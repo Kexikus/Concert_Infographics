@@ -15,6 +15,21 @@ class GermanMapManager {
             tooltips: []
         };
         
+        // Initialize the new repellant forces label placer
+        this.labelPlacer = new D3RepellantForcesLabelPlacer({
+            offsetDistance: 35,
+            minDistance: 25, // Reduced by factor of 2
+            simulationIterations: 200, // Reduced for faster calculation
+            convergenceThreshold: 0.2, // Slightly higher for faster convergence
+            attractionStrength: 0.4, // Increased to keep labels closer to cities
+            repulsionStrength: -20, // Reduced to allow closer placement
+            biasStrength: 0.15,
+            boundaryStrength: 0.5,
+            collisionBuffer: 8, // Reduced buffer for closer placement
+            debug: false,
+            showMetrics: true // Enable to see performance metrics
+        });
+        
         // Color configuration
         this.colors = {
             fill: '#000000',        // Black fill for all states
@@ -28,9 +43,7 @@ class GermanMapManager {
         // Visual configuration
         this.config = {
             cityDotRadius: 4,
-            countCircleRadius: 20,
-            countCircleMinRadius: 15,
-            countCircleMaxRadius: 35,
+            countCircleRadius: 12, // Fixed radius of 12px for all labels
             lineStrokeWidth: 2,
             minDistance: 50, // Minimum distance between count circles
             offsetDistance: 40 // Distance from city dot to count circle
@@ -182,11 +195,69 @@ class GermanMapManager {
         return { x: svgX, y: svgY };
     }
 
-    // Calculate optimal position for count circle to avoid overlaps
-    calculateOptimalPosition(cityX, cityY, existingPositions, currentRadius) {
-        // Change default direction to top-right (45 degrees) as first option
-        // Note: In SVG coordinate system, negative Y is up, so -45 degrees for top-right
-        const angles = [-45, 0, -90, 45, 90, 135, 180, -135]; // Try different angles, top-right first
+    // Calculate optimal positions using the new D3 repellant forces algorithm
+    async calculateOptimalPositions(cityDataArray, mapBounds) {
+        try {
+            // Prepare city data for the algorithm
+            const cityData = cityDataArray.map(city => ({
+                x: city.x,
+                y: city.y,
+                radius: city.radius,
+                count: city.count,
+                name: city.name,
+                data: city.data
+            }));
+            
+            // Calculate optimal positions using the new algorithm
+            const positions = await this.labelPlacer.calculateOptimalPositions(cityData, mapBounds);
+            
+            // Log performance metrics if debugging is enabled
+            if (this.labelPlacer.config.debug || this.labelPlacer.config.showMetrics) {
+                const metrics = this.labelPlacer.getPerformanceMetrics();
+                console.log('Label placement metrics:', metrics);
+            }
+            
+            return positions;
+        } catch (error) {
+            console.error('Error in new label placement algorithm, falling back to legacy method:', error);
+            
+            // Fallback to legacy algorithm
+            return this.calculateOptimalPositionsLegacy(cityDataArray);
+        }
+    }
+    
+    // Legacy fallback method (simplified version of the old algorithm)
+    calculateOptimalPositionsLegacy(cityDataArray) {
+        const positions = [];
+        const existingPositions = [];
+        
+        cityDataArray.forEach(city => {
+            const position = this.calculateOptimalPositionLegacy(city.x, city.y, existingPositions, city.radius);
+            
+            positions.push({
+                cityX: city.x,
+                cityY: city.y,
+                labelX: position.x,
+                labelY: position.y,
+                radius: city.radius,
+                city: city.data
+            });
+            
+            existingPositions.push({
+                x: position.x,
+                y: position.y,
+                radius: city.radius,
+                cityX: city.x,
+                cityY: city.y
+            });
+        });
+        
+        return positions;
+    }
+    
+    // Legacy position calculation method (kept as fallback)
+    calculateOptimalPositionLegacy(cityX, cityY, existingPositions, currentRadius) {
+        const angles = [-45, 0, -90, 45, 90, 135, 180, -135]; // Top-right first
         const distances = [this.config.offsetDistance, this.config.offsetDistance * 1.5, this.config.offsetDistance * 2, this.config.offsetDistance * 3];
         
         for (const distance of distances) {
@@ -195,32 +266,14 @@ class GermanMapManager {
                 const x = cityX + Math.cos(radians) * distance;
                 const y = cityY + Math.sin(radians) * distance;
                 
-                // Check if this position conflicts with existing elements
                 let hasConflict = false;
                 
-                // Check against existing count circles
                 for (const pos of existingPositions) {
                     const dist = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
-                    // Consider both circle radii plus buffer
-                    const minRequiredDistance = currentRadius + pos.radius + 15; // Increased buffer
+                    const minRequiredDistance = currentRadius + pos.radius + 15;
                     if (dist < minRequiredDistance) {
                         hasConflict = true;
                         break;
-                    }
-                }
-                
-                // Also check against other city dots (to avoid placing count circles too close to other cities)
-                if (!hasConflict) {
-                    for (const pos of existingPositions) {
-                        if (pos.cityX !== undefined && pos.cityY !== undefined) {
-                            const distToCity = Math.sqrt(Math.pow(x - pos.cityX, 2) + Math.pow(y - pos.cityY, 2));
-                            // Ensure count circle doesn't overlap with other city dots
-                            const minDistanceToCity = currentRadius + this.config.cityDotRadius + 20; // Buffer from city dots
-                            if (distToCity < minDistanceToCity) {
-                                hasConflict = true;
-                                break;
-                            }
-                        }
                     }
                 }
                 
@@ -230,27 +283,12 @@ class GermanMapManager {
             }
         }
         
-        // If no good position found, use default offset (top-right) with increased distance
         return {
             x: cityX + this.config.offsetDistance * 1.5,
             y: cityY - this.config.offsetDistance * 1.5
         };
     }
 
-    // Calculate circle radius based on concert count (80% of original size)
-    calculateCircleRadius(count) {
-        const minCount = 1;
-        const maxCount = Math.max(...Array.from(this.cityStats.values()).map(city => city.count));
-        
-        if (maxCount === minCount) {
-            return this.config.countCircleRadius * 0.8; // 80% of original
-        }
-        
-        const normalized = (count - minCount) / (maxCount - minCount);
-        const radius = this.config.countCircleMinRadius +
-                (normalized * (this.config.countCircleMaxRadius - this.config.countCircleMinRadius));
-        return radius * 0.8; // 80% of calculated radius
-    }
 
     // Load SVG map from assets/de.svg
     loadSVGMap() {
@@ -407,8 +445,8 @@ class GermanMapManager {
         return stateIdMap[id] || id;
     }
 
-    // Add concert visualization elements to the SVG
-    addConcertVisualization() {
+    // Add concert visualization elements to the SVG using the new algorithm
+    async addConcertVisualization() {
         if (!this.svgElement || this.cityStats.size === 0) {
             return;
         }
@@ -426,46 +464,134 @@ class GermanMapManager {
         const countCirclesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         countCirclesGroup.setAttribute('class', 'count-circles-group');
         
-        const existingPositions = [];
-        
-        // Process each city with concerts
+        // Prepare city data for the new algorithm
+        const cityDataArray = [];
         this.cityStats.forEach((cityData, cityName) => {
             const svgCoords = this.latLngToSVG(cityData.latitude, cityData.longitude);
+            const circleRadius = this.config.countCircleRadius;
             
-            // Create city dot
-            const cityDot = this.createCityDot(svgCoords.x, svgCoords.y, cityName, cityData);
-            cityDotsGroup.appendChild(cityDot);
-            this.visualElements.cityDots.push(cityDot);
-            
-            // Calculate optimal position for count circle
-            const circleRadius = this.calculateCircleRadius(cityData.count);
-            const circlePos = this.calculateOptimalPosition(svgCoords.x, svgCoords.y, existingPositions, circleRadius);
-            // Store both the count circle position and the city dot position for overlap checking
-            existingPositions.push({
-                x: circlePos.x,
-                y: circlePos.y,
+            cityDataArray.push({
+                x: svgCoords.x,
+                y: svgCoords.y,
                 radius: circleRadius,
-                cityX: svgCoords.x,
-                cityY: svgCoords.y
+                count: cityData.count,
+                name: cityName,
+                data: {
+                    // Preserve all original city data in a nested structure
+                    count: cityData.count,
+                    venues: cityData.venues,
+                    venueVisits: cityData.venueVisits,
+                    latitude: cityData.latitude,
+                    longitude: cityData.longitude,
+                    name: cityName
+                }
+            });
+        });
+        
+        // Calculate map bounds for boundary constraints
+        const mapBounds = this.calculateMapBounds();
+        
+        try {
+            // Use the new algorithm to calculate optimal positions
+            const optimalPositions = await this.calculateOptimalPositions(cityDataArray, mapBounds);
+            
+            // Create visual elements using the calculated positions
+            optimalPositions.forEach(position => {
+                const cityName = position.city.name;
+                const cityData = position.city; // City data now contains all the original properties
+                
+                // Create city dot
+                const cityDot = this.createCityDot(position.cityX, position.cityY, cityName, cityData);
+                cityDotsGroup.appendChild(cityDot);
+                this.visualElements.cityDots.push(cityDot);
+                
+                // Create connecting line
+                const connectingLine = this.createConnectingLine(
+                    position.cityX, position.cityY,
+                    position.labelX, position.labelY
+                );
+                connectingLinesGroup.appendChild(connectingLine);
+                this.visualElements.connectingLines.push(connectingLine);
+                
+                // Create count circle
+                const countCircle = this.createCountCircle(
+                    position.labelX, position.labelY,
+                    position.radius, cityData.count,
+                    cityName, cityData
+                );
+                countCirclesGroup.appendChild(countCircle);
+                this.visualElements.countCircles.push(countCircle);
             });
             
-            // Create connecting line
-            const connectingLine = this.createConnectingLine(svgCoords.x, svgCoords.y, circlePos.x, circlePos.y);
-            connectingLinesGroup.appendChild(connectingLine);
-            this.visualElements.connectingLines.push(connectingLine);
+        } catch (error) {
+            console.error('Error using new algorithm, falling back to legacy method:', error);
             
-            // Create count circle
-            const countCircle = this.createCountCircle(circlePos.x, circlePos.y, circleRadius, cityData.count, cityName, cityData);
-            countCirclesGroup.appendChild(countCircle);
-            this.visualElements.countCircles.push(countCircle);
-        });
+            // Fallback to legacy method
+            const existingPositions = [];
+            
+            this.cityStats.forEach((cityData, cityName) => {
+                const svgCoords = this.latLngToSVG(cityData.latitude, cityData.longitude);
+                const circleRadius = this.config.countCircleRadius;
+                
+                // Create city dot
+                const cityDot = this.createCityDot(svgCoords.x, svgCoords.y, cityName, cityData);
+                cityDotsGroup.appendChild(cityDot);
+                this.visualElements.cityDots.push(cityDot);
+                
+                // Calculate position using legacy method
+                const circlePos = this.calculateOptimalPositionLegacy(svgCoords.x, svgCoords.y, existingPositions, circleRadius);
+                existingPositions.push({
+                    x: circlePos.x,
+                    y: circlePos.y,
+                    radius: circleRadius,
+                    cityX: svgCoords.x,
+                    cityY: svgCoords.y
+                });
+                
+                // Create connecting line
+                const connectingLine = this.createConnectingLine(svgCoords.x, svgCoords.y, circlePos.x, circlePos.y);
+                connectingLinesGroup.appendChild(connectingLine);
+                this.visualElements.connectingLines.push(connectingLine);
+                
+                // Create count circle
+                const countCircle = this.createCountCircle(circlePos.x, circlePos.y, circleRadius, cityData.count, cityName, cityData);
+                countCirclesGroup.appendChild(countCircle);
+                this.visualElements.countCircles.push(countCircle);
+            });
+        }
         
         // Add groups to SVG in correct order (lines first, then dots, then circles)
         this.svgElement.appendChild(connectingLinesGroup);
         this.svgElement.appendChild(cityDotsGroup);
         this.svgElement.appendChild(countCirclesGroup);
         
-        console.log(`Added concert visualization for ${this.cityStats.size} cities`);
+        console.log(`Added concert visualization for ${this.cityStats.size} cities using advanced label placement`);
+    }
+    
+    // Calculate map bounds for boundary constraints
+    calculateMapBounds() {
+        if (!this.svgElement) {
+            return { minX: 0, minY: 0, maxX: 1000, maxY: 1000 };
+        }
+        
+        const paths = this.svgElement.querySelectorAll('path');
+        let globalMinX = Infinity, globalMinY = Infinity;
+        let globalMaxX = -Infinity, globalMaxY = -Infinity;
+
+        paths.forEach(path => {
+            const bbox = path.getBBox();
+            globalMinX = Math.min(globalMinX, bbox.x);
+            globalMinY = Math.min(globalMinY, bbox.y);
+            globalMaxX = Math.max(globalMaxX, bbox.x + bbox.width);
+            globalMaxY = Math.max(globalMaxY, bbox.y + bbox.height);
+        });
+
+        return {
+            minX: globalMinX,
+            maxX: globalMaxX,
+            minY: globalMinY,
+            maxY: globalMaxY
+        };
     }
 
     // Create a city dot element
@@ -566,10 +692,10 @@ class GermanMapManager {
         tooltip.className = 'german-map-tooltip';
         
         // Sort venues alphabetically and create list with visit counts
-        const sortedVenues = Array.from(cityData.venueVisits.entries())
+        const sortedVenues = cityData.venueVisits ? Array.from(cityData.venueVisits.entries())
             .sort((a, b) => a[0].localeCompare(b[0])) // Sort by venue name alphabetically
             .map(([venueName, visitCount]) => `<div class="german-tooltip-venue">${venueName} (${visitCount})</div>`)
-            .join('');
+            .join('') : '';
         
         tooltip.innerHTML = `
             <div class="german-tooltip-state">${cityName}</div>
@@ -728,6 +854,11 @@ class GermanMapManager {
     destroy() {
         if (this.mapContainer) {
             this.mapContainer.innerHTML = '';
+        }
+        
+        // Cleanup the label placer
+        if (this.labelPlacer) {
+            this.labelPlacer.destroy();
         }
         
         this.stateElements = {};

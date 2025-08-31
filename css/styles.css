@@ -804,7 +804,7 @@ body {
     position: relative;
     width: 100%;
     max-width: 100%;
-    aspect-ratio: 16 / 9; /* Adjusted aspect ratio for German map */
+    aspect-ratio: 4 / 3; /* Changed to 4/3 for larger map */
     background-color: var(--dark-grey);
     overflow: hidden;
 }
