@@ -17,17 +17,17 @@ class GermanMapManager {
         
         // Initialize the new repellant forces label placer
         this.labelPlacer = new D3RepellantForcesLabelPlacer({
-            offsetDistance: 35,
-            minDistance: 25, // Reduced by factor of 2
-            simulationIterations: 200, // Reduced for faster calculation
+            offsetDistance: 25,
+            minDistance: 25, // Reduced by 50% from 25 to allow labels closer together
+            simulationIterations: 50, // Reduced for faster calculation
             convergenceThreshold: 0.2, // Slightly higher for faster convergence
-            attractionStrength: 0.4, // Increased to keep labels closer to cities
+            attractionStrength: 0.2, // Increased to keep labels closer to cities
             repulsionStrength: -20, // Reduced to allow closer placement
             biasStrength: 0.15,
             boundaryStrength: 0.5,
             collisionBuffer: 8, // Reduced buffer for closer placement
             debug: false,
-            showMetrics: true // Enable to see performance metrics
+            showMetrics: false // Enable to see performance metrics
         });
         
         // Color configuration

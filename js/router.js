@@ -115,6 +115,13 @@ class Router {
     // Show Cost page
     showCost() {
         this.showView('cost-view');
+        
+        // Initialize cost-related components
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            statisticsManager.initializeCostStatistics();
+        }, 100);
+        
         console.log('Cost page loaded');
     }
 

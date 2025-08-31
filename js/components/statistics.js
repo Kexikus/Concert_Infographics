@@ -365,6 +365,36 @@ class StatisticsManager {
     initializeLocationStatistics() {
         this.updateLocationStatistics();
     }
+
+    // Update cost statistics
+    updateCostStatistics() {
+        const costStats = dataManager.getCostStatistics();
+        
+        // Find the cost statistics elements
+        const totalCostElement = document.getElementById('costs-total');
+        const avgCostPerYearElement = document.getElementById('costs-avg-per-year');
+        const avgCostPerEventElement = document.getElementById('costs-avg-per-event');
+        
+        // Animate the cost statistics
+        if (totalCostElement) {
+            this.animateEuro(totalCostElement, 0, costStats.totalCost);
+        }
+        if (avgCostPerYearElement) {
+            this.animateEuro(avgCostPerYearElement, 0, costStats.avgCostPerYear);
+        }
+        if (avgCostPerEventElement) {
+            this.animateEuro(avgCostPerEventElement, 0, costStats.avgCostPerEvent);
+        }
+        
+        // Create the cost charts
+        chartsManager.createCostPerYearChart();
+        chartsManager.createCostTrendChart();
+    }
+
+    // Initialize cost statistics display
+    initializeCostStatistics() {
+        this.updateCostStatistics();
+    }
 }
 
 // Create global instance

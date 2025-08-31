@@ -1303,12 +1303,12 @@ font-weight: 500;
     grid-template-columns: 1fr 1fr; /* Two equal width boxes */
     gap: 2rem;
     padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
 }
 
 .locations-stat-box {
     position: relative;
     padding: 2rem;
-    transform: skewX(-15deg);
     overflow: hidden;
     min-height: 120px;
     display: flex;
@@ -1398,10 +1398,13 @@ font-weight: 500;
 }
 
 @media (max-width: 768px) {
+    .locations-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
     .locations-stat-box {
         padding: 1.5rem;
         min-height: 100px;
-        transform: skewX(-10deg);
     }
     
     .locations-stat-number {
@@ -1429,10 +1432,13 @@ font-weight: 500;
         padding: 0 1rem;
     }
     
+    .locations-stats-grid {
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
     .locations-stat-box {
         padding: 1rem;
         min-height: 80px;
-        transform: skewX(-8deg);
     }
     
     .locations-stat-number {
@@ -1494,6 +1500,281 @@ font-weight: 500;
     }
     
     .locations-view .chart-container {
+        min-height: 140px;
+    }
+}
+
+/* Costs Statistics Section */
+.costs-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.costs-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
+    grid-template-rows: auto; /* Single row */
+    grid-template-areas:
+        "left center center right";
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+}
+
+.costs-stat-box {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Grid area assignments */
+.costs-stat-left {
+    grid-area: left;
+}
+
+.costs-stat-center {
+    grid-area: center;
+}
+
+.costs-stat-right {
+    grid-area: right;
+}
+
+/* Outer boxes (left and right): Dark red background with light red labels */
+.costs-stat-left,
+.costs-stat-right {
+    background-color: var(--dark-red);
+}
+
+.costs-stat-left .costs-stat-label,
+.costs-stat-right .costs-stat-label {
+    color: var(--red);
+}
+
+/* Inner box (center): Light red background with dark red labels */
+.costs-stat-center {
+    background-color: var(--red);
+}
+
+.costs-stat-center .costs-stat-label {
+    color: var(--dark-red);
+}
+
+.costs-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.costs-stat-number {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+/* Outer boxes (left and right): 1.5x bigger numbers */
+.costs-stat-left .costs-stat-number,
+.costs-stat-right .costs-stat-number {
+    font-size: 6rem; /* 4rem * 1.5 = 6rem */
+}
+
+/* Inner box (center): 2x bigger numbers */
+.costs-stat-center .costs-stat-number {
+    font-size: 8rem; /* 4rem * 2 = 8rem */
+}
+
+.costs-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Chart sections styling for costs */
+.cost-view .chart-section {
+    background: transparent;
+    padding: 2rem 0;
+}
+
+.cost-view .chart-container {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    min-height: 200px; /* Minimum height for safety */
+}
+
+.cost-view .chart-container canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive Design for Costs Statistics */
+@media (max-width: 1200px) {
+    .costs-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .costs-stat-left .costs-stat-number,
+    .costs-stat-right .costs-stat-number {
+        font-size: 5.25rem; /* 3.5rem * 1.5 */
+    }
+    
+    .costs-stat-center .costs-stat-number {
+        font-size: 7rem; /* 3.5rem * 2 */
+    }
+    
+    .costs-stat-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 1050px) {
+    .costs-stats-grid {
+        grid-template-columns: 1fr 1fr; /* bb/ac pattern: 2-column layout */
+        grid-template-areas:
+            "center center"
+            "left right";
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .costs-stat-number {
+        font-size: 3rem;
+    }
+    
+    .costs-stat-left .costs-stat-number,
+    .costs-stat-right .costs-stat-number {
+        font-size: 4.5rem; /* 3rem * 1.5 */
+    }
+    
+    .costs-stat-center .costs-stat-number {
+        font-size: 6rem; /* 3rem * 2 */
+    }
+    
+    .costs-stat-label {
+        font-size: 1rem;
+    }
+    
+    .costs-stats-grid {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .costs-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
+    .costs-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .costs-stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .costs-stat-left .costs-stat-number,
+    .costs-stat-right .costs-stat-number {
+        font-size: 3.75rem; /* 2.5rem * 1.5 */
+    }
+    
+    .costs-stat-center .costs-stat-number {
+        font-size: 5rem; /* 2.5rem * 2 */
+    }
+    
+    .costs-stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .cost-view .chart-container {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 550px) {
+    .costs-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .costs-stats-grid {
+        grid-template-columns: 1fr; /* Single column */
+        grid-template-areas:
+            "center"
+            "left"
+            "right";
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .costs-stats-grid {
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .costs-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .costs-stat-number {
+        font-size: 2rem;
+    }
+    
+    .costs-stat-left .costs-stat-number,
+    .costs-stat-right .costs-stat-number {
+        font-size: 3rem; /* 2rem * 1.5 */
+    }
+    
+    .costs-stat-center .costs-stat-number {
+        font-size: 4rem; /* 2rem * 2 */
+    }
+    
+    .costs-stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .cost-view .chart-section {
+        padding: 1.5rem 0;
+    }
+    
+    .cost-view .chart-container {
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 400px) {
+    .costs-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .costs-stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .costs-stat-left .costs-stat-number,
+    .costs-stat-right .costs-stat-number {
+        font-size: 2.7rem; /* 1.8rem * 1.5 */
+    }
+    
+    .costs-stat-center .costs-stat-number {
+        font-size: 3.6rem; /* 1.8rem * 2 */
+    }
+    
+    .costs-stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .cost-view .chart-container {
         min-height: 140px;
     }
 }

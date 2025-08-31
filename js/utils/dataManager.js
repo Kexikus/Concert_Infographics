@@ -70,7 +70,10 @@ class DataManager {
         const totalEvents = this.concerts.length;
         const totalArtists = this.artists.length;
         const totalVenues = this.venues.length;
-        const totalCost = this.concerts.reduce((sum, concert) => sum + concert.price, 0);
+        
+        // Calculate total cost only from concerts with non-null prices
+        const concertsWithPrice = this.concerts.filter(concert => concert.price !== null && concert.price !== undefined);
+        const totalCost = concertsWithPrice.reduce((sum, concert) => sum + concert.price, 0);
         
         // Get concerts and festivals counts
         const concertTypeStats = this.getConcertTypeStats();
@@ -83,6 +86,7 @@ class DataManager {
         
         // Calculate total shows (sum of artists per event)
         const totalShows = this.concerts.reduce((sum, concert) => sum + concert.artistIds.length, 0);
+        const totalShowsWithPrice = concertsWithPrice.reduce((sum, concert) => sum + concert.artistIds.length, 0);
         
         // Calculate unique artists seen
         const uniqueArtistIds = new Set();
@@ -98,6 +102,11 @@ class DataManager {
         
         // Calculate new bands per year
         const newBandsPerYear = totalUniqueBands / yearSpan;
+
+        // Calculate years with non-zero costs for average per year calculation
+        const costPerYearStats = this.getCostPerYearStats();
+        const yearsWithCosts = Object.values(costPerYearStats).filter(cost => cost > 0);
+        const yearsWithCostsCount = yearsWithCosts.length;
 
         return {
             // Main statistics
@@ -119,9 +128,9 @@ class DataManager {
             avgShowsPerBand: totalUniqueBands > 0 ? (totalShows / totalUniqueBands).toFixed(1) : 0,
             avgShowsPerEvent: totalEvents > 0 ? (totalShows / totalEvents).toFixed(1) : 0,
             
-            avgCostPerYear: Math.round(totalCost / yearSpan),
-            avgCostPerEvent: totalEvents > 0 ? Math.round(totalCost / totalEvents) : 0,
-            avgCostPerShow: totalShows > 0 ? Math.round(totalCost / totalShows) : 0
+            avgCostPerYear: yearsWithCostsCount > 0 ? Math.round(totalCost / yearsWithCostsCount) : 0,
+            avgCostPerEvent: concertsWithPrice.length > 0 ? Math.round(totalCost / concertsWithPrice.length) : 0,
+            avgCostPerShow: totalShowsWithPrice > 0 ? Math.round(totalCost / totalShowsWithPrice) : 0
         };
     }
 
@@ -729,6 +738,90 @@ class DataManager {
                     Math.round(yearStats[year].concert.reduce((sum, cap) => sum + cap, 0) / yearStats[year].concert.length) : 0,
                 festival: yearStats[year].festival.length > 0 ?
                     Math.round(yearStats[year].festival.reduce((sum, cap) => sum + cap, 0) / yearStats[year].festival.length) : 0
+            };
+        });
+        
+        return result;
+    }
+
+    // Get cost statistics for the costs view
+    getCostStatistics() {
+        const stats = this.getStatistics();
+        const years = this.getAvailableYears();
+        const yearSpan = years.length > 0 ? years.length : 1;
+        
+        return {
+            totalCost: stats.totalCost,
+            avgCostPerYear: stats.avgCostPerYear,
+            avgCostPerEvent: stats.avgCostPerEvent,
+            avgCostPerShow: stats.avgCostPerShow
+        };
+    }
+
+    // Get cost per year statistics
+    getCostPerYearStats() {
+        const stats = {};
+        
+        // Initialize all years with 0
+        const allYears = this.getAvailableYears();
+        allYears.forEach(year => {
+            stats[year] = 0;
+        });
+        
+        // Add costs for concerts with non-null prices
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            if (concert.price !== null && concert.price !== undefined) {
+                const price = concert.price;
+                stats[year] = (stats[year] || 0) + price;
+            }
+        });
+        
+        // Round all values to integers
+        Object.keys(stats).forEach(year => {
+            stats[year] = Math.round(stats[year]);
+        });
+        
+        return stats;
+    }
+
+    // Get average cost per show by year and type (cost per event, not per artist)
+    getAverageCostPerShowByYear() {
+        const yearStats = {};
+        
+        // Initialize all years with empty arrays
+        const allYears = this.getAvailableYears();
+        allYears.forEach(year => {
+            yearStats[year] = {
+                overall: [],
+                concert: [],
+                festival: []
+            };
+        });
+        
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            
+            // Only process concerts with non-null prices
+            if (concert.price !== null && concert.price !== undefined) {
+                const price = concert.price;
+                
+                // Add event cost to overall and type-specific arrays (not divided by artist count)
+                yearStats[year].overall.push(price);
+                yearStats[year][concert.type].push(price);
+            }
+        });
+        
+        // Calculate averages for each year and round to integers
+        const result = {};
+        allYears.forEach(year => {
+            result[year] = {
+                overall: yearStats[year].overall.length > 0 ?
+                    Math.round(yearStats[year].overall.reduce((sum, cost) => sum + cost, 0) / yearStats[year].overall.length) : null,
+                concert: yearStats[year].concert.length > 0 ?
+                    Math.round(yearStats[year].concert.reduce((sum, cost) => sum + cost, 0) / yearStats[year].concert.length) : null,
+                festival: yearStats[year].festival.length > 0 ?
+                    Math.round(yearStats[year].festival.reduce((sum, cost) => sum + cost, 0) / yearStats[year].festival.length) : null
             };
         });
         

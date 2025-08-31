@@ -315,18 +315,49 @@
                         <p class="subpage-description">Track your concert spending and budget insights</p>
                     </header>
                     
+                    <!-- Costs Statistics Section -->
+                    <section class="costs-stats-overview">
+                        <div class="costs-stats-grid">
+                            <!-- Left cell: Average cost per event -->
+                            <div class="costs-stat-box costs-stat-left">
+                                <div class="costs-stat-content">
+                                    <div class="costs-stat-number" id="costs-avg-per-event">0€</div>
+                                    <div class="costs-stat-label">⌀ per event</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Central cell: Total cost (double width) -->
+                            <div class="costs-stat-box costs-stat-center">
+                                <div class="costs-stat-content">
+                                    <div class="costs-stat-number" id="costs-total">0€</div>
+                                    <div class="costs-stat-label">total cost</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Average cost per year -->
+                            <div class="costs-stat-box costs-stat-right">
+                                <div class="costs-stat-content">
+                                    <div class="costs-stat-number" id="costs-avg-per-year">0€</div>
+                                    <div class="costs-stat-label">⌀ per year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
                     <div class="subpage-content">
-                        <section class="placeholder-section">
-                            <h2>Spending Analysis</h2>
-                            <div class="placeholder-content">
-                                <p>Spending trends and budget analysis will be displayed here</p>
+                        <!-- Cost per Year Chart (Vertical Bar Chart) -->
+                        <section class="chart-section">
+                            <h2>Cost per Year</h2>
+                            <div class="chart-container">
+                                <canvas id="cost-per-year-chart"></canvas>
                             </div>
                         </section>
-                        
-                        <section class="placeholder-section">
-                            <h2>Cost Breakdown</h2>
-                            <div class="placeholder-content">
-                                <p>Detailed cost breakdowns and comparisons will be displayed here</p>
+
+                        <!-- Cost Trend Chart (Line Chart with Dots) -->
+                        <section class="chart-section">
+                            <h2>Cost Trend Over Time</h2>
+                            <div class="chart-container">
+                                <canvas id="cost-trend-chart"></canvas>
                             </div>
                         </section>
                     </div>

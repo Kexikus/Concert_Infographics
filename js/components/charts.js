@@ -893,6 +893,243 @@ class ChartsManager {
         });
     }
 
+    // Create Cost Per Year Vertical Bar Chart
+    createCostPerYearChart() {
+        const ctx = document.getElementById('cost-per-year-chart');
+        if (!ctx) return;
+
+        const costData = dataManager.getCostPerYearStats();
+        const years = Object.keys(costData).sort();
+        const data = years.map(year => costData[year] || 0);
+
+        // Destroy existing chart if it exists
+        if (this.charts.costPerYear) {
+            this.charts.costPerYear.destroy();
+        }
+
+        this.charts.costPerYear = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Total Cost',
+                    data: data,
+                    backgroundColor: this.defaultColors.black,
+                    borderColor: this.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.9
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `Year ${context[0].label}`;
+                            },
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                return `Total Cost: ${value}€`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            },
+                            callback: function(value) {
+                                return value + '€';
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create Cost Trend Line Chart (Average Cost per Show by Year)
+    createCostTrendChart() {
+        const ctx = document.getElementById('cost-trend-chart');
+        if (!ctx) return;
+
+        const costTrendData = dataManager.getAverageCostPerShowByYear();
+        const years = Object.keys(costTrendData).sort();
+
+        // Prepare data arrays
+        const overallData = years.map(year => costTrendData[year]?.overall || null);
+        const festivalData = years.map(year => costTrendData[year]?.festival || null);
+        const concertData = years.map(year => costTrendData[year]?.concert || null);
+
+        // Destroy existing chart if it exists
+        if (this.charts.costTrend) {
+            this.charts.costTrend.destroy();
+        }
+
+        this.charts.costTrend = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    // Overall (black line)
+                    {
+                        label: 'All Events',
+                        data: overallData,
+                        borderColor: this.defaultColors.black,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointBackgroundColor: this.defaultColors.black,
+                        pointBorderColor: this.defaultColors.black,
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0, // Straight lines
+                        spanGaps: false
+                    },
+                    // Festival (light red line)
+                    {
+                        label: 'Festivals',
+                        data: festivalData,
+                        borderColor: this.defaultColors.red,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointBackgroundColor: this.defaultColors.red,
+                        pointBorderColor: this.defaultColors.red,
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0, // Straight lines
+                        spanGaps: false
+                    },
+                    // Concert (dark red line)
+                    {
+                        label: 'Concerts',
+                        data: concertData,
+                        borderColor: this.defaultColors.darkRed,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointBackgroundColor: this.defaultColors.darkRed,
+                        pointBorderColor: this.defaultColors.darkRed,
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0, // Straight lines
+                        spanGaps: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `Year ${context[0].label}`;
+                            },
+                            label: function(context) {
+                                const datasetLabel = context.dataset.label;
+                                const value = context.parsed.y;
+                                return value !== null ? `${datasetLabel}: ${value}€` : `${datasetLabel}: No data`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '20'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            },
+                            callback: function(value) {
+                                return value + '€';
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
     // Update all charts with new data
     updateCharts() {
         this.createEventsPerYearChart();
