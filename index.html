@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concert Infographics Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div id="app">
+        <main id="main-content">
+            <div id="dashboard-view" class="view active">
+                <div class="dashboard-grid">
+                    <!-- Overview Statistics -->
+                    <section class="stats-overview">
+                        <h2>Overview Statistics</h2>
+                        <div class="stats-list">
+                            <!-- Total Events -->
+                            <div class="stat-row">
+                                <div class="main-stat">
+                                    <div class="stat-number" id="total-events">0</div>
+                                    <div class="stat-label">Total Events</div>
+                                </div>
+                                <div class="sub-stats">
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-value" id="total-concerts">0</span>
+                                        <span class="sub-stat-label">concerts</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-value" id="total-festivals">0</span>
+                                        <span class="sub-stat-label">festivals</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-events-per-year">0</span>
+                                        <span class="sub-stat-label">per year</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Total Bands -->
+                            <div class="stat-row">
+                                <div class="main-stat">
+                                    <div class="stat-number" id="total-bands">0</div>
+                                    <div class="stat-label">Total Bands</div>
+                                </div>
+                                <div class="sub-stats">
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-value" id="repeat-bands-percentage">0%</span>
+                                        <span class="sub-stat-label">seen more than once</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-bands-per-year">0</span>
+                                        <span class="sub-stat-label">per year</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-new-bands-per-year">0</span>
+                                        <span class="sub-stat-label">new per year</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Total Shows -->
+                            <div class="stat-row">
+                                <div class="main-stat">
+                                    <div class="stat-number" id="total-shows">0</div>
+                                    <div class="stat-label">Total Shows</div>
+                                </div>
+                                <div class="sub-stats">
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-shows-per-year">0</span>
+                                        <span class="sub-stat-label">per year</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-shows-per-band">0</span>
+                                        <span class="sub-stat-label">per band</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-shows-per-event">0</span>
+                                        <span class="sub-stat-label">per event</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Total Cost -->
+                            <div class="stat-row">
+                                <div class="main-stat">
+                                    <div class="stat-number" id="total-cost">0€</div>
+                                    <div class="stat-label">Total Cost</div>
+                                </div>
+                                <div class="sub-stats">
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-cost-per-year">0€</span>
+                                        <span class="sub-stat-label">per year</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-cost-per-event">0€</span>
+                                        <span class="sub-stat-label">per event</span>
+                                    </div>
+                                    <div class="sub-stat">
+                                        <span class="sub-stat-label">∅</span>
+                                        <span class="sub-stat-value" id="avg-cost-per-show">0€</span>
+                                        <span class="sub-stat-label">per show</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Events per Year Chart -->
+                    <section class="chart-section">
+                        <h2>Events per Year</h2>
+                        <div class="chart-container">
+                            <canvas id="events-per-year-chart"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <!-- Events View -->
+            <div id="events-view" class="view">
+                <div class="subpage-container">
+                    <header class="subpage-header">
+                        <h1>Events</h1>
+                        <p class="subpage-description">Explore detailed insights about your concert and festival experiences</p>
+                    </header>
+                    
+                    <div class="subpage-content">
+                        <section class="placeholder-section">
+                            <h2>Event Analytics</h2>
+                            <div class="placeholder-content">
+                                <p>Event-specific infographics will be displayed here</p>
+                            </div>
+                        </section>
+                        
+                        <section class="placeholder-section">
+                            <h2>Timeline & Trends</h2>
+                            <div class="placeholder-content">
+                                <p>Event timeline and trend analysis will be displayed here</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bands View -->
+            <div id="bands-view" class="view">
+                <div class="subpage-container">
+                    <header class="subpage-header">
+                        <h1>Bands</h1>
+                        <p class="subpage-description">Discover patterns in your musical journey and artist preferences</p>
+                    </header>
+                    
+                    <!-- Bands Statistics Section -->
+                    <section class="bands-stats-overview">
+                        <div class="bands-stats-grid">
+                            <!-- Left cell: Average bands per year -->
+                            <div class="bands-stat-box bands-stat-left">
+                                <div class="bands-stat-content">
+                                    <div class="bands-stat-number" id="bands-avg-per-year">0</div>
+                                    <div class="bands-stat-label">⌀ per year</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Central cell: Total bands (double width) -->
+                            <div class="bands-stat-box bands-stat-center">
+                                <div class="bands-stat-content">
+                                    <div class="bands-stat-number" id="bands-total">0</div>
+                                    <div class="bands-stat-label">total bands</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Percentage seen at least twice -->
+                            <div class="bands-stat-box bands-stat-right">
+                                <div class="bands-stat-content">
+                                    <div class="bands-stat-number" id="bands-at-least-twice">0%</div>
+                                    <div class="bands-stat-label">at least twice</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Second row: Shows per band (double width) -->
+                            <div class="bands-stat-box bands-stat-shows-per-band">
+                                <div class="bands-stat-content">
+                                    <div class="bands-stat-number" id="bands-shows-per-band">0.0</div>
+                                    <div class="bands-stat-label">shows per band</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Second row: Countries (double width) -->
+                            <div class="bands-stat-box bands-stat-countries">
+                                <div class="bands-stat-content">
+                                    <div class="bands-stat-number" id="bands-countries">0</div>
+                                    <div class="bands-stat-label">countries</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <div class="subpage-content">
+                        <!-- World Map Section -->
+                        <section class="world-map-section">
+                            <h2>Artists by Country</h2>
+                            <div id="world-map-container" class="world-map-container">
+                                <!-- World map will be populated here -->
+                            </div>
+                        </section>
+
+                        <!-- Bands per Year Chart -->
+                        <section class="chart-section">
+                            <h2>Bands per Year</h2>
+                            <div class="chart-container">
+                                <canvas id="bands-per-year-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Band Frequency Chart -->
+                        <section class="chart-section">
+                            <h2>Most Frequent Artists</h2>
+                            <div class="chart-container">
+                                <canvas id="band-frequency-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Other Artists Section -->
+                        <section class="chart-section">
+                            <h2>Other Artists</h2>
+                            <div id="otherArtistsGrid" class="other-artists-grid">
+                                <!-- Other artists will be populated here -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations View -->
+            <div id="locations-view" class="view">
+                <div class="subpage-container">
+                    <header class="subpage-header">
+                        <h1>Locations</h1>
+                        <p class="subpage-description">Analyze your concert geography and venue experiences</p>
+                    </header>
+                    
+                    <!-- Locations Statistics Section -->
+                    <section class="locations-stats-overview">
+                        <div class="locations-stats-grid">
+                            <!-- Left cell: Number of venues -->
+                            <div class="locations-stat-box venues-stat-left">
+                                <div class="locations-stat-content">
+                                    <div class="locations-stat-number" id="locations-total-venues">0</div>
+                                    <div class="locations-stat-label">venues</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Number of cities -->
+                            <div class="locations-stat-box cities-stat-right">
+                                <div class="locations-stat-content">
+                                    <div class="locations-stat-number" id="locations-total-cities">0</div>
+                                    <div class="locations-stat-label">cities</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- German Map Section -->
+                    <section class="german-map-section">
+                        <h2>Concert Locations in Germany</h2>
+                        <div id="german-map-container" class="german-map-container">
+                            <!-- German map will be populated here -->
+                        </div>
+                    </section>
+                    
+                    <div class="subpage-content">
+                        <!-- Top Venues Section -->
+                        <section class="chart-section">
+                            <h2>Top 3 Venues by Events</h2>
+                            <div class="chart-container">
+                                <canvas id="top-venues-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Top Cities Section -->
+                        <section class="chart-section">
+                            <h2>Top 3 Cities by Events</h2>
+                            <div class="chart-container">
+                                <canvas id="top-cities-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Average Venue Size per Year Section -->
+                        <section class="chart-section">
+                            <h2>Average Venue Size per Year</h2>
+                            <div class="chart-container">
+                                <canvas id="venue-size-chart"></canvas>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost View -->
+            <div id="cost-view" class="view">
+                <div class="subpage-container">
+                    <header class="subpage-header">
+                        <h1>Cost</h1>
+                        <p class="subpage-description">Track your concert spending and budget insights</p>
+                    </header>
+                    
+                    <div class="subpage-content">
+                        <section class="placeholder-section">
+                            <h2>Spending Analysis</h2>
+                            <div class="placeholder-content">
+                                <p>Spending trends and budget analysis will be displayed here</p>
+                            </div>
+                        </section>
+                        
+                        <section class="placeholder-section">
+                            <h2>Cost Breakdown</h2>
+                            <div class="placeholder-content">
+                                <p>Detailed cost breakdowns and comparisons will be displayed here</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data/concerts.js"></script>
+    <script src="js/data/artists.js"></script>
+    <script src="js/data/venues.js"></script>
+    <script src="js/data/worldMapData.js"></script>
+    <script src="js/data/germanMapData.js"></script>
+    <script src="js/utils/dataManager.js"></script>
+    <script src="js/components/charts.js"></script>
+    <script src="js/components/statistics.js"></script>
+    <script src="js/components/worldMap.js"></script>
+    <script src="js/components/germanMap.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

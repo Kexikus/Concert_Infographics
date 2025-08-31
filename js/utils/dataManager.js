@@ -1,0 +1,740 @@
+// Data Manager - Centralized data management and utility functions
+class DataManager {
+    constructor() {
+        this.concerts = concertsData || [];
+        this.artists = artistsData || [];
+        this.venues = venuesData || [];
+    }
+
+    // Get all concerts
+    getConcerts() {
+        return this.concerts;
+    }
+
+    // Get all artists
+    getArtists() {
+        return this.artists;
+    }
+
+    // Get all venues
+    getVenues() {
+        return this.venues;
+    }
+
+    // Get artist by ID
+    getArtistById(id) {
+        return this.artists.find(artist => artist.id === id);
+    }
+
+    // Get venue by ID
+    getVenueById(id) {
+        return this.venues.find(venue => venue.id === id);
+    }
+
+    // Get concert by ID
+    getConcertById(id) {
+        return this.concerts.find(concert => concert.id === id);
+    }
+
+    // Get concerts by type
+    getConcertsByType(type) {
+        return this.concerts.filter(concert => concert.type === type);
+    }
+
+    // Get concerts by year
+    getConcertsByYear(year) {
+        return this.concerts.filter(concert => {
+            const concertYear = new Date(concert.date).getFullYear();
+            return concertYear === year;
+        });
+    }
+
+    // Get concerts by artist ID
+    getConcertsByArtist(artistId) {
+        return this.concerts.filter(concert => 
+            concert.artistIds.includes(artistId)
+        );
+    }
+
+    // Get enriched concert data (with artist and venue details)
+    getEnrichedConcerts() {
+        return this.concerts.map(concert => ({
+            ...concert,
+            artists: concert.artistIds.map(id => this.getArtistById(id)).filter(Boolean),
+            venue: this.getVenueById(concert.venueId)
+        }));
+    }
+
+    // Get concert statistics
+    getStatistics() {
+        const totalEvents = this.concerts.length;
+        const totalArtists = this.artists.length;
+        const totalVenues = this.venues.length;
+        const totalCost = this.concerts.reduce((sum, concert) => sum + concert.price, 0);
+        
+        // Get concerts and festivals counts
+        const concertTypeStats = this.getConcertTypeStats();
+        const totalConcerts = concertTypeStats.concert || 0;
+        const totalFestivals = concertTypeStats.festival || 0;
+        
+        // Calculate years span
+        const years = this.getAvailableYears();
+        const yearSpan = years.length > 0 ? years.length : 1;
+        
+        // Calculate total shows (sum of artists per event)
+        const totalShows = this.concerts.reduce((sum, concert) => sum + concert.artistIds.length, 0);
+        
+        // Calculate unique artists seen
+        const uniqueArtistIds = new Set();
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => uniqueArtistIds.add(artistId));
+        });
+        const totalUniqueBands = uniqueArtistIds.size;
+        
+        // Calculate repeat bands percentage
+        const artistFrequency = this.getArtistFrequencyStats();
+        const repeatBands = Object.values(artistFrequency).filter(count => count > 1).length;
+        const repeatBandsPercentage = totalUniqueBands > 0 ? (repeatBands / totalUniqueBands * 100).toFixed(1) : 0;
+        
+        // Calculate new bands per year
+        const newBandsPerYear = totalUniqueBands / yearSpan;
+
+        return {
+            // Main statistics
+            totalEvents,
+            totalUniqueBands,
+            totalShows,
+            totalCost: Math.round(totalCost),
+            
+            // Sub-statistics
+            totalConcerts,
+            totalFestivals,
+            avgEventsPerYear: (totalEvents / yearSpan).toFixed(1),
+            
+            repeatBandsPercentage: repeatBandsPercentage + '%',
+            avgBandsPerYear: (totalUniqueBands / yearSpan).toFixed(1),
+            avgNewBandsPerYear: newBandsPerYear.toFixed(1),
+            
+            avgShowsPerYear: (totalShows / yearSpan).toFixed(1),
+            avgShowsPerBand: totalUniqueBands > 0 ? (totalShows / totalUniqueBands).toFixed(1) : 0,
+            avgShowsPerEvent: totalEvents > 0 ? (totalShows / totalEvents).toFixed(1) : 0,
+            
+            avgCostPerYear: Math.round(totalCost / yearSpan),
+            avgCostPerEvent: totalEvents > 0 ? Math.round(totalCost / totalEvents) : 0,
+            avgCostPerShow: totalShows > 0 ? Math.round(totalCost / totalShows) : 0
+        };
+    }
+
+    // Get concerts by type statistics
+    getConcertTypeStats() {
+        const stats = {};
+        this.concerts.forEach(concert => {
+            stats[concert.type] = (stats[concert.type] || 0) + 1;
+        });
+        return stats;
+    }
+
+    // Get concerts per year statistics
+    getConcertsPerYearStats() {
+        const stats = {};
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            stats[year] = (stats[year] || 0) + 1;
+        });
+        return stats;
+    }
+
+    // Get events per year broken down by type (concerts and festivals)
+    getEventsPerYearByType() {
+        const stats = {};
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            if (!stats[year]) {
+                stats[year] = { concert: 0, festival: 0 };
+            }
+            stats[year][concert.type] = (stats[year][concert.type] || 0) + 1;
+        });
+        return stats;
+    }
+
+    // Get shows per year (total number of artist performances)
+    getShowsPerYearStats() {
+        const stats = {};
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            const showCount = concert.artistIds.length;
+            stats[year] = (stats[year] || 0) + showCount;
+        });
+        return stats;
+    }
+
+    // Get bands per year statistics (total bands seen each year)
+    getBandsPerYearStats() {
+        const stats = {};
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            if (!stats[year]) {
+                stats[year] = new Set();
+            }
+            // Add all artist IDs from this concert to the year's set
+            concert.artistIds.forEach(artistId => {
+                stats[year].add(artistId);
+            });
+        });
+        
+        // Convert sets to counts
+        const result = {};
+        Object.keys(stats).forEach(year => {
+            result[year] = stats[year].size;
+        });
+        
+        return result;
+    }
+
+    // Get first-time bands per year statistics (bands seen for the first time each year)
+    getFirstTimeBandsPerYearStats() {
+        const stats = {};
+        const seenArtists = new Set();
+        
+        // Sort concerts by date to process chronologically
+        const sortedConcerts = [...this.concerts].sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        sortedConcerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            if (!stats[year]) {
+                stats[year] = 0;
+            }
+            
+            // Check each artist in this concert
+            concert.artistIds.forEach(artistId => {
+                if (!seenArtists.has(artistId)) {
+                    // This is the first time seeing this artist
+                    seenArtists.add(artistId);
+                    stats[year]++;
+                }
+            });
+        });
+        
+        return stats;
+    }
+
+    // Get artist frequency statistics
+    getArtistFrequencyStats() {
+        const stats = {};
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => {
+                const artist = this.getArtistById(artistId);
+                if (artist) {
+                    stats[artist.name] = (stats[artist.name] || 0) + 1;
+                }
+            });
+        });
+        return stats;
+    }
+
+    // Get top artists by frequency
+    getTopArtists(limit = 10) {
+        const frequencyStats = this.getArtistFrequencyStats();
+        return Object.entries(frequencyStats)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, limit)
+            .map(([name, count]) => ({ name, count }));
+    }
+
+    // Get artists seen at least a minimum number of times
+    getFrequentArtists(minCount = 2) {
+        const frequencyStats = this.getArtistFrequencyStats();
+        
+        // Get first appearance info for each artist
+        const artistFirstAppearance = {};
+        
+        // Sort concerts by date to find first appearances
+        const sortedConcerts = [...this.concerts].sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        sortedConcerts.forEach(concert => {
+            concert.artistIds.forEach((artistId, index) => {
+                const artist = this.getArtistById(artistId);
+                if (artist && !artistFirstAppearance[artist.name]) {
+                    artistFirstAppearance[artist.name] = {
+                        date: new Date(concert.date),
+                        orderInEvent: index
+                    };
+                }
+            });
+        });
+        
+        return Object.entries(frequencyStats)
+            .filter(([name, count]) => count >= minCount)
+            .sort(([nameA, countA], [nameB, countB]) => {
+                // First sort by count (descending)
+                if (countA !== countB) {
+                    return countB - countA;
+                }
+                
+                // If counts are equal, sort by first appearance date (ascending)
+                const firstA = artistFirstAppearance[nameA];
+                const firstB = artistFirstAppearance[nameB];
+                
+                if (firstA && firstB) {
+                    const dateComparison = firstA.date - firstB.date;
+                    if (dateComparison !== 0) {
+                        return dateComparison;
+                    }
+                    
+                    // If same date, sort by order in event (ascending)
+                    return firstA.orderInEvent - firstB.orderInEvent;
+                }
+                
+                return 0;
+            })
+            .map(([name, count]) => {
+                // Find the artist object to get additional info like ID and logo
+                const artist = this.artists.find(a => a.name === name);
+                return {
+                    name,
+                    count,
+                    id: artist ? artist.id : null,
+                    logo: artist ? this.getArtistLogo(artist.id) : null
+                };
+            });
+    }
+
+    // Get artist logo with automatic path prepending
+    getArtistLogo(artistId, concertDate = null) {
+        const artist = this.getArtistById(artistId);
+        if (!artist) return null;
+
+        let logoPath = '';
+
+        if (typeof artist.logo === 'string') {
+            // Simple string logo
+            logoPath = artist.logo;
+        } else if (Array.isArray(artist.logo)) {
+            // Array of logos with date ranges
+            if (concertDate) {
+                const date = new Date(concertDate);
+                const applicableLogo = artist.logo.find(logoObj => {
+                    const startDate = new Date(logoObj.startDate);
+                    const endDate = logoObj.endDate ? new Date(logoObj.endDate) : null;
+                    return date >= startDate && (!endDate || date <= endDate);
+                });
+                logoPath = applicableLogo ? applicableLogo.logo : artist.logo[0].logo;
+            } else {
+                // Return the most recent logo (last in array or one without endDate)
+                const currentLogo = artist.logo.find(logoObj => !logoObj.endDate);
+                logoPath = currentLogo ? currentLogo.logo : artist.logo[artist.logo.length - 1].logo;
+            }
+        }
+
+        // Automatically prepend assets/images/ path
+        return logoPath ? `assets/images/${logoPath}` : null;
+    }
+
+    // Get venue coordinates for mapping
+    getVenueCoordinates() {
+        return this.venues.map(venue => ({
+            id: venue.id,
+            name: venue.name,
+            city: venue.city,
+            country: venue.country,
+            latitude: venue.latitude,
+            longitude: venue.longitude,
+            concertCount: this.concerts.filter(concert => concert.venueId === venue.id).length
+        }));
+    }
+
+    // Search functionality
+    searchConcerts(query) {
+        const lowerQuery = query.toLowerCase();
+        return this.getEnrichedConcerts().filter(concert => 
+            concert.name.toLowerCase().includes(lowerQuery) ||
+            concert.artists.some(artist => artist.name.toLowerCase().includes(lowerQuery)) ||
+            concert.venue.name.toLowerCase().includes(lowerQuery) ||
+            concert.venue.city.toLowerCase().includes(lowerQuery)
+        );
+    }
+
+    // Filter concerts by date range
+    getConcertsByDateRange(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return this.concerts.filter(concert => {
+            const concertDate = new Date(concert.date);
+            return concertDate >= start && concertDate <= end;
+        });
+    }
+
+    // Get unique years from concerts
+    getAvailableYears() {
+        const years = [...new Set(this.concerts.map(concert => 
+            new Date(concert.date).getFullYear()
+        ))];
+        return years.sort((a, b) => a - b);
+    }
+
+    // Get unique countries from venues
+    getAvailableCountries() {
+        const countries = [...new Set(this.venues.map(venue => venue.country))];
+        return countries.sort();
+    }
+
+    // Get other artists (not in frequent artists list)
+    getOtherArtists() {
+        // Get all unique artists
+        const allArtists = new Set();
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => {
+                const artist = this.getArtistById(artistId);
+                if (artist) {
+                    allArtists.add(artist.name);
+                }
+            });
+        });
+
+        // Get frequent artists (seen at least twice)
+        const frequentArtists = new Set(
+            this.getFrequentArtists(2).map(item => item.name)
+        );
+
+        // Filter out frequent artists and sort alphabetically
+        return Array.from(allArtists)
+            .filter(artistName => !frequentArtists.has(artistName))
+            .sort((a, b) => a.localeCompare(b))
+            .map(artistName => {
+                // Find the artist object to get additional info like ID and logo
+                const artist = this.artists.find(a => a.name === artistName);
+                return {
+                    name: artistName,
+                    id: artist ? artist.id : null,
+                    logo: artist ? this.getArtistLogo(artist.id) : null
+                };
+            });
+    }
+
+    // Get country band statistics for world map based on artist origins
+    getCountryBandStats() {
+        const countryStats = {};
+        
+        // Country name mapping from artist data to world map names
+        const countryNameMap = {
+            'USA': 'United States',
+            'UK': 'United Kingdom',
+            'Australia': 'Australia',
+            'Germany': 'Germany',
+            'France': 'France',
+            'Norway': 'Norway',
+            'Canada': 'Canada',
+            'Brazil': 'Brazil',
+            'Japan': 'Japan',
+            'Italy': 'Italy',
+            'Spain': 'Spain',
+            'Netherlands': 'Netherlands',
+            'Belgium': 'Belgium',
+            'Sweden': 'Sweden',
+            'Denmark': 'Denmark',
+            'Finland': 'Finland',
+            'Austria': 'Austria',
+            'Switzerland': 'Switzerland',
+            'Portugal': 'Portugal',
+            'Ireland': 'Ireland',
+            'Poland': 'Poland',
+            'Czech Republic': 'Czech Republic',
+            'Hungary': 'Hungary',
+            'Greece': 'Greece',
+            'Turkey': 'Turkey',
+            'Russia': 'Russian Federation',
+            'China': 'China',
+            'India': 'India',
+            'South Korea': 'Republic of Korea',
+            'Mexico': 'Mexico',
+            'Argentina': 'Argentina',
+            'Chile': 'Chile',
+            'Colombia': 'Colombia',
+            'Peru': 'Peru',
+            'Venezuela': 'Venezuela',
+            'South Africa': 'South Africa',
+            'Egypt': 'Egypt',
+            'Morocco': 'Morocco',
+            'Nigeria': 'Nigeria',
+            'Kenya': 'Kenya',
+            'New Zealand': 'New Zealand',
+            'Thailand': 'Thailand',
+            'Malaysia': 'Malaysia',
+            'Singapore': 'Singapore',
+            'Indonesia': 'Indonesia',
+            'Philippines': 'Philippines',
+            'Vietnam': 'Vietnam'
+        };
+        
+        // Get all artists that have been seen in concerts
+        const seenArtistIds = new Set();
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => {
+                seenArtistIds.add(artistId);
+            });
+        });
+        
+        // Count bands by their origin country (only those that have been seen)
+        this.artists.forEach(artist => {
+            if (seenArtistIds.has(artist.id)) {
+                const artistCountry = artist.country;
+                const mappedCountry = countryNameMap[artistCountry] || artistCountry;
+                
+                if (!countryStats[mappedCountry]) {
+                    countryStats[mappedCountry] = 0;
+                }
+                countryStats[mappedCountry]++;
+            }
+        });
+        
+        return countryStats;
+    }
+
+    // Get artists by country (based on artist origin)
+    getArtistsByCountry(countryName) {
+        // Reverse country name mapping for lookup
+        const reverseCountryNameMap = {
+            'United States': 'USA',
+            'United Kingdom': 'UK',
+            'Australia': 'Australia',
+            'Germany': 'Germany',
+            'France': 'France',
+            'Norway': 'Norway',
+            'Canada': 'Canada',
+            'Brazil': 'Brazil',
+            'Japan': 'Japan',
+            'Italy': 'Italy',
+            'Spain': 'Spain',
+            'Netherlands': 'Netherlands',
+            'Belgium': 'Belgium',
+            'Sweden': 'Sweden',
+            'Denmark': 'Denmark',
+            'Finland': 'Finland',
+            'Austria': 'Austria',
+            'Switzerland': 'Switzerland',
+            'Portugal': 'Portugal',
+            'Ireland': 'Ireland',
+            'Poland': 'Poland',
+            'Czech Republic': 'Czech Republic',
+            'Hungary': 'Hungary',
+            'Greece': 'Greece',
+            'Turkey': 'Turkey',
+            'Russian Federation': 'Russia',
+            'China': 'China',
+            'India': 'India',
+            'Republic of Korea': 'South Korea',
+            'Mexico': 'Mexico',
+            'Argentina': 'Argentina',
+            'Chile': 'Chile',
+            'Colombia': 'Colombia',
+            'Peru': 'Peru',
+            'Venezuela': 'Venezuela',
+            'South Africa': 'South Africa',
+            'Egypt': 'Egypt',
+            'Morocco': 'Morocco',
+            'Nigeria': 'Nigeria',
+            'Kenya': 'Kenya',
+            'New Zealand': 'New Zealand',
+            'Thailand': 'Thailand',
+            'Malaysia': 'Malaysia',
+            'Singapore': 'Singapore',
+            'Indonesia': 'Indonesia',
+            'Philippines': 'Philippines',
+            'Vietnam': 'Vietnam'
+        };
+        
+        const artistCountryName = reverseCountryNameMap[countryName] || countryName;
+        
+        // Get all artists that have been seen in concerts
+        const seenArtistIds = new Set();
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => {
+                seenArtistIds.add(artistId);
+            });
+        });
+        
+        // Filter artists by their origin country (only those that have been seen)
+        return this.artists.filter(artist =>
+            artist.country === artistCountryName && seenArtistIds.has(artist.id)
+        );
+    }
+
+    // Get concerts by country
+    getConcertsByCountry(countryName) {
+        const venues = this.getVenues().filter(venue => venue.country === countryName);
+        const venueIds = venues.map(venue => venue.id);
+        
+        return this.concerts.filter(concert => venueIds.includes(concert.venueId));
+    }
+
+    // Get country statistics (venues, concerts, artists)
+    getCountryStatistics(countryName) {
+        const venues = this.getVenues().filter(venue => venue.country === countryName);
+        const concerts = this.getConcertsByCountry(countryName);
+        const artists = this.getArtistsByCountry(countryName);
+        
+        return {
+            country: countryName,
+            venueCount: venues.length,
+            concertCount: concerts.length,
+            artistCount: artists.length,
+            venues: venues,
+            concerts: concerts,
+            artists: artists
+        };
+    }
+
+    // Get all countries with statistics
+    getAllCountryStatistics() {
+        const countries = this.getAvailableCountries();
+        return countries.map(country => this.getCountryStatistics(country));
+    }
+
+    // Get bands statistics for the bands view
+    getBandsStatistics() {
+        const stats = this.getStatistics();
+        const years = this.getAvailableYears();
+        const yearSpan = years.length > 0 ? years.length : 1;
+        
+        // Calculate unique artists seen
+        const uniqueArtistIds = new Set();
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => uniqueArtistIds.add(artistId));
+        });
+        const totalUniqueBands = uniqueArtistIds.size;
+        
+        // Calculate average bands per year with period as decimal point
+        const avgBandsPerYear = (totalUniqueBands / yearSpan).toFixed(1).replace('.', '.');
+        
+        // Calculate percentage of bands seen at least twice (rounded to integer)
+        const artistFrequency = this.getArtistFrequencyStats();
+        const bandsSeenAtLeastTwice = Object.values(artistFrequency).filter(count => count >= 2).length;
+        const percentageAtLeastTwice = totalUniqueBands > 0 ?
+            Math.round((bandsSeenAtLeastTwice / totalUniqueBands) * 100) : 0;
+        
+        // Calculate shows per band (average number of shows per unique band)
+        const totalShows = this.concerts.reduce((sum, concert) => sum + concert.artistIds.length, 0);
+        const showsPerBand = totalUniqueBands > 0 ? (totalShows / totalUniqueBands).toFixed(1) : '0.0';
+        
+        // Calculate unique countries (countries of origin for seen bands)
+        const seenArtistIds = new Set();
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => seenArtistIds.add(artistId));
+        });
+        
+        const countries = new Set();
+        this.artists.forEach(artist => {
+            if (seenArtistIds.has(artist.id)) {
+                countries.add(artist.country);
+            }
+        });
+        const uniqueCountries = countries.size;
+        
+        return {
+            avgBandsPerYear: avgBandsPerYear,
+            totalBands: totalUniqueBands,
+            percentageAtLeastTwice: percentageAtLeastTwice + '%',
+            showsPerBand: showsPerBand,
+            uniqueCountries: uniqueCountries
+        };
+    }
+
+    // Get location statistics for the locations view
+    getLocationStatistics() {
+        // Calculate unique venues
+        const uniqueVenueIds = new Set();
+        this.concerts.forEach(concert => {
+            uniqueVenueIds.add(concert.venueId);
+        });
+        const totalVenues = uniqueVenueIds.size;
+        
+        // Calculate unique cities
+        const uniqueCities = new Set();
+        this.concerts.forEach(concert => {
+            const venue = this.getVenueById(concert.venueId);
+            if (venue) {
+                uniqueCities.add(venue.city);
+            }
+        });
+        const totalCities = uniqueCities.size;
+        
+        // Calculate venue frequency (events per venue)
+        const venueFrequency = {};
+        this.concerts.forEach(concert => {
+            const venue = this.getVenueById(concert.venueId);
+            if (venue) {
+                venueFrequency[venue.name] = (venueFrequency[venue.name] || 0) + 1;
+            }
+        });
+        
+        // Get top 3 venues by event count
+        const topVenues = Object.entries(venueFrequency)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 3)
+            .map(([name, count]) => ({ name, count }));
+        
+        // Calculate city frequency (events per city)
+        const cityFrequency = {};
+        this.concerts.forEach(concert => {
+            const venue = this.getVenueById(concert.venueId);
+            if (venue) {
+                cityFrequency[venue.city] = (cityFrequency[venue.city] || 0) + 1;
+            }
+        });
+        
+        // Get top 3 cities by event count
+        const topCities = Object.entries(cityFrequency)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 3)
+            .map(([name, count]) => ({ name, count }));
+        
+        return {
+            totalVenues: totalVenues,
+            totalCities: totalCities,
+            topVenues: topVenues,
+            topCities: topCities
+        };
+    }
+
+    // Get average venue size per year statistics
+    getAverageVenueSizePerYear() {
+        const yearStats = {};
+        
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            const venue = this.getVenueById(concert.venueId);
+            
+            if (venue && venue.capacity) {
+                if (!yearStats[year]) {
+                    yearStats[year] = {
+                        overall: [],
+                        concert: [],
+                        festival: []
+                    };
+                }
+                
+                // Add venue capacity to overall and type-specific arrays
+                yearStats[year].overall.push(venue.capacity);
+                yearStats[year][concert.type].push(venue.capacity);
+            }
+        });
+        
+        // Calculate averages for each year
+        const result = {};
+        Object.keys(yearStats).forEach(year => {
+            result[year] = {
+                overall: yearStats[year].overall.length > 0 ?
+                    Math.round(yearStats[year].overall.reduce((sum, cap) => sum + cap, 0) / yearStats[year].overall.length) : 0,
+                concert: yearStats[year].concert.length > 0 ?
+                    Math.round(yearStats[year].concert.reduce((sum, cap) => sum + cap, 0) / yearStats[year].concert.length) : 0,
+                festival: yearStats[year].festival.length > 0 ?
+                    Math.round(yearStats[year].festival.reduce((sum, cap) => sum + cap, 0) / yearStats[year].festival.length) : 0
+            };
+        });
+        
+        return result;
+    }
+}
+
+// Create global instance
+const dataManager = new DataManager();

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concert Data Admin</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <header>
+        <h1>Concert Data Admin</h1>
+        <nav>
+            <button onclick="showSection('artists')" class="nav-btn">Artists</button>
+            <button onclick="showSection('venues')" class="nav-btn">Venues</button>
+            <button onclick="showSection('concerts')" class="nav-btn">Concerts</button>
+            <button onclick="showSection('export')" class="nav-btn">Export Data</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Artists Management Section -->
+        <section id="artists-section" class="admin-section">
+            <h2>Artists Management</h2>
+            
+            <div class="form-container">
+                <h3>Add New Artist</h3>
+                <form id="artist-form">
+                    <div class="form-group">
+                        <label for="artist-id">ID:</label>
+                        <input type="text" id="artist-id" name="id" required placeholder="e.g., artist-name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="artist-name">Name:</label>
+                        <input type="text" id="artist-name" name="name" required placeholder="Artist Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="artist-country">Country:</label>
+                        <input type="text" id="artist-country" name="country" required placeholder="Country">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="artist-logo">Logo (optional):</label>
+                        <input type="text" id="artist-logo" name="logo" placeholder="logo-filename.png">
+                    </div>
+                    
+                    <button type="submit">Add Artist</button>
+                    <button type="button" onclick="clearForm('artist-form')">Clear</button>
+                </form>
+            </div>
+
+            <div class="data-container">
+                <div class="section-header">
+                    <h3>Existing Artists</h3>
+                    <button onclick="saveArtistsData()" class="save-btn">💾 Save Artists Data</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="artist-search" placeholder="Search artists..." onkeyup="filterData('artists')">
+                </div>
+                <div id="artists-list" class="data-list"></div>
+            </div>
+        </section>
+
+        <!-- Venues Management Section -->
+        <section id="venues-section" class="admin-section" style="display: none;">
+            <h2>Venues Management</h2>
+            
+            <div class="form-container">
+                <h3>Add New Venue</h3>
+                <form id="venue-form">
+                    <div class="form-group">
+                        <label for="venue-id">ID:</label>
+                        <input type="text" id="venue-id" name="id" required placeholder="e.g., venue-name-city">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venue-name">Name:</label>
+                        <input type="text" id="venue-name" name="name" required placeholder="Venue Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venue-city">City:</label>
+                        <input type="text" id="venue-city" name="city" required placeholder="City">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venue-country">Country:</label>
+                        <input type="text" id="venue-country" name="country" required placeholder="Country">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venue-latitude">Latitude:</label>
+                        <input type="number" id="venue-latitude" name="latitude" step="any" required placeholder="e.g., 50.1109">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venue-longitude">Longitude:</label>
+                        <input type="number" id="venue-longitude" name="longitude" step="any" required placeholder="e.g., 8.6821">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venue-capacity">Capacity (optional):</label>
+                        <input type="number" id="venue-capacity" name="capacity" placeholder="e.g., 5000">
+                    </div>
+                    
+                    <button type="submit">Add Venue</button>
+                    <button type="button" onclick="clearForm('venue-form')">Clear</button>
+                </form>
+            </div>
+
+            <div class="data-container">
+                <div class="section-header">
+                    <h3>Existing Venues</h3>
+                    <button onclick="saveVenuesData()" class="save-btn">💾 Save Venues Data</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="venue-search" placeholder="Search venues..." onkeyup="filterData('venues')">
+                </div>
+                <div id="venues-list" class="data-list"></div>
+            </div>
+        </section>
+
+        <!-- Concerts Management Section -->
+        <section id="concerts-section" class="admin-section" style="display: none;">
+            <h2>Concerts Management</h2>
+            
+            <div class="form-container">
+                <h3>Add New Concert</h3>
+                <form id="concert-form">
+                    <div class="form-group">
+                        <label for="concert-id">ID:</label>
+                        <input type="text" id="concert-id" name="id" required placeholder="e.g., concert-name-year">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-name">Name:</label>
+                        <input type="text" id="concert-name" name="name" required placeholder="Concert Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-date">Date:</label>
+                        <input type="date" id="concert-date" name="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-end-date">End Date (optional):</label>
+                        <input type="date" id="concert-end-date" name="endDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-type">Type:</label>
+                        <select id="concert-type" name="type" required>
+                            <option value="">Select Type</option>
+                            <option value="concert">Concert</option>
+                            <option value="festival">Festival</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-artists">Artists:</label>
+                        <select id="concert-artists" name="artistIds" multiple size="5">
+                            <!-- Will be populated by JavaScript -->
+                        </select>
+                        <small>Hold Ctrl/Cmd to select multiple artists</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-venue">Venue:</label>
+                        <select id="concert-venue" name="venueId" required>
+                            <option value="">Select Venue</option>
+                            <!-- Will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-price">Price (optional):</label>
+                        <input type="number" id="concert-price" name="price" step="0.01" placeholder="e.g., 25.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="concert-notes">Notes (optional):</label>
+                        <textarea id="concert-notes" name="notes" rows="3" placeholder="Additional notes about the concert"></textarea>
+                    </div>
+                    
+                    <button type="submit">Add Concert</button>
+                    <button type="button" onclick="clearForm('concert-form')">Clear</button>
+                </form>
+            </div>
+
+            <div class="data-container">
+                <div class="section-header">
+                    <h3>Existing Concerts</h3>
+                    <button onclick="saveConcertsData()" class="save-btn">💾 Save Concerts Data</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="concert-search" placeholder="Search concerts..." onkeyup="filterData('concerts')">
+                    <select id="concert-filter-type" onchange="filterData('concerts')">
+                        <option value="">All Types</option>
+                        <option value="concert">Concerts</option>
+                        <option value="festival">Festivals</option>
+                    </select>
+                </div>
+                <div id="concerts-list" class="data-list"></div>
+            </div>
+        </section>
+
+        <!-- Export Data Section -->
+        <section id="export-section" class="admin-section" style="display: none;">
+            <h2>Export Data</h2>
+            
+            <div class="export-container">
+                <h3>Download Data</h3>
+                <p>Export your concert data in various formats for backup or external use.</p>
+                
+                <div class="export-options">
+                    <div class="export-group">
+                        <h4>Artists Data</h4>
+                        <button onclick="exportData('artists', 'json')" class="export-btn">Download Artists JSON</button>
+                        <button onclick="exportData('artists', 'csv')" class="export-btn">Download Artists CSV</button>
+                    </div>
+                    
+                    <div class="export-group">
+                        <h4>Venues Data</h4>
+                        <button onclick="exportData('venues', 'json')" class="export-btn">Download Venues JSON</button>
+                        <button onclick="exportData('venues', 'csv')" class="export-btn">Download Venues CSV</button>
+                    </div>
+                    
+                    <div class="export-group">
+                        <h4>Concerts Data</h4>
+                        <button onclick="exportData('concerts', 'json')" class="export-btn">Download Concerts JSON</button>
+                        <button onclick="exportData('concerts', 'csv')" class="export-btn">Download Concerts CSV</button>
+                    </div>
+                    
+                    <div class="export-group">
+                        <h4>Complete Database</h4>
+                        <button onclick="exportData('all', 'json')" class="export-btn primary">Download All Data JSON</button>
+                        <button onclick="exportData('all', 'zip')" class="export-btn primary">Download All Data ZIP</button>
+                    </div>
+                </div>
+
+                <div class="import-container">
+                    <h3>Import Data</h3>
+                    <p>Import data from JSON files to update your database.</p>
+                    
+                    <div class="import-group">
+                        <label for="import-file">Select JSON file:</label>
+                        <input type="file" id="import-file" accept=".json" onchange="handleFileImport(event)">
+                        <button onclick="importData()" class="import-btn">Import Data</button>
+                    </div>
+                </div>
+
+                <div class="stats-container">
+                    <h3>Database Statistics</h3>
+                    <div id="database-stats" class="stats-grid">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for editing entries -->
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modal-title">Edit Entry</h3>
+            <div id="modal-form-container">
+                <!-- Form will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Confirm Action</h3>
+            <p id="confirm-message">Are you sure you want to perform this action?</p>
+            <div class="modal-buttons">
+                <button id="confirm-yes" class="btn-danger">Yes</button>
+                <button id="confirm-no" onclick="closeConfirmModal()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load data files -->
+    <script src="js/data/artists.js"></script>
+    <script src="js/data/venues.js"></script>
+    <script src="js/data/concerts.js"></script>
+    
+    <!-- Load admin functionality -->
+    <script src="js/admin.js"></script>
+</body>
+</html>

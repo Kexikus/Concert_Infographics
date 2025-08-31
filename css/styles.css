@@ -1,0 +1,1499 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Color Palette */
+:root {
+    --white: #ffffff;
+    --black: #000000;
+    --dark-grey: #2a2a2a;
+    --light-grey: #cccccc;
+    --red: #dc3545;
+    --dark-red: #a71e2a;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--dark-grey);
+    color: var(--white);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+#app {
+    overflow: hidden;
+}
+
+/* Main Content */
+#main-content {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    grid-template-areas:
+        "stats"
+        "years"
+        "frequency";
+}
+
+/* Common Section Styles */
+.stats-overview,
+.chart-section {
+    padding: 2rem 0;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.stats-overview {
+    grid-area: stats;
+}
+
+/* Dashboard specific grid areas */
+.dashboard-grid .chart-section:nth-child(2) {
+    grid-area: years;
+}
+
+.dashboard-grid .chart-section:nth-child(3) {
+    grid-area: frequency;
+}
+
+/* Subpage chart sections - reset grid areas */
+.subpage-content .chart-section {
+    grid-area: unset;
+}
+
+/* Common Header Styles */
+.stats-overview h2 {
+    margin-bottom: 2rem;
+    color: var(--white);
+    font-weight: 300;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.chart-section h2 {
+    margin-bottom: 2rem;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: left;
+}
+
+/* Statistics Overview */
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.stat-row {
+    display: flex;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transform: skewX(-15deg);
+}
+
+/* Odd rows: extend from right edge */
+.stat-row:nth-child(odd) {
+    margin-right: -100vw;
+    padding-right: 4rem;
+    padding-left: 4rem;
+    background-color: var(--red);
+}
+
+/* Even rows: extend from left edge */
+.stat-row:nth-child(even) {
+    flex-direction: row-reverse;
+    text-align: right;
+    margin-left: -100vw;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    background-color: var(--dark-red);
+}
+
+.main-stat {
+    flex: 0 0 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.stat-row:nth-child(even) .main-stat {
+    text-align: right;
+}
+
+.stat-number {
+    font-size: 9rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 1rem;
+    color: var(--white);
+}
+
+.stat-label {
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Text colors for odd rows (light red background) */
+.stat-row:nth-child(odd) .stat-label,
+.stat-row:nth-child(odd) .sub-stat-label {
+    color: var(--dark-red);
+}
+
+.stat-row:nth-child(odd) .sub-stat-value {
+    color: var(--white);
+}
+
+/* Text colors for even rows (dark red background) */
+.stat-row:nth-child(even) .stat-label,
+.stat-row:nth-child(even) .sub-stat-label {
+    color: var(--red);
+}
+
+.stat-row:nth-child(even) .sub-stat-value {
+    color: var(--white);
+}
+
+.sub-stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.sub-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 2.1rem;
+    line-height: 1.4;
+}
+
+.stat-row:nth-child(even) .sub-stat {
+    justify-content: flex-end;
+}
+
+.sub-stat-value {
+    font-weight: bold;
+}
+
+.sub-stat-label {
+    font-weight: 400;
+}
+
+/* Chart Sections */
+.chart-section {
+    background: transparent;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    min-height: 200px; /* Minimum height for safety */
+}
+
+.chart-container canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Other Artists Grid */
+.other-artists-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+}
+
+.artist-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.artist-item:hover {
+    transform: scale(1.05);
+}
+
+.artist-logo {
+    max-width: 150px;
+    max-height: 50px;
+    object-fit: contain;
+    filter: brightness(0.9);
+    transition: filter 0.2s ease;
+}
+
+.artist-item:hover .artist-logo {
+    filter: brightness(1);
+}
+
+.artist-name {
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
+    word-break: break-word;
+    text-align: center;
+}
+
+/* Loading and Error States */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: var(--light-grey);
+    font-style: italic;
+}
+
+.error {
+    background-color: var(--dark-red);
+    color: var(--white);
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+    border-left: 4px solid var(--red);
+}
+
+.error-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--dark-red);
+    color: var(--white);
+    padding: 1rem;
+    border-radius: 5px;
+    border-left: 4px solid var(--red);
+    z-index: 1000;
+    max-width: 400px;
+}
+
+.error-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.error-close {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 1rem;
+}
+
+.error-close:hover {
+    color: var(--light-grey);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .stat-number {
+        font-size: 7rem;
+    }
+    
+    .stat-label {
+        font-size: 1.5rem;
+    }
+    
+    .sub-stat {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .stat-number {
+        font-size: 6rem;
+    }
+    
+    .stat-label {
+        font-size: 1.3rem;
+    }
+    
+    .sub-stat {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .chart-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .other-artists-grid {
+        gap: 1.5rem;
+    }
+    
+    .artist-logo {
+        max-width: 70px;
+        max-height: 55px;
+    }
+    
+    .artist-name {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .stat-number {
+        font-size: 5.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1.2rem;
+    }
+    
+    .sub-stat {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 550px) {
+    #main-content {
+        padding: 1rem;
+    }
+    
+    .stats-overview h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stats-list {
+        gap: 1rem;
+    }
+    
+    .stat-row {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem 1rem;
+        transform: skewX(-10deg);
+    }
+    
+    .stat-row:nth-child(odd) {
+        margin-right: -100vw;
+        padding-right: 100vw;
+        padding-left: 4rem;
+    }
+    
+    .stat-row:nth-child(even) {
+        flex-direction: column;
+        margin-left: -100vw;
+        padding-left: 100vw;
+        padding-right: 4rem;
+    }
+    
+    .main-stat,
+    .stat-row:nth-child(even) .main-stat {
+        flex: none;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 5rem;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+    }
+    
+    .sub-stats {
+        gap: 1rem;
+    }
+    
+    .sub-stat,
+    .stat-row:nth-child(even) .sub-stat {
+        font-size: 1.2rem;
+        justify-content: center;
+    }
+    
+    .chart-section {
+        padding: 1.5rem 0;
+    }
+    
+    .chart-container {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .other-artists-grid {
+        gap: 1rem;
+    }
+    
+    .artist-logo {
+        max-width: 60px;
+        max-height: 45px;
+    }
+    
+    .artist-name {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .stat-row {
+        padding: 1.5rem 0.5rem;
+        transform: skewX(-8deg);
+    }
+    
+    .stat-row:nth-child(odd) {
+        padding-left: 3rem;
+    }
+    
+    .stat-row:nth-child(even) {
+        padding-right: 3rem;
+    }
+    
+    .stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .sub-stat {
+        font-size: 1rem;
+    }
+    
+    .chart-container {
+        min-height: 160px;
+    }
+}
+
+/* Subpage Styles */
+.subpage-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.subpage-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+
+.subpage-header h1 {
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.subpage-description {
+    font-size: 1.2rem;
+    color: var(--light-grey);
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.subpage-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+}
+
+.placeholder-section {
+    background: transparent;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.placeholder-section:last-child {
+    border-bottom: none;
+}
+
+.placeholder-section h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.placeholder-content {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-content p {
+    font-size: 1.1rem;
+    color: var(--light-grey);
+    font-style: italic;
+    margin: 0;
+}
+
+/* Responsive Design for Subpages */
+@media (max-width: 768px) {
+    .subpage-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .subpage-description {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+    
+    .placeholder-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .placeholder-content {
+        padding: 2rem;
+        min-height: 150px;
+    }
+    
+    .placeholder-content p {
+        font-size: 1rem;
+    }
+}
+
+/* World Map Styles */
+.world-map-section {
+    background: transparent;
+    padding: 2rem 0;
+}
+
+.world-map-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 2000 / 857; /* Maintain the original SVG aspect ratio */
+    background-color: var(--dark-grey);
+    overflow: hidden;
+}
+
+.world-map-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.map-background {
+    fill: var(--dark-grey);
+}
+
+.country-path {
+    fill: var(--black);
+    stroke: var(--light-grey);
+    stroke-width: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.country-path:hover {
+    stroke-width: 2;
+    filter: brightness(1.2);
+}
+
+.world-map-tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: var(--white);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    pointer-events: none;
+    z-index: 1000;
+    border: 1px solid var(--light-grey);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.tooltip-country {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.tooltip-bands {
+    color: var(--light-grey);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.tooltip-artists {
+    border-top: 1px solid var(--light-grey);
+    padding-top: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.tooltip-artist {
+    font-size: 0.75rem;
+    color: var(--white);
+    padding: 0.1rem 0;
+    line-height: 1.2;
+}
+
+.world-map-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: var(--light-grey);
+    padding: 2rem;
+}
+
+.world-map-error h3 {
+    color: var(--red);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.world-map-error p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.retry-button {
+    background-color: var(--red);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+    background-color: var(--dark-red);
+}
+
+/* World Map Responsive Design */
+@media (max-width: 768px) {
+    .world-map-tooltip {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .tooltip-country {
+        font-size: 0.8rem;
+    }
+    
+    .tooltip-bands {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .world-map-section {
+        padding: 1.5rem 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .country-path {
+        stroke-width: 0.5;
+    }
+    
+    .country-path:hover {
+        stroke-width: 1;
+    }
+}
+
+/* Fallback for browsers that don't support aspect-ratio */
+@supports not (aspect-ratio: 1) {
+    .world-map-container {
+        height: 400px;
+    }
+    
+    @media (max-width: 768px) {
+        .world-map-container {
+            height: 300px;
+        }
+    }
+    
+    @media (max-width: 550px) {
+        .world-map-container {
+            height: 250px;
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .world-map-container {
+            height: 200px;
+        }
+    }
+}
+
+/* German Map Styles */
+.german-map-section {
+    background: transparent;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.german-map-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9; /* Adjusted aspect ratio for German map */
+    background-color: var(--dark-grey);
+    overflow: hidden;
+}
+
+.german-map-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.german-map-background {
+    fill: var(--dark-grey);
+}
+
+.german-state-path {
+    fill: var(--black);
+    stroke: var(--light-grey);
+    stroke-width: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.german-state-path:hover {
+    stroke-width: 2;
+    filter: brightness(1.2);
+}
+
+.german-map-tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: var(--white);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    pointer-events: none;
+    z-index: 1000;
+    border: 1px solid var(--light-grey);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.german-tooltip-state {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.german-tooltip-venues {
+    color: var(--light-grey);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.german-tooltip-venues-list {
+    border-top: 1px solid var(--light-grey);
+    padding-top: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.german-tooltip-venue {
+    font-size: 0.75rem;
+    color: var(--white);
+    padding: 0.1rem 0;
+    line-height: 1.2;
+}
+
+.german-map-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: var(--light-grey);
+    padding: 2rem;
+}
+
+.german-map-error h3 {
+    color: var(--red);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.german-map-error p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+/* German Map Responsive Design */
+@media (max-width: 768px) {
+    .german-map-tooltip {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .german-tooltip-state {
+        font-size: 0.8rem;
+    }
+    
+    .german-tooltip-venues {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .german-map-section {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .german-state-path {
+        stroke-width: 0.5;
+    }
+    
+    .german-state-path:hover {
+        stroke-width: 1;
+    }
+}
+
+/* Fallback for browsers that don't support aspect-ratio */
+@supports not (aspect-ratio: 1) {
+    .german-map-container {
+        height: 350px;
+    }
+    
+    @media (max-width: 768px) {
+        .german-map-container {
+            height: 280px;
+        }
+    }
+    
+    @media (max-width: 550px) {
+        .german-map-container {
+            height: 220px;
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .german-map-container {
+            height: 180px;
+        }
+    }
+}
+
+@media (max-width: 550px) {
+    .subpage-header {
+        margin-bottom: 2rem;
+        padding: 1rem 0;
+    }
+    
+    .subpage-header h1 {
+        font-size: 2rem;
+    }
+    
+    .subpage-description {
+        font-size: 1rem;
+    }
+    
+    .subpage-content {
+        gap: 2rem;
+    }
+    
+    .placeholder-section {
+        padding: 1.5rem 0;
+    }
+    
+    .placeholder-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .placeholder-content {
+        padding: 1.5rem;
+        min-height: 120px;
+    }
+}
+
+/* Bands Statistics Section */
+.bands-stats-overview {
+padding: 2rem 0;
+margin-bottom: 2rem;
+animation: fadeIn 0.6s ease-out;
+}
+
+.bands-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
+    grid-template-rows: auto auto; /* Two rows */
+    grid-template-areas:
+        "left center center right"
+        "shows-per-band shows-per-band countries countries";
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+}
+
+.bands-stat-box {
+position: relative;
+padding: 2rem;
+overflow: hidden;
+min-height: 120px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+/* Grid area assignments */
+.bands-stat-left {
+    grid-area: left;
+}
+
+.bands-stat-center {
+    grid-area: center;
+}
+
+.bands-stat-right {
+    grid-area: right;
+}
+
+.bands-stat-shows-per-band {
+    grid-area: shows-per-band;
+}
+
+.bands-stat-countries {
+    grid-area: countries;
+}
+
+/* Outer boxes (left and right): Dark red background with light red labels */
+.bands-stat-left,
+.bands-stat-right {
+background-color: var(--dark-red);
+}
+
+.bands-stat-left .bands-stat-label,
+.bands-stat-right .bands-stat-label {
+color: var(--red);
+}
+
+/* Inner box (center): Light red background with dark red labels */
+.bands-stat-center {
+background-color: var(--red);
+}
+
+.bands-stat-center .bands-stat-label {
+color: var(--dark-red);
+}
+
+/* Second row boxes: Dark red background with light red labels */
+.bands-stat-shows-per-band,
+.bands-stat-countries {
+    background-color: var(--dark-red);
+}
+
+.bands-stat-shows-per-band .bands-stat-label,
+.bands-stat-countries .bands-stat-label {
+    color: var(--red);
+}
+
+.bands-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.bands-stat-number {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+/* Outer boxes (left and right): 1.5x bigger numbers */
+.bands-stat-left .bands-stat-number,
+.bands-stat-right .bands-stat-number {
+    font-size: 6rem; /* 4rem * 1.5 = 6rem */
+}
+
+/* Inner box (center): 2x bigger numbers */
+.bands-stat-center .bands-stat-number {
+    font-size: 8rem; /* 4rem * 2 = 8rem */
+}
+
+/* Second row boxes: Match outer boxes font size (1.5x) */
+.bands-stat-shows-per-band .bands-stat-number,
+.bands-stat-countries .bands-stat-number {
+    font-size: 6rem; /* Match left/right boxes */
+}
+
+.bands-stat-label {
+font-size: 1.2rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-weight: 500;
+}
+
+/* Responsive Design for Bands Statistics */
+@media (max-width: 1200px) {
+    .bands-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .bands-stat-left .bands-stat-number,
+    .bands-stat-right .bands-stat-number {
+        font-size: 5.25rem; /* 3.5rem * 1.5 */
+    }
+    
+    .bands-stat-center .bands-stat-number {
+        font-size: 7rem; /* 3.5rem * 2 */
+    }
+    
+    .bands-stat-shows-per-band .bands-stat-number,
+    .bands-stat-countries .bands-stat-number {
+        font-size: 5.25rem; /* Match left/right boxes */
+    }
+    
+    .bands-stat-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 1050px) {
+    .bands-stats-grid {
+        grid-template-columns: 1fr 1fr; /* 2-column layout */
+        grid-template-areas:
+            "center center"
+            "left right"
+            "shows-per-band countries";
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .bands-stat-number {
+        font-size: 3rem;
+    }
+    
+    .bands-stat-left .bands-stat-number,
+    .bands-stat-right .bands-stat-number {
+        font-size: 4.5rem; /* 3rem * 1.5 */
+    }
+    
+    .bands-stat-center .bands-stat-number {
+        font-size: 6rem; /* 3rem * 2 */
+    }
+    
+    .bands-stat-shows-per-band .bands-stat-number,
+    .bands-stat-countries .bands-stat-number {
+        font-size: 4.5rem; /* Match left/right boxes */
+    }
+    
+    .bands-stat-label {
+        font-size: 1rem;
+    }
+    
+    .bands-stats-grid {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .bands-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
+    .bands-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .bands-stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .bands-stat-left .bands-stat-number,
+    .bands-stat-right .bands-stat-number {
+        font-size: 3.75rem; /* 2.5rem * 1.5 */
+    }
+    
+    .bands-stat-center .bands-stat-number {
+        font-size: 5rem; /* 2.5rem * 2 */
+    }
+    
+    .bands-stat-shows-per-band .bands-stat-number,
+    .bands-stat-countries .bands-stat-number {
+        font-size: 3.75rem; /* Match left/right boxes */
+    }
+    
+    .bands-stat-label {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .bands-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .bands-stats-grid {
+        grid-template-columns: 1fr; /* Single column */
+        grid-template-areas:
+            "center"
+            "left"
+            "right"
+            "shows-per-band"
+            "countries";
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .bands-stats-grid {
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .bands-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .bands-stat-number {
+        font-size: 2rem;
+    }
+    
+    .bands-stat-left .bands-stat-number,
+    .bands-stat-right .bands-stat-number {
+        font-size: 3rem; /* 2rem * 1.5 */
+    }
+    
+    .bands-stat-center .bands-stat-number {
+        font-size: 4rem; /* 2rem * 2 */
+    }
+    
+    .bands-stat-shows-per-band .bands-stat-number,
+    .bands-stat-countries .bands-stat-number {
+        font-size: 3rem; /* Match left/right boxes */
+    }
+    
+    .bands-stat-label {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .bands-stats-grid {
+        grid-template-columns: 1fr; /* Single column */
+        grid-template-areas:
+            "center"
+            "left"
+            "right"
+            "shows-per-band"
+            "countries";
+    }
+    
+    .bands-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .bands-stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .bands-stat-left .bands-stat-number,
+    .bands-stat-right .bands-stat-number {
+        font-size: 2.7rem; /* 1.8rem * 1.5 */
+    }
+    
+    .bands-stat-center .bands-stat-number {
+        font-size: 3.6rem; /* 1.8rem * 2 */
+    }
+    
+    .bands-stat-shows-per-band .bands-stat-number,
+    .bands-stat-countries .bands-stat-number {
+        font-size: 2.7rem; /* Match left/right boxes */
+    }
+    
+    .bands-stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Locations Statistics Section */
+.locations-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.locations-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal width boxes */
+    gap: 2rem;
+    padding: 0 2rem;
+}
+
+.locations-stat-box {
+    position: relative;
+    padding: 2rem;
+    transform: skewX(-15deg);
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Left box (venues): Light red background with dark red labels */
+.venues-stat-left {
+    background-color: var(--red);
+}
+
+.venues-stat-left .locations-stat-label {
+    color: var(--dark-red);
+}
+
+/* Right box (cities): Dark red background with red labels */
+.cities-stat-right {
+    background-color: var(--dark-red);
+}
+
+.cities-stat-right .locations-stat-label {
+    color: var(--red);
+}
+
+.locations-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.locations-stat-number {
+    font-size: 6rem; /* Larger numbers for two-box layout */
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.locations-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Chart sections styling for locations */
+.locations-view .chart-section {
+    background: transparent;
+    padding: 2rem 0;
+}
+
+.locations-view .chart-container {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    min-height: 200px; /* Minimum height for safety */
+}
+
+.locations-view .chart-container canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive Design for Locations Statistics */
+@media (max-width: 1200px) {
+    .locations-stat-number {
+        font-size: 5rem;
+    }
+    
+    .locations-stat-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .locations-stat-number {
+        font-size: 4.5rem;
+    }
+    
+    .locations-stat-label {
+        font-size: 1rem;
+    }
+    
+    .locations-stats-grid {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .locations-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+        transform: skewX(-10deg);
+    }
+    
+    .locations-stat-number {
+        font-size: 4rem;
+    }
+    
+    .locations-stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .locations-view .chart-container {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 550px) {
+    .locations-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .locations-stats-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .locations-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+        transform: skewX(-8deg);
+    }
+    
+    .locations-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .locations-stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .locations-view .chart-section {
+        padding: 1.5rem 0;
+    }
+    
+    .locations-view .chart-container {
+        min-height: 160px;
+    }
+}
+
+/* German Map Visualization Elements */
+.city-dot {
+   cursor: pointer;
+   transition: r 0.2s ease;
+}
+
+.city-dot:hover {
+   r: 6;
+}
+
+.count-circle {
+   cursor: pointer;
+}
+
+.count-circle-group:hover .count-circle {
+   filter: brightness(1.2);
+}
+
+.count-text {
+   pointer-events: none;
+   user-select: none;
+}
+
+.connecting-line {
+   pointer-events: none;
+}
+
+@media (max-width: 400px) {
+    .locations-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .locations-stat-number {
+        font-size: 3rem;
+    }
+    
+    .locations-stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .locations-view .chart-container {
+        min-height: 140px;
+    }
+}
