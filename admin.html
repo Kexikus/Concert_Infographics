@@ -13,7 +13,6 @@
             <button onclick="showSection('artists')" class="nav-btn">Artists</button>
             <button onclick="showSection('venues')" class="nav-btn">Venues</button>
             <button onclick="showSection('concerts')" class="nav-btn">Concerts</button>
-            <button onclick="showSection('export')" class="nav-btn">Export Data</button>
         </nav>
     </header>
 
@@ -205,59 +204,6 @@
             </div>
         </section>
 
-        <!-- Export Data Section -->
-        <section id="export-section" class="admin-section" style="display: none;">
-            <h2>Export Data</h2>
-            
-            <div class="export-container">
-                <h3>Download Data</h3>
-                <p>Export your concert data in various formats for backup or external use.</p>
-                
-                <div class="export-options">
-                    <div class="export-group">
-                        <h4>Artists Data</h4>
-                        <button onclick="exportData('artists', 'json')" class="export-btn">Download Artists JSON</button>
-                        <button onclick="exportData('artists', 'csv')" class="export-btn">Download Artists CSV</button>
-                    </div>
-                    
-                    <div class="export-group">
-                        <h4>Venues Data</h4>
-                        <button onclick="exportData('venues', 'json')" class="export-btn">Download Venues JSON</button>
-                        <button onclick="exportData('venues', 'csv')" class="export-btn">Download Venues CSV</button>
-                    </div>
-                    
-                    <div class="export-group">
-                        <h4>Concerts Data</h4>
-                        <button onclick="exportData('concerts', 'json')" class="export-btn">Download Concerts JSON</button>
-                        <button onclick="exportData('concerts', 'csv')" class="export-btn">Download Concerts CSV</button>
-                    </div>
-                    
-                    <div class="export-group">
-                        <h4>Complete Database</h4>
-                        <button onclick="exportData('all', 'json')" class="export-btn primary">Download All Data JSON</button>
-                        <button onclick="exportData('all', 'zip')" class="export-btn primary">Download All Data ZIP</button>
-                    </div>
-                </div>
-
-                <div class="import-container">
-                    <h3>Import Data</h3>
-                    <p>Import data from JSON files to update your database.</p>
-                    
-                    <div class="import-group">
-                        <label for="import-file">Select JSON file:</label>
-                        <input type="file" id="import-file" accept=".json" onchange="handleFileImport(event)">
-                        <button onclick="importData()" class="import-btn">Import Data</button>
-                    </div>
-                </div>
-
-                <div class="stats-container">
-                    <h3>Database Statistics</h3>
-                    <div id="database-stats" class="stats-grid">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <!-- Modal for editing entries -->

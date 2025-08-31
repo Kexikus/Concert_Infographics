@@ -110,9 +110,6 @@ class AdminManager {
                 this.loadConcertsList();
                 this.populateConcertFormSelects();
                 break;
-            case 'export':
-                this.updateDatabaseStats();
-                break;
         }
     }
 
@@ -1320,123 +1317,6 @@ class AdminManager {
         };
     }
 
-    // ==================== DATA EXPORT ====================
-
-    /**
-     * Export data in specified format
-     * @param {string} dataType - Type of data to export (artists, venues, concerts, all)
-     * @param {string} format - Export format (json, csv, zip)
-     */
-    exportData(dataType, format) {
-        let data;
-        let filename;
-        
-        switch (dataType) {
-            case 'artists':
-                data = this.artists;
-                filename = `artists_${this.getCurrentDateString()}`;
-                break;
-            case 'venues':
-                data = this.venues;
-                filename = `venues_${this.getCurrentDateString()}`;
-                break;
-            case 'concerts':
-                data = this.concerts;
-                filename = `concerts_${this.getCurrentDateString()}`;
-                break;
-            case 'all':
-                data = {
-                    artists: this.artists,
-                    venues: this.venues,
-                    concerts: this.concerts,
-                    exportDate: new Date().toISOString()
-                };
-                filename = `concert_data_${this.getCurrentDateString()}`;
-                break;
-            default:
-                this.showErrorMessage('Invalid data type for export');
-                return;
-        }
-        
-        switch (format) {
-            case 'json':
-                this.downloadJSON(data, `${filename}.json`);
-                break;
-            case 'csv':
-                if (dataType === 'all') {
-                    this.showErrorMessage('CSV export not available for combined data. Use JSON or ZIP instead.');
-                    return;
-                }
-                this.downloadCSV(data, `${filename}.csv`);
-                break;
-            case 'zip':
-                this.downloadZIP(data, `${filename}.zip`);
-                break;
-            default:
-                this.showErrorMessage('Invalid export format');
-                return;
-        }
-        
-        this.showSuccessMessage(`${dataType.charAt(0).toUpperCase() + dataType.slice(1)} data exported successfully!`);
-    }
-
-    /**
-     * Download data as JSON file
-     * @param {Object} data - Data to export
-     * @param {string} filename - Filename for download
-     */
-    downloadJSON(data, filename) {
-        const jsonString = JSON.stringify(data, null, 2);
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        this.downloadBlob(blob, filename);
-    }
-
-    /**
-     * Download data as CSV file
-     * @param {Array} data - Array data to export
-     * @param {string} filename - Filename for download
-     */
-    downloadCSV(data, filename) {
-        if (!Array.isArray(data) || data.length === 0) {
-            this.showErrorMessage('No data available for CSV export');
-            return;
-        }
-        
-        // Get headers from first object
-        const headers = Object.keys(data[0]);
-        
-        // Create CSV content
-        let csvContent = headers.join(',') + '\n';
-        
-        data.forEach(item => {
-            const row = headers.map(header => {
-                let value = item[header];
-                if (value === null || value === undefined) {
-                    value = '';
-                } else if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
-                    value = '"' + value.replace(/"/g, '""') + '"';
-                }
-                return value;
-            });
-            csvContent += row.join(',') + '\n';
-        });
-        
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        this.downloadBlob(blob, filename);
-    }
-
-    /**
-     * Download data as ZIP file (placeholder - would need JSZip library)
-     * @param {Object} data - Data to export
-     * @param {string} filename - Filename for download
-     */
-    downloadZIP(data, filename) {
-        // For now, just download as JSON
-        // In a real implementation, you would use JSZip library
-        this.showErrorMessage('ZIP export requires additional library. Using JSON format instead.');
-        this.downloadJSON(data, filename.replace('.zip', '.json'));
-    }
-
     /**
      * Download blob as file
      * @param {Blob} blob - Blob to download
@@ -1461,36 +1341,6 @@ class AdminManager {
         return new Date().toISOString().split('T')[0];
     }
 
-    // ==================== DATABASE STATISTICS ====================
-
-    /**
-     * Update database statistics display
-     */
-    updateDatabaseStats() {
-        const container = document.getElementById('database-stats');
-        if (!container) return;
-        
-        const stats = {
-            'Total Artists': this.artists.length,
-            'Total Venues': this.venues.length,
-            'Total Concerts': this.concerts.length,
-            'Total Events': this.concerts.length,
-            'Concert Types': [...new Set(this.concerts.map(c => c.type))].length,
-            'Countries (Venues)': [...new Set(this.venues.map(v => v.country))].length,
-            'Countries (Artists)': [...new Set(this.artists.map(a => a.country))].length,
-            'Years Covered': [...new Set(this.concerts.map(c => new Date(c.date).getFullYear()))].length
-        };
-        
-        const html = Object.entries(stats).map(([label, value]) => `
-            <div class="stat-item">
-                <div class="stat-value">${value}</div>
-                <div class="stat-label">${label}</div>
-            </div>
-        `).join('');
-        
-        container.innerHTML = html;
-    }
-
     // ==================== UTILITY FUNCTIONS ====================
 
     /**
@@ -1505,20 +1355,6 @@ class AdminManager {
         return div.innerHTML;
     }
 
-    /**
-     * Handle file import (placeholder for future implementation)
-     * @param {Event} event - File input change event
-     */
-    handleFileImport(event) {
-        this.showErrorMessage('File import functionality will be implemented in a future update.');
-    }
-
-    /**
-     * Import data from file (placeholder for future implementation)
-     */
-    importData() {
-        this.showErrorMessage('Data import functionality will be implemented in a future update.');
-    }
 
     // ==================== SEARCHABLE DROPDOWN FUNCTIONALITY ====================
 
@@ -2011,16 +1847,6 @@ function filterData(type) {
     }
 }
 
-/**
- * Export data (called from HTML)
- * @param {string} dataType - Type of data to export
- * @param {string} format - Export format
- */
-function exportData(dataType, format) {
-    if (adminManager) {
-        adminManager.exportData(dataType, format);
-    }
-}
 
 /**
  * Save artists data (called from HTML)
@@ -2049,24 +1875,6 @@ function saveConcertsData() {
     }
 }
 
-/**
- * Handle file import (called from HTML)
- * @param {Event} event - File input change event
- */
-function handleFileImport(event) {
-    if (adminManager) {
-        adminManager.handleFileImport(event);
-    }
-}
-
-/**
- * Import data (called from HTML)
- */
-function importData() {
-    if (adminManager) {
-        adminManager.importData();
-    }
-}
 
 /**
  * Close modal (called from HTML)
