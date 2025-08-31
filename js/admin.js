@@ -36,7 +36,7 @@ class AdminManager {
         this.setupEventListeners();
         this.showSection('artists'); // Show artists section by default
         this.loadArtistsList();
-        this.updateDatabaseStats();
+        // this.updateDatabaseStats(); // Remove this call for now since method doesn't exist
     }
 
     /**
@@ -807,7 +807,7 @@ class AdminManager {
         this.showSuccessMessage(`Concert "${concertData.name}" added successfully!`);
         this.clearForm('concert-form');
         this.loadConcertsList();
-        this.updateDatabaseStats();
+        // this.updateDatabaseStats(); // Remove this call for now since method doesn't exist
     }
 
     /**
@@ -822,7 +822,7 @@ class AdminManager {
             this.clearForm('concert-form');
             this.loadConcertsList();
             this.closeModal();
-            this.updateDatabaseStats();
+            // this.updateDatabaseStats(); // Remove this call for now since method doesn't exist
         }
     }
 
@@ -899,7 +899,7 @@ class AdminManager {
             
             this.showSuccessMessage(`Concert "${concert.name}" deleted successfully!`);
             this.loadConcertsList();
-            this.updateDatabaseStats();
+            // this.updateDatabaseStats(); // Remove this call for now since method doesn't exist
             this.closeConfirmModal();
         });
     }
