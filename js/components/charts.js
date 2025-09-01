@@ -1215,6 +1215,290 @@ class ChartsManager {
             otherArtistsGrid.appendChild(artistItem);
         });
     }
+
+    // Create Events Per Year Chart (Events only, no Shows bars)
+    createEventsPerYearChartEvents() {
+        const ctx = document.getElementById('events-per-year-chart-detailed');
+        if (!ctx) return;
+
+        const eventsData = dataManager.getEventsPerYearByType();
+        const years = Object.keys(eventsData).sort();
+
+        // Prepare data arrays
+        const concertData = years.map(year => eventsData[year]?.concert || 0);
+        const festivalData = years.map(year => eventsData[year]?.festival || 0);
+        const totalData = years.map(year => (eventsData[year]?.concert || 0) + (eventsData[year]?.festival || 0));
+
+        // Destroy existing chart if it exists
+        if (this.charts.eventsPerYearEvents) {
+            this.charts.eventsPerYearEvents.destroy();
+        }
+
+        this.charts.eventsPerYearEvents = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [
+                    // Festivals dataset (top of stack) - LEGEND ORDER: First
+                    {
+                        label: 'Festivals',
+                        data: festivalData,
+                        backgroundColor: this.defaultColors.red,
+                        borderColor: this.defaultColors.red,
+                        borderWidth: 1,
+                        borderSkipped: false,
+                        stack: 'events',
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9,
+                        order: 1
+                    },
+                    // Concerts dataset (bottom of stack) - LEGEND ORDER: Second
+                    {
+                        label: 'Concerts',
+                        data: concertData,
+                        backgroundColor: this.defaultColors.darkRed,
+                        borderColor: this.defaultColors.darkRed,
+                        borderWidth: 1,
+                        borderSkipped: false,
+                        stack: 'events',
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9,
+                        order: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `Year ${context[0].label}`;
+                            },
+                            beforeBody: function(context) {
+                                const yearIndex = context[0].dataIndex;
+                                const totalEvents = totalData[yearIndex];
+                                return `Total Events: ${totalEvents}`;
+                            },
+                            label: function(context) {
+                                const datasetLabel = context.dataset.label;
+                                const value = context.parsed.y;
+                                return `${datasetLabel}: ${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        offset: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create Shows Per Year Vertical Bar Chart
+    createShowsPerYearChart() {
+        const ctx = document.getElementById('shows-per-year-chart');
+        if (!ctx) return;
+
+        const showsData = dataManager.getShowsPerYearStats();
+        const years = Object.keys(showsData).sort();
+        const data = years.map(year => showsData[year] || 0);
+
+        // Destroy existing chart if it exists
+        if (this.charts.showsPerYear) {
+            this.charts.showsPerYear.destroy();
+        }
+
+        this.charts.showsPerYear = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Shows',
+                    data: data,
+                    backgroundColor: this.defaultColors.black,
+                    borderColor: this.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.9
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `Year ${context[0].label}`;
+                            },
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                return `Shows: ${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        offset: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create Event Type Pie Chart
+    createEventTypePieChart() {
+        const ctx = document.getElementById('event-types-pie-chart');
+        if (!ctx) return;
+
+        const pieData = dataManager.getEventTypePieData();
+        const labels = pieData.map(item => item.label);
+        const data = pieData.map(item => item.value);
+        const colors = pieData.map(item => item.color);
+
+        // Destroy existing chart if it exists
+        if (this.charts.eventTypePie) {
+            this.charts.eventTypePie.destroy();
+        }
+
+        this.charts.eventTypePie = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: this.defaultColors.white,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                rotation: 90,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label;
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+                                const percentage = ((value / total) * 100).toFixed(1).replace('.', '.');
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
 }
 
 // Create global instance

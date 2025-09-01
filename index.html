@@ -135,18 +135,111 @@
                         <p class="subpage-description">Explore detailed insights about your concert and festival experiences</p>
                     </header>
                     
+                    <!-- Events Statistics Section -->
+                    <section class="events-stats-overview">
+                        <div class="events-stats-grid">
+                            <!-- Left cell: Average events per year -->
+                            <div class="events-stat-box events-stat-left">
+                                <div class="events-stat-content">
+                                    <div class="events-stat-number" id="events-avg-per-year">0</div>
+                                    <div class="events-stat-label">⌀ per year</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Central cell: Total events (double width) -->
+                            <div class="events-stat-box events-stat-center">
+                                <div class="events-stat-content">
+                                    <div class="events-stat-number" id="events-total">0</div>
+                                    <div class="events-stat-label">total events</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Max events in one year -->
+                            <div class="events-stat-box events-stat-right">
+                                <div class="events-stat-content">
+                                    <div class="events-stat-number" id="events-max-per-year">0</div>
+                                    <div class="events-stat-label">max in one year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Event Types Statistics Section -->
+                    <section class="event-types-stats-overview">
+                        <div class="event-types-stats-grid">
+                            <!-- Left cell: Concerts count (dark red) -->
+                            <div class="event-types-stat-box event-types-stat-left">
+                                <div class="event-types-stat-content">
+                                    <div class="event-types-stat-number" id="event-types-concerts">0</div>
+                                    <div class="event-types-stat-label">concerts</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Center cell: Pie chart (double width) -->
+                            <div class="event-types-stat-box event-types-stat-center">
+                                <div class="event-types-chart-container">
+                                    <canvas id="event-types-pie-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Festivals count (bright red) -->
+                            <div class="event-types-stat-box event-types-stat-right">
+                                <div class="event-types-stat-content">
+                                    <div class="event-types-stat-number" id="event-types-festivals">0</div>
+                                    <div class="event-types-stat-label">festivals</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
                     <div class="subpage-content">
-                        <section class="placeholder-section">
-                            <h2>Event Analytics</h2>
-                            <div class="placeholder-content">
-                                <p>Event-specific infographics will be displayed here</p>
+                        <!-- Events per Year Chart (moved from dashboard) -->
+                        <section class="chart-section">
+                            <h2>Events per Year</h2>
+                            <div class="chart-container">
+                                <canvas id="events-per-year-chart-detailed"></canvas>
                             </div>
                         </section>
-                        
-                        <section class="placeholder-section">
-                            <h2>Timeline & Trends</h2>
-                            <div class="placeholder-content">
-                                <p>Event timeline and trend analysis will be displayed here</p>
+                    </div>
+
+                    <!-- Dark Red Background Transition Point -->
+                    <div class="dark-red-transition"></div>
+
+                    <!-- Shows Statistics Section -->
+                    <section class="shows-stats-overview">
+                        <div class="shows-stats-grid">
+                            <!-- Left cell: Average shows per year -->
+                            <div class="shows-stat-box shows-stat-left">
+                                <div class="shows-stat-content">
+                                    <div class="shows-stat-number" id="shows-avg-per-year">0</div>
+                                    <div class="shows-stat-label">⌀ per year</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Central cell: Total shows (double width, black center with dark red outer) -->
+                            <div class="shows-stat-box shows-stat-center">
+                                <div class="shows-stat-content">
+                                    <div class="shows-stat-number" id="shows-total">0</div>
+                                    <div class="shows-stat-label">total shows</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Average shows per event -->
+                            <div class="shows-stat-box shows-stat-right">
+                                <div class="shows-stat-content">
+                                    <div class="shows-stat-number" id="shows-avg-per-event">0.0</div>
+                                    <div class="shows-stat-label">⌀ per event</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="subpage-content shows-content">
+                        <!-- Shows per Year Chart (Vertical Bar Chart) -->
+                        <section class="chart-section">
+                            <h2>Shows per Year</h2>
+                            <div class="chart-container">
+                                <canvas id="shows-per-year-chart"></canvas>
                             </div>
                         </section>
                     </div>

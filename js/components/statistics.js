@@ -395,6 +395,59 @@ class StatisticsManager {
     initializeCostStatistics() {
         this.updateCostStatistics();
     }
+
+    // Update events statistics
+    updateEventsStatistics() {
+        const eventsStats = dataManager.getEventsStatistics();
+        
+        // Find the events statistics elements (matching HTML IDs)
+        const totalEventsElement = document.getElementById('events-total');
+        const totalShowsElement = document.getElementById('shows-total');
+        const avgEventsPerYearElement = document.getElementById('events-avg-per-year');
+        const maxEventsInOneYearElement = document.getElementById('events-max-per-year');
+        const avgShowsPerYearElement = document.getElementById('shows-avg-per-year');
+        const avgShowsPerEventElement = document.getElementById('shows-avg-per-event');
+        const totalConcertsElement = document.getElementById('event-types-concerts');
+        const totalFestivalsElement = document.getElementById('event-types-festivals');
+        
+        // Animate the events statistics
+        if (totalEventsElement) {
+            this.animateNumber(totalEventsElement, 0, eventsStats.totalEvents);
+        }
+        if (totalShowsElement) {
+            this.animateNumber(totalShowsElement, 0, eventsStats.totalShows);
+        }
+        if (avgEventsPerYearElement) {
+            this.animateNumber(avgEventsPerYearElement, 0, parseFloat(eventsStats.avgEventsPerYear));
+        }
+        if (maxEventsInOneYearElement) {
+            this.animateNumber(maxEventsInOneYearElement, 0, eventsStats.maxEventsInOneYear);
+        }
+        if (avgShowsPerYearElement) {
+            this.animateNumber(avgShowsPerYearElement, 0, parseFloat(eventsStats.avgShowsPerYear));
+        }
+        if (avgShowsPerEventElement) {
+            // Calculate average shows per event
+            const avgShowsPerEvent = eventsStats.totalEvents > 0 ? (eventsStats.totalShows / eventsStats.totalEvents).toFixed(1).replace('.', '.') : '0.0';
+            this.animateNumber(avgShowsPerEventElement, 0, parseFloat(avgShowsPerEvent));
+        }
+        if (totalConcertsElement) {
+            this.animateNumber(totalConcertsElement, 0, eventsStats.totalConcerts);
+        }
+        if (totalFestivalsElement) {
+            this.animateNumber(totalFestivalsElement, 0, eventsStats.totalFestivals);
+        }
+        
+        // Create the events charts
+        chartsManager.createEventsPerYearChartEvents();
+        chartsManager.createShowsPerYearChart();
+        chartsManager.createEventTypePieChart();
+    }
+
+    // Initialize events statistics display
+    initializeEventsStatistics() {
+        this.updateEventsStatistics();
+    }
 }
 
 // Create global instance

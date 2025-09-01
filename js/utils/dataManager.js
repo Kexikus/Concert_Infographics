@@ -827,6 +827,71 @@ class DataManager {
         
         return result;
     }
+
+    // Get events statistics for the events view
+    getEventsStatistics() {
+        const years = this.getAvailableYears();
+        const yearSpan = years.length > 0 ? years.length : 1;
+        
+        // Calculate total events (concerts and festivals)
+        const totalEvents = this.concerts.length;
+        
+        // Calculate total shows (sum of artistIds.length for each concert)
+        const totalShows = this.concerts.reduce((sum, concert) => sum + concert.artistIds.length, 0);
+        
+        // Calculate events per year statistics
+        const eventsPerYearStats = this.getConcertsPerYearStats();
+        const maxEventsInOneYear = Math.max(...Object.values(eventsPerYearStats));
+        const avgEventsPerYear = (totalEvents / yearSpan).toFixed(1).replace('.', '.');
+        
+        // Calculate shows per year statistics
+        const showsPerYearStats = this.getShowsPerYearStats();
+        const maxShowsInOneYear = Math.max(...Object.values(showsPerYearStats));
+        const avgShowsPerYear = (totalShows / yearSpan).toFixed(1).replace('.', '.');
+        
+        // Get event type breakdown
+        const eventTypeStats = this.getConcertTypeStats();
+        const totalConcerts = eventTypeStats.concert || 0;
+        const totalFestivals = eventTypeStats.festival || 0;
+        
+        return {
+            totalEvents,
+            totalShows,
+            avgEventsPerYear,
+            maxEventsInOneYear,
+            avgShowsPerYear,
+            maxShowsInOneYear,
+            totalConcerts,
+            totalFestivals
+        };
+    }
+
+    // Get events per year statistics (concerts only, no shows)
+    getEventsPerYearStatsEvents() {
+        const stats = {};
+        this.concerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            stats[year] = (stats[year] || 0) + 1;
+        });
+        return stats;
+    }
+
+    // Get event type pie chart data
+    getEventTypePieData() {
+        const typeStats = this.getConcertTypeStats();
+        return [
+            {
+                label: 'Festivals',
+                value: typeStats.festival || 0,
+                color: '#dc3545' // red
+            },
+            {
+                label: 'Concerts',
+                value: typeStats.concert || 0,
+                color: '#a71e2a' // darkRed
+            }
+        ];
+    }
 }
 
 // Create global instance

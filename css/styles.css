@@ -1778,3 +1778,786 @@ font-weight: 500;
         min-height: 140px;
     }
 }
+
+/* Events Statistics Section */
+.events-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.events-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
+    grid-template-rows: auto; /* Single row */
+    grid-template-areas:
+        "left center center right";
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+}
+
+.events-stat-box {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Grid area assignments */
+.events-stat-left {
+    grid-area: left;
+}
+
+.events-stat-center {
+    grid-area: center;
+}
+
+.events-stat-right {
+    grid-area: right;
+}
+
+/* Outer boxes (left and right): Dark red background with light red labels */
+.events-stat-left,
+.events-stat-right {
+    background-color: var(--dark-red);
+}
+
+.events-stat-left .events-stat-label,
+.events-stat-right .events-stat-label {
+    color: var(--red);
+}
+
+/* Inner box (center): Light red background with dark red labels */
+.events-stat-center {
+    background-color: var(--red);
+}
+
+.events-stat-center .events-stat-label {
+    color: var(--dark-red);
+}
+
+.events-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.events-stat-number {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+/* Outer boxes (left and right): 1.5x bigger numbers */
+.events-stat-left .events-stat-number,
+.events-stat-right .events-stat-number {
+    font-size: 6rem; /* 4rem * 1.5 = 6rem */
+}
+
+/* Inner box (center): 2x bigger numbers */
+.events-stat-center .events-stat-number {
+    font-size: 8rem; /* 4rem * 2 = 8rem */
+}
+
+.events-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Event Types Statistics Section */
+.event-types-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.event-types-stats-grid {
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr; /* abbe/ebbc pattern */
+    grid-template-rows: auto auto; /* Two rows */
+    grid-template-areas:
+        "left center ."
+        ". center right";
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+}
+
+.event-types-stat-box {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Grid area assignments */
+.event-types-stat-left {
+    grid-area: left;
+}
+
+.event-types-stat-center {
+    grid-area: center;
+}
+
+.event-types-stat-right {
+    grid-area: right;
+}
+
+/* Left box (concerts): Dark red background with light red labels */
+.event-types-stat-left {
+    background-color: var(--dark-red);
+}
+
+.event-types-stat-left .event-types-stat-label {
+    color: var(--red);
+}
+
+/* Center box (pie chart): No background, counter-skew */
+.event-types-stat-center {
+    background: transparent;
+    padding: 1rem;
+    min-height: 260px; /* Taller to accommodate both rows */
+    transform: skewX(15deg); /* Counter-skew to make pie chart straight */
+}
+
+/* Right box (festivals): Bright red background with dark red labels */
+.event-types-stat-right {
+    background-color: var(--red);
+}
+
+.event-types-stat-right .event-types-stat-label {
+    color: var(--dark-red);
+}
+
+.event-types-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.event-types-stat-number {
+    font-size: 6rem; /* Larger numbers for side boxes */
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.event-types-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Pie chart container styling */
+.event-types-chart-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+}
+
+.event-types-chart-container canvas {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+}
+
+/* Dark Red Background Transition Point */
+.dark-red-transition {
+    background-color: var(--dark-red);
+    height: 4rem;
+    width: 100%;
+    margin: 3rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-red-transition::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    right: -50%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        var(--dark-grey) 0%,
+        var(--dark-red) 25%,
+        var(--dark-red) 75%,
+        var(--dark-grey) 100%);
+    transform: skewX(-15deg);
+}
+
+/* Shows Statistics Section */
+.shows-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+    background-color: var(--dark-red);
+    margin-left: -100vw;
+    margin-right: -100vw;
+    padding-left: 100vw;
+    padding-right: 100vw;
+}
+
+.shows-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
+    grid-template-rows: auto; /* Single row */
+    grid-template-areas:
+        "left center center right";
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.shows-stat-box {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Grid area assignments */
+.shows-stat-left {
+    grid-area: left;
+}
+
+.shows-stat-center {
+    grid-area: center;
+}
+
+.shows-stat-right {
+    grid-area: right;
+}
+
+/* Outer boxes (left and right): Black background with dark red labels */
+.shows-stat-left,
+.shows-stat-right {
+    background-color: var(--black);
+}
+
+.shows-stat-left .shows-stat-label,
+.shows-stat-right .shows-stat-label {
+    color: var(--dark-red);
+}
+
+/* Inner box (center): Black center with dark red outer border effect */
+.shows-stat-center {
+    background-color: var(--black);
+    border: 4px solid var(--dark-red);
+    position: relative;
+}
+
+.shows-stat-center::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    background-color: var(--dark-red);
+    z-index: -1;
+}
+
+.shows-stat-center .shows-stat-label {
+    color: var(--dark-red);
+}
+
+.shows-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.shows-stat-number {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+/* Outer boxes (left and right): 1.5x bigger numbers */
+.shows-stat-left .shows-stat-number,
+.shows-stat-right .shows-stat-number {
+    font-size: 6rem; /* 4rem * 1.5 = 6rem */
+}
+
+/* Inner box (center): 2x bigger numbers */
+.shows-stat-center .shows-stat-number {
+    font-size: 8rem; /* 4rem * 2 = 8rem */
+}
+
+.shows-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Shows content section styling */
+.shows-content {
+    background-color: var(--dark-red);
+    margin-left: -100vw;
+    margin-right: -100vw;
+    padding-left: 100vw;
+    padding-right: 100vw;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.shows-content .chart-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: transparent;
+    padding: 2rem 0;
+    width: 100%; /* Ensure full width */
+}
+
+.shows-content .chart-container {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    min-height: 200px;
+}
+
+.shows-content .chart-container canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive Design for Events Statistics */
+@media (max-width: 1200px) {
+    .events-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .events-stat-left .events-stat-number,
+    .events-stat-right .events-stat-number {
+        font-size: 5.25rem; /* 3.5rem * 1.5 */
+    }
+    
+    .events-stat-center .events-stat-number {
+        font-size: 7rem; /* 3.5rem * 2 */
+    }
+    
+    .events-stat-label {
+        font-size: 1.1rem;
+    }
+    
+    .event-types-stat-number {
+        font-size: 5rem;
+    }
+    
+    .event-types-stat-label {
+        font-size: 1.1rem;
+    }
+    
+    .shows-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .shows-stat-left .shows-stat-number,
+    .shows-stat-right .shows-stat-number {
+        font-size: 5.25rem; /* 3.5rem * 1.5 */
+    }
+    
+    .shows-stat-center .shows-stat-number {
+        font-size: 7rem; /* 3.5rem * 2 */
+    }
+    
+    .shows-stat-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 1050px) {
+    .events-stats-grid {
+        grid-template-columns: 1fr 1fr; /* bb/ac pattern: 2-column layout */
+        grid-template-areas:
+            "center center"
+            "left right";
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .event-types-stats-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "left"
+            "center"
+            "right";
+        gap: 1.5rem;
+        padding: 0 1rem;
+        transform: skewX(0deg);
+    }
+
+    .event-types-stat-box {
+        transform: skewX(-15deg);
+    }
+
+    .event-types-stat-box.event-types-stat-center {
+        transform: skewX(0deg);
+    }
+    
+    .shows-stats-grid {
+        grid-template-columns: 1fr 1fr; /* bb/ac pattern: 2-column layout */
+        grid-template-areas:
+            "center center"
+            "left right";
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .events-stat-number {
+        font-size: 3rem;
+    }
+    
+    .events-stat-left .events-stat-number,
+    .events-stat-right .events-stat-number {
+        font-size: 4.5rem; /* 3rem * 1.5 */
+    }
+    
+    .events-stat-center .events-stat-number {
+        font-size: 6rem; /* 3rem * 2 */
+    }
+    
+    .events-stat-label {
+        font-size: 1rem;
+    }
+    
+    .events-stats-grid {
+        gap: 1.5rem;
+    }
+    
+    .event-types-stat-number {
+        font-size: 4.5rem;
+    }
+    
+    .event-types-stat-label {
+        font-size: 1rem;
+    }
+    
+    .event-types-stats-grid {
+        gap: 1.5rem;
+    }
+    
+    .shows-stat-number {
+        font-size: 3rem;
+    }
+    
+    .shows-stat-left .shows-stat-number,
+    .shows-stat-right .shows-stat-number {
+        font-size: 4.5rem; /* 3rem * 1.5 */
+    }
+    
+    .shows-stat-center .shows-stat-number {
+        font-size: 6rem; /* 3rem * 2 */
+    }
+    
+    .shows-stat-label {
+        font-size: 1rem;
+    }
+    
+    .shows-stats-grid {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .events-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
+    .events-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .events-stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .events-stat-left .events-stat-number,
+    .events-stat-right .events-stat-number {
+        font-size: 3.75rem; /* 2.5rem * 1.5 */
+    }
+    
+    .events-stat-center .events-stat-number {
+        font-size: 5rem; /* 2.5rem * 2 */
+    }
+    
+    .events-stat-label {
+        font-size: 0.9rem;
+    }
+
+    .event-types-stat-box {
+        transform: skewX(-10deg);
+    }
+    
+    .event-types-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .event-types-stat-number {
+        font-size: 4rem;
+    }
+    
+    .event-types-stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .shows-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
+    .shows-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .shows-stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .shows-stat-left .shows-stat-number,
+    .shows-stat-right .shows-stat-number {
+        font-size: 3.75rem; /* 2.5rem * 1.5 */
+    }
+    
+    .shows-stat-center .shows-stat-number {
+        font-size: 5rem; /* 2.5rem * 2 */
+    }
+    
+    .shows-stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .shows-content .chart-container {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 550px) {
+    .events-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .events-stats-grid {
+        grid-template-columns: 1fr; /* Single column */
+        grid-template-areas:
+            "center"
+            "left"
+            "right";
+        gap: 1rem;
+        padding: 0 1rem;
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .events-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .events-stat-number {
+        font-size: 2rem;
+    }
+    
+    .events-stat-left .events-stat-number,
+    .events-stat-right .events-stat-number {
+        font-size: 3rem; /* 2rem * 1.5 */
+    }
+    
+    .events-stat-center .events-stat-number {
+        font-size: 4rem; /* 2rem * 2 */
+    }
+    
+    .events-stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .event-types-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .event-types-stats-grid {
+        grid-template-columns: 1fr; /* Single column */
+        grid-template-areas:
+            "left"
+            "center"
+            "right";
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .event-types-stat-center {
+        min-height: 180px; /* Smaller on mobile */
+    }
+    
+    .event-types-chart-container {
+        min-height: 140px; /* Smaller on mobile */
+    }
+    
+    .event-types-stat-box {
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .event-types-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .event-types-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .event-types-stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .shows-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .shows-stats-grid {
+        grid-template-columns: 1fr; /* Single column */
+        grid-template-areas:
+            "center"
+            "left"
+            "right";
+        gap: 1rem;
+        padding: 0 1rem;
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .shows-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .shows-stat-number {
+        font-size: 2rem;
+    }
+    
+    .shows-stat-left .shows-stat-number,
+    .shows-stat-right .shows-stat-number {
+        font-size: 3rem; /* 2rem * 1.5 */
+    }
+    
+    .shows-stat-center .shows-stat-number {
+        font-size: 4rem; /* 2rem * 2 */
+    }
+    
+    .shows-stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .shows-content .chart-section {
+        padding: 1.5rem 0;
+    }
+    
+    .shows-content .chart-container {
+        min-height: 160px;
+    }
+    
+    .dark-red-transition {
+        height: 3rem;
+        margin: 2rem 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .events-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .events-stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .events-stat-left .events-stat-number,
+    .events-stat-right .events-stat-number {
+        font-size: 2.7rem; /* 1.8rem * 1.5 */
+    }
+    
+    .events-stat-center .events-stat-number {
+        font-size: 3.6rem; /* 1.8rem * 2 */
+    }
+    
+    .events-stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .event-types-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .event-types-stat-center {
+        transform: skewX(8deg); /* Counter-skew to make pie chart straight */
+    }
+    
+    .event-types-stat-number {
+        font-size: 3rem;
+    }
+    
+    .event-types-stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .shows-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .shows-stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .shows-stat-left .shows-stat-number,
+    .shows-stat-right .shows-stat-number {
+        font-size: 2.7rem; /* 1.8rem * 1.5 */
+    }
+    
+    .shows-stat-center .shows-stat-number {
+        font-size: 3.6rem; /* 1.8rem * 2 */
+    }
+    
+    .shows-stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .shows-content .chart-container {
+        min-height: 140px;
+    }
+    
+    .dark-red-transition {
+        height: 2rem;
+        margin: 1.5rem 0;
+    }
+}

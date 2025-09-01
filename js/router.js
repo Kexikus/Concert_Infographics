@@ -75,6 +75,13 @@ class Router {
     // Show Events page
     showEvents() {
         this.showView('events-view');
+        
+        // Initialize events-related components
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            statisticsManager.initializeEventsStatistics();
+        }, 100);
+        
         console.log('Events page loaded');
     }
     
