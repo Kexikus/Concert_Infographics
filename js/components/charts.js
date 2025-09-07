@@ -29,9 +29,10 @@ class ChartsManager {
         }
     }
 
-    // Initialize all charts
+    // Initialize all charts (removed Events per Year chart from main dashboard)
     initializeCharts() {
-        this.createEventsPerYearChart();
+        // Note: createEventsPerYearChart() removed from main dashboard initialization
+        // The Events per Year chart is now only available in the #events section
         this.createBandsPerYearChart();
         this.createBandFrequencyChart();
         this.renderOtherArtists();
@@ -1130,9 +1131,10 @@ class ChartsManager {
         });
     }
 
-    // Update all charts with new data
+    // Update all charts with new data (removed Events per Year chart from main dashboard)
     updateCharts() {
-        this.createEventsPerYearChart();
+        // Note: createEventsPerYearChart() removed from main dashboard updates
+        // The Events per Year chart is now only available in the #events section
         this.createBandsPerYearChart();
         this.createBandFrequencyChart();
         this.renderOtherArtists();

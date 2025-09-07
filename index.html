@@ -16,113 +16,76 @@
                     <!-- Overview Statistics -->
                     <section class="stats-overview">
                         <h2>Overview Statistics</h2>
-                        <div class="stats-list">
-                            <!-- Total Events -->
-                            <div class="stat-row">
-                                <div class="main-stat">
-                                    <div class="stat-number" id="total-events">0</div>
-                                    <div class="stat-label">Total Events</div>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-value" id="total-concerts">0</span>
-                                        <span class="sub-stat-label">concerts</span>
+                        <div class="paired-stats-list">
+                            <!-- Total Shows AT Total Events -->
+                            <a href="#events" class="paired-stat-link">
+                                <div class="paired-stat-row">
+                                    <div class="paired-stat-left">
+                                        <div class="stat-number" id="paired-total-shows">0</div>
+                                        <div class="stat-label">Shows</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-value" id="total-festivals">0</span>
-                                        <span class="sub-stat-label">festivals</span>
+                                    <div class="paired-stat-connector">
+                                        <div class="connector-label">AT</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-events-per-year">0</span>
-                                        <span class="sub-stat-label">per year</span>
+                                    <div class="paired-stat-right">
+                                        <div class="stat-number" id="paired-total-events">0</div>
+                                        <div class="stat-label">Events</div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
 
-                            <!-- Total Bands -->
-                            <div class="stat-row">
-                                <div class="main-stat">
-                                    <div class="stat-number" id="total-bands">0</div>
-                                    <div class="stat-label">Total Bands</div>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-value" id="repeat-bands-percentage">0%</span>
-                                        <span class="sub-stat-label">seen more than once</span>
+                            <!-- Total Bands FROM Number of countries -->
+                            <a href="#bands" class="paired-stat-link">
+                                <div class="paired-stat-row">
+                                    <div class="paired-stat-left">
+                                        <div class="stat-number" id="paired-total-bands">0</div>
+                                        <div class="stat-label">Bands</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-bands-per-year">0</span>
-                                        <span class="sub-stat-label">per year</span>
+                                    <div class="paired-stat-connector">
+                                        <div class="connector-label">FROM</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-new-bands-per-year">0</span>
-                                        <span class="sub-stat-label">new per year</span>
+                                    <div class="paired-stat-right">
+                                        <div class="stat-number" id="paired-countries">0</div>
+                                        <div class="stat-label">Countries</div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
 
-                            <!-- Total Shows -->
-                            <div class="stat-row">
-                                <div class="main-stat">
-                                    <div class="stat-number" id="total-shows">0</div>
-                                    <div class="stat-label">Total Shows</div>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-shows-per-year">0</span>
-                                        <span class="sub-stat-label">per year</span>
+                            <!-- Total Venues IN Number of cities -->
+                            <a href="#locations" class="paired-stat-link">
+                                <div class="paired-stat-row">
+                                    <div class="paired-stat-left">
+                                        <div class="stat-number" id="paired-total-venues">0</div>
+                                        <div class="stat-label">Venues</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-shows-per-band">0</span>
-                                        <span class="sub-stat-label">per band</span>
+                                    <div class="paired-stat-connector">
+                                        <div class="connector-label">IN</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-shows-per-event">0</span>
-                                        <span class="sub-stat-label">per event</span>
+                                    <div class="paired-stat-right">
+                                        <div class="stat-number" id="paired-cities">0</div>
+                                        <div class="stat-label">Cities</div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
 
-                            <!-- Total Cost -->
-                            <div class="stat-row">
-                                <div class="main-stat">
-                                    <div class="stat-number" id="total-cost">0€</div>
-                                    <div class="stat-label">Total Cost</div>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-cost-per-year">0€</span>
-                                        <span class="sub-stat-label">per year</span>
+                            <!-- Total Cost IN Number of years -->
+                            <a href="#cost" class="paired-stat-link">
+                                <div class="paired-stat-row">
+                                    <div class="paired-stat-left">
+                                        <div class="stat-number" id="paired-total-cost">0€</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-cost-per-event">0€</span>
-                                        <span class="sub-stat-label">per event</span>
+                                    <div class="paired-stat-connector">
+                                        <div class="connector-label">IN</div>
                                     </div>
-                                    <div class="sub-stat">
-                                        <span class="sub-stat-label">∅</span>
-                                        <span class="sub-stat-value" id="avg-cost-per-show">0€</span>
-                                        <span class="sub-stat-label">per show</span>
+                                    <div class="paired-stat-right">
+                                        <div class="stat-number" id="paired-years">0</div>
+                                        <div class="stat-label">Years</div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </section>
 
-                    <!-- Events per Year Chart -->
-                    <section class="chart-section">
-                        <h2>Events per Year</h2>
-                        <div class="chart-container">
-                            <canvas id="events-per-year-chart"></canvas>
-                        </div>
-                    </section>
 
                 </div>
             </div>

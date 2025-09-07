@@ -2,28 +2,15 @@
 class StatisticsManager {
     constructor() {
         this.elements = {
-            // Main statistics
-            totalEvents: document.getElementById('total-events'),
-            totalBands: document.getElementById('total-bands'),
-            totalShows: document.getElementById('total-shows'),
-            totalCost: document.getElementById('total-cost'),
-            
-            // Sub-statistics
-            totalConcerts: document.getElementById('total-concerts'),
-            totalFestivals: document.getElementById('total-festivals'),
-            avgEventsPerYear: document.getElementById('avg-events-per-year'),
-            
-            repeatBandsPercentage: document.getElementById('repeat-bands-percentage'),
-            avgBandsPerYear: document.getElementById('avg-bands-per-year'),
-            avgNewBandsPerYear: document.getElementById('avg-new-bands-per-year'),
-            
-            avgShowsPerYear: document.getElementById('avg-shows-per-year'),
-            avgShowsPerBand: document.getElementById('avg-shows-per-band'),
-            avgShowsPerEvent: document.getElementById('avg-shows-per-event'),
-            
-            avgCostPerYear: document.getElementById('avg-cost-per-year'),
-            avgCostPerEvent: document.getElementById('avg-cost-per-event'),
-            avgCostPerShow: document.getElementById('avg-cost-per-show'),
+            // Paired statistics elements
+            pairedTotalShows: document.getElementById('paired-total-shows'),
+            pairedTotalEvents: document.getElementById('paired-total-events'),
+            pairedTotalBands: document.getElementById('paired-total-bands'),
+            pairedCountries: document.getElementById('paired-countries'),
+            pairedTotalVenues: document.getElementById('paired-total-venues'),
+            pairedCities: document.getElementById('paired-cities'),
+            pairedTotalCost: document.getElementById('paired-total-cost'),
+            pairedYears: document.getElementById('paired-years'),
             
             // Bands statistics elements
             bandsAvgPerYear: document.getElementById('bands-avg-per-year'),
@@ -43,29 +30,19 @@ class StatisticsManager {
     // Update all statistics
     updateStatistics() {
         const stats = dataManager.getStatistics();
+        const bandsStats = dataManager.getBandsStatistics();
+        const locationStats = dataManager.getLocationStatistics();
+        const years = dataManager.getAvailableYears();
         
-        // Animate main statistics
-        this.animateNumber(this.elements.totalEvents, 0, stats.totalEvents);
-        this.animateNumber(this.elements.totalBands, 0, stats.totalUniqueBands);
-        this.animateNumber(this.elements.totalShows, 0, stats.totalShows);
-        this.animateEuro(this.elements.totalCost, 0, stats.totalCost);
-        
-        // Update sub-statistics (no animation for these)
-        this.updateElement(this.elements.totalConcerts, stats.totalConcerts);
-        this.updateElement(this.elements.totalFestivals, stats.totalFestivals);
-        this.updateElement(this.elements.avgEventsPerYear, stats.avgEventsPerYear);
-        
-        this.updateElement(this.elements.repeatBandsPercentage, stats.repeatBandsPercentage);
-        this.updateElement(this.elements.avgBandsPerYear, stats.avgBandsPerYear);
-        this.updateElement(this.elements.avgNewBandsPerYear, stats.avgNewBandsPerYear);
-        
-        this.updateElement(this.elements.avgShowsPerYear, stats.avgShowsPerYear);
-        this.updateElement(this.elements.avgShowsPerBand, stats.avgShowsPerBand);
-        this.updateElement(this.elements.avgShowsPerEvent, stats.avgShowsPerEvent);
-        
-        this.updateElement(this.elements.avgCostPerYear, stats.avgCostPerYear + '€');
-        this.updateElement(this.elements.avgCostPerEvent, stats.avgCostPerEvent + '€');
-        this.updateElement(this.elements.avgCostPerShow, stats.avgCostPerShow + '€');
+        // Animate paired statistics
+        this.animateNumber(this.elements.pairedTotalShows, 0, stats.totalShows);
+        this.animateNumber(this.elements.pairedTotalEvents, 0, stats.totalEvents);
+        this.animateNumber(this.elements.pairedTotalBands, 0, stats.totalUniqueBands);
+        this.animateNumber(this.elements.pairedCountries, 0, bandsStats.uniqueCountries);
+        this.animateNumber(this.elements.pairedTotalVenues, 0, locationStats.totalVenues);
+        this.animateNumber(this.elements.pairedCities, 0, locationStats.totalCities);
+        this.animateEuro(this.elements.pairedTotalCost, 0, stats.totalCost);
+        this.animateNumber(this.elements.pairedYears, 0, years.length);
     }
 
     // Update element without animation

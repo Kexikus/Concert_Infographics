@@ -96,18 +96,37 @@ body {
 }
 
 /* Statistics Overview */
-.stats-list {
+.paired-stats-list {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
+    text-align: right;
 }
 
-.stat-row {
+/* Clickable link wrapper for paired stat rows */
+.paired-stat-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    cursor: pointer;
+}
+
+.paired-stat-link:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+.paired-stat-link:active {
+    transform: scale(0.98);
+}
+
+.paired-stat-row {
     display: flex;
     align-items: stretch;
-    gap: 2rem;
+    gap: 0;
     padding: 2rem 2.5rem;
     position: relative;
     overflow: hidden;
@@ -115,7 +134,7 @@ body {
 }
 
 /* Odd rows: extend from right edge */
-.stat-row:nth-child(odd) {
+.paired-stat-link:nth-child(odd) .paired-stat-row {
     margin-right: -100vw;
     padding-right: 4rem;
     padding-left: 4rem;
@@ -123,32 +142,47 @@ body {
 }
 
 /* Even rows: extend from left edge */
-.stat-row:nth-child(even) {
-    flex-direction: row-reverse;
-    text-align: right;
+.paired-stat-link:nth-child(even) .paired-stat-row {
+    justify-content: flex-end;
     margin-left: -100vw;
     padding-left: 4rem;
     padding-right: 4rem;
     background-color: var(--dark-red);
 }
 
-.main-stat {
-    flex: 0 0 250px;
+.left-stat,
+.right-stat {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: left;
+    text-align: center;
+    padding: 1rem;
 }
 
-.stat-row:nth-child(even) .main-stat {
-    text-align: right;
+.paired-stat-connector {
+    flex: 0 0 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.connector-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transform: rotate(-90deg);
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
 }
 
 .stat-number {
     font-size: 9rem;
     font-weight: bold;
     line-height: 0.9;
-    margin-bottom: 1rem;
     color: var(--white);
 }
 
@@ -160,52 +194,15 @@ body {
 }
 
 /* Text colors for odd rows (light red background) */
-.stat-row:nth-child(odd) .stat-label,
-.stat-row:nth-child(odd) .sub-stat-label {
+.paired-stat-link:nth-child(odd) .stat-label, .paired-stat-link:nth-child(odd) .connector-label {
     color: var(--dark-red);
 }
 
-.stat-row:nth-child(odd) .sub-stat-value {
-    color: var(--white);
-}
-
 /* Text colors for even rows (dark red background) */
-.stat-row:nth-child(even) .stat-label,
-.stat-row:nth-child(even) .sub-stat-label {
+.paired-stat-link:nth-child(even) .stat-label, .paired-stat-link:nth-child(even) .connector-label {
     color: var(--red);
 }
 
-.stat-row:nth-child(even) .sub-stat-value {
-    color: var(--white);
-}
-
-.sub-stats {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-.sub-stat {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 2.1rem;
-    line-height: 1.4;
-}
-
-.stat-row:nth-child(even) .sub-stat {
-    justify-content: flex-end;
-}
-
-.sub-stat-value {
-    font-weight: bold;
-}
-
-.sub-stat-label {
-    font-weight: 400;
-}
 
 /* Chart Sections */
 .chart-section {
@@ -358,6 +355,15 @@ body {
     .sub-stat {
         font-size: 1.8rem;
     }
+    
+    .connector-label {
+        font-size: 1.3rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 100px;
+    }
 }
 
 @media (max-width: 900px) {
@@ -371,6 +377,15 @@ body {
     
     .sub-stat {
         font-size: 1.5rem;
+    }
+    
+    .connector-label {
+        font-size: 1.2rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 80px;
     }
 }
 
@@ -418,34 +433,45 @@ body {
         margin-bottom: 1.5rem;
     }
     
-    .stats-list {
+    .paired-stats-list {
         gap: 1rem;
     }
     
-    .stat-row {
+    .paired-stat-row {
         flex-direction: column;
-        gap: 1.5rem;
-        padding: 2rem 1rem;
+        align-items: center;
+        gap: 0;
+        padding: 2rem 1rem;      
         transform: skewX(-10deg);
     }
     
-    .stat-row:nth-child(odd) {
+    .paired-stat-link:nth-child(odd) .paired-stat-row {
         margin-right: -100vw;
         padding-right: 100vw;
         padding-left: 4rem;
     }
     
-    .stat-row:nth-child(even) {
+    .paired-stat-link:nth-child(even) .paired-stat-row {
         flex-direction: column;
         margin-left: -100vw;
         padding-left: 100vw;
         padding-right: 4rem;
     }
     
-    .main-stat,
-    .stat-row:nth-child(even) .main-stat {
-        flex: none;
+    .left-stat,
+    .right-stat {
         text-align: center;
+        padding: 0.5rem;
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 60px;
+    }
+    
+    .connector-label {
+        font-size: 1rem;
+        padding: 0.2rem 0.5rem;
+        transform: rotate(0deg);
     }
     
     .stat-number {
@@ -456,15 +482,6 @@ body {
         font-size: 1rem;
     }
     
-    .sub-stats {
-        gap: 1rem;
-    }
-    
-    .sub-stat,
-    .stat-row:nth-child(even) .sub-stat {
-        font-size: 1.2rem;
-        justify-content: center;
-    }
     
     .chart-section {
         padding: 1.5rem 0;
@@ -491,17 +508,26 @@ body {
 }
 
 @media (max-width: 400px) {
-    .stat-row {
+    .paired-stat-row {
         padding: 1.5rem 0.5rem;
         transform: skewX(-8deg);
     }
     
-    .stat-row:nth-child(odd) {
+    .paired-stat-link:nth-child(odd) .paired-stat-row {
         padding-left: 3rem;
     }
     
-    .stat-row:nth-child(even) {
+    .paired-stat-link:nth-child(even) .paired-stat-row {
         padding-right: 3rem;
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 50px;
+    }
+    
+    .connector-label {
+        font-size: 0.9rem;
+        padding: 0.1rem 0.3rem;
     }
     
     .stat-number {
@@ -512,9 +538,6 @@ body {
         font-size: 0.9rem;
     }
     
-    .sub-stat {
-        font-size: 1rem;
-    }
     
     .chart-container {
         min-height: 160px;
