@@ -266,6 +266,16 @@ class Router {
             titleElement.textContent = actualCityName;
         }
         
+        // Initialize city-related components
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            statisticsManager.initializeCityStatistics(cityName);
+            chartsManager.createCityEventsPerYearChart(cityName);
+            chartsManager.createCityVisitsPerVenueChart(cityName);
+            chartsManager.createCityCapacityPerVenueChart(cityName);
+            showDisplayManager.initializeCityShowDisplays(actualCityName);
+        }, 100);
+        
         console.log(`City page loaded: ${actualCityName}`);
     }
 

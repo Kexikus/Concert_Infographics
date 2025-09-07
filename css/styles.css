@@ -213,7 +213,6 @@ body {
     position: relative;
     width: 100%;
     background: transparent;
-    min-height: 200px; /* Minimum height for safety */
 }
 
 .chart-container canvas {
@@ -1523,6 +1522,196 @@ font-weight: 500;
     }
     
     .locations-view .chart-container {
+        min-height: 140px;
+    }
+}
+
+/* City Statistics Section */
+.city-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.city-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal width boxes */
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+}
+
+.city-stat-box {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Left box (total events): Light red background with dark red labels */
+.city-stat-left {
+    background-color: var(--red);
+}
+
+.city-stat-left .city-stat-label {
+    color: var(--dark-red);
+}
+
+/* Right box (venues): Dark red background with red labels */
+.city-stat-right {
+    background-color: var(--dark-red);
+}
+
+.city-stat-right .city-stat-label {
+    color: var(--red);
+}
+
+.city-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.city-stat-number {
+    font-size: 6rem; /* Larger numbers for two-box layout */
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.city-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Responsive Design for City Statistics */
+@media (max-width: 1200px) {
+    .city-stat-number {
+        font-size: 5rem;
+    }
+    
+    .city-stat-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .city-stat-number {
+        font-size: 4.5rem;
+    }
+    
+    .city-stat-label {
+        font-size: 1rem;
+    }
+    
+    .city-stats-grid {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .city-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
+    .city-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .city-stat-number {
+        font-size: 4rem;
+    }
+    
+    .city-stat-label {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .city-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .city-stats-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 1rem;
+        padding: 0 1rem;
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .city-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .city-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .city-stat-label {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .city-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .city-stat-number {
+        font-size: 3rem;
+    }
+    
+    .city-stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* City Chart Sections */
+.city-view .chart-section {
+    background: transparent;
+    padding: 2rem 0;
+}
+
+.city-view .chart-container {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    min-height: 200px; /* Minimum height for safety */
+}
+
+.city-view .chart-container canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive Design for City Charts */
+@media (max-width: 768px) {
+    .city-view .chart-container {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 550px) {
+    .city-view .chart-section {
+        padding: 1.5rem 0;
+    }
+    
+    .city-view .chart-container {
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 400px) {
+    .city-view .chart-container {
         min-height: 140px;
     }
 }
@@ -3679,6 +3868,95 @@ font-weight: 500;
     }
     
     .no-events-grid {
+        font-size: 0.9rem;
+        padding: 1.5rem;
+    }
+}
+
+/* City All Events Section */
+.city-all-events-section {
+    background: transparent;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.city-all-events-section h2 {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.city-all-events-container {
+    width: 100%;
+}
+
+.city-events-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 0 2rem;
+}
+
+.no-city-events-grid {
+    color: var(--light-grey);
+    font-style: italic;
+    font-size: 1rem;
+    text-align: center;
+    padding: 2rem;
+    grid-column: 1 / -1;
+}
+
+/* Responsive Design for City All Events */
+@media (max-width: 1200px) {
+    .city-events-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        padding: 0 1.5rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .city-events-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .city-all-events-section {
+        padding: 1.5rem 0;
+        margin-top: 1.5rem;
+    }
+    
+    .city-all-events-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .city-events-grid {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+        padding: 0 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .city-all-events-section {
+        padding: 1rem 0;
+        margin-top: 1rem;
+    }
+    
+    .city-all-events-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .no-city-events-grid {
         font-size: 0.9rem;
         padding: 1.5rem;
     }

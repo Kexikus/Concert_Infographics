@@ -510,11 +510,57 @@
                         <p class="subpage-description">Concerts and venues in this city</p>
                     </header>
                     
+                    <!-- City Statistics Section -->
+                    <section class="city-stats-overview">
+                        <div class="city-stats-grid">
+                            <!-- Left cell: Total events in city -->
+                            <div class="city-stat-box city-stat-left">
+                                <div class="city-stat-content">
+                                    <div class="city-stat-number" id="city-total-events">0</div>
+                                    <div class="city-stat-label">total events</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Number of venues in city -->
+                            <div class="city-stat-box city-stat-right">
+                                <div class="city-stat-content">
+                                    <div class="city-stat-number" id="city-total-venues">0</div>
+                                    <div class="city-stat-label">venues</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
                     <div class="subpage-content">
-                        <section class="dynamic-page-section">
-                            <div class="dynamic-page-content">
-                                <p>City page content will be implemented here.</p>
-                                <p>This is a placeholder for the dynamic city page.</p>
+                        <!-- Events per Year Chart for City -->
+                        <section class="chart-section">
+                            <h2>Events per Year</h2>
+                            <div class="chart-container">
+                                <canvas id="city-events-per-year-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Visits per Venue Chart for City -->
+                        <section class="chart-section">
+                            <h2>Visits per Venue</h2>
+                            <div class="chart-container">
+                                <canvas id="city-visits-per-venue-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Capacity per Venue Chart for City -->
+                        <section class="chart-section">
+                            <h2>Capacity per Venue</h2>
+                            <div class="chart-container">
+                                <canvas id="city-capacity-per-venue-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- All Events Section for City -->
+                        <section class="city-all-events-section">
+                            <h2>All Events</h2>
+                            <div id="city-all-events" class="city-all-events-container">
+                                <!-- All events grid will be populated here -->
                             </div>
                         </section>
                     </div>

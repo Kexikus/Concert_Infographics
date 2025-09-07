@@ -2242,6 +2242,509 @@ class ChartsManager {
             }
         });
     }
+
+    // Create City Events Per Year Chart with venue stacking and color coding
+    createCityEventsPerYearChart(cityName) {
+        const ctx = document.getElementById('city-events-per-year-chart');
+        if (!ctx) return;
+
+        // Get all concerts for venues in this city
+        const cityVenues = venuesData.filter(v =>
+            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+        );
+        
+        if (cityVenues.length === 0) {
+            console.warn(`No venues found for city: ${cityName}`);
+            return;
+        }
+
+        const cityVenueIds = cityVenues.map(v => v.id);
+        const cityConcerts = concertsData.filter(c => cityVenueIds.includes(c.venueId));
+
+        // Get all years from the entire dataset for complete range
+        const allYears = [...new Set(concertsData.map(c => new Date(c.date).getFullYear()))].sort();
+        
+        // Group concerts by year and venue
+        const yearVenueData = {};
+        allYears.forEach(year => {
+            yearVenueData[year] = {};
+            cityVenueIds.forEach(venueId => {
+                yearVenueData[year][venueId] = 0;
+            });
+        });
+
+        // Count events per year per venue
+        cityConcerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            if (yearVenueData[year] && yearVenueData[year].hasOwnProperty(concert.venueId)) {
+                yearVenueData[year][concert.venueId]++;
+            }
+        });
+
+        // Find first visit date for each venue to determine ordering
+        const venueFirstVisit = {};
+        cityVenueIds.forEach(venueId => {
+            const venueFirstConcert = cityConcerts
+                .filter(c => c.venueId === venueId)
+                .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+            
+            if (venueFirstConcert) {
+                venueFirstVisit[venueId] = new Date(venueFirstConcert.date);
+            } else {
+                venueFirstVisit[venueId] = new Date('9999-12-31'); // Never visited
+            }
+        });
+
+        // Sort venues by first visit date
+        const sortedVenueIds = cityVenueIds.sort((a, b) =>
+            venueFirstVisit[a] - venueFirstVisit[b]
+        ).filter(venueId => venueFirstVisit[venueId].getFullYear() !== 9999);
+
+        // Generate colors based on venue order
+        const generateVenueColor = (index, total) => {
+            if (total <= 3) {
+                // For 3 or fewer venues, use fixed colors
+                if (index === 0) return '#000000'; // First venue: black
+                if (index === 1) return '#991b1b'; // Second venue: dark red
+                if (index === 2) return '#dc2626'; // Third venue: red
+                return '#dc2626'; // Fallback to red
+            } else {
+                // For 4+ venues: interpolate between black (first) and red (last)
+                const ratio = index / (total - 1); // 0 to 1 across all venues
+                const r = Math.round(0 + (220 - 0) * ratio); // 0 to 220 (black to red)
+                const g = Math.round(0 + (38 - 0) * ratio);  // 0 to 38
+                const b = Math.round(0 + (38 - 0) * ratio);  // 0 to 38
+                
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+        };
+
+        // Create datasets for each venue
+        const datasets = sortedVenueIds.map((venueId, index) => {
+            const venue = venuesData.find(v => v.id === venueId);
+            const venueName = venue ? venue.name : venueId;
+            const data = allYears.map(year => yearVenueData[year][venueId] || 0);
+            
+            return {
+                label: venueName,
+                data: data,
+                backgroundColor: generateVenueColor(index, sortedVenueIds.length),
+                borderColor: generateVenueColor(index, sortedVenueIds.length),
+                borderWidth: 1,
+                borderSkipped: false,
+                stack: 'venues',
+                barPercentage: 0.8,
+                categoryPercentage: 0.9
+            };
+        });
+
+        // Destroy existing chart if it exists
+        if (this.charts.cityEventsPerYear) {
+            this.charts.cityEventsPerYear.destroy();
+        }
+
+        this.charts.cityEventsPerYear = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: allYears,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `Year ${context[0].label}`;
+                            },
+                            beforeBody: function(context) {
+                                const yearIndex = context[0].dataIndex;
+                                const year = allYears[yearIndex];
+                                const totalEvents = sortedVenueIds.reduce((sum, venueId) =>
+                                    sum + (yearVenueData[year][venueId] || 0), 0
+                                );
+                                return totalEvents > 0 ? `Total Events: ${totalEvents}` : '';
+                            },
+                            label: function(context) {
+                                const datasetLabel = context.dataset.label;
+                                const value = context.parsed.y;
+                                return value > 0 ? `${datasetLabel}: ${value}` : null;
+                            },
+                            filter: function(tooltipItem) {
+                                return tooltipItem.parsed.y > 0; // Only show non-zero values
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        offset: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create City Visits Per Venue Horizontal Bar Chart
+    createCityVisitsPerVenueChart(cityName) {
+        const ctx = document.getElementById('city-visits-per-venue-chart');
+        if (!ctx) return;
+
+        // Get all concerts for venues in this city
+        const cityVenues = venuesData.filter(v =>
+            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+        );
+        
+        if (cityVenues.length === 0) {
+            console.warn(`No venues found for city: ${cityName}`);
+            return;
+        }
+
+        const cityVenueIds = cityVenues.map(v => v.id);
+        const cityConcerts = concertsData.filter(c => cityVenueIds.includes(c.venueId));
+
+        // Count visits (concerts) per venue
+        const venueVisits = {};
+        cityVenues.forEach(venue => {
+            venueVisits[venue.name] = 0;
+        });
+
+        cityConcerts.forEach(concert => {
+            const venue = venuesData.find(v => v.id === concert.venueId);
+            if (venue) {
+                venueVisits[venue.name] = (venueVisits[venue.name] || 0) + 1;
+            }
+        });
+
+        // Convert to array and sort by visit count (descending)
+        const sortedVenues = Object.entries(venueVisits)
+            .sort(([,a], [,b]) => b - a)
+            .map(([name, count]) => ({ name, count }));
+
+        const labels = sortedVenues.map(venue => venue.name);
+        const data = sortedVenues.map(venue => venue.count);
+
+        // Destroy existing chart if it exists first
+        if (this.charts.cityVisitsPerVenue) {
+            this.charts.cityVisitsPerVenue.destroy();
+        }
+
+        // Calculate and set dynamic container height with consistent 40px bar height
+        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
+        this.setChartContainerHeight('city-visits-per-venue-chart', chartHeight);
+
+        this.charts.cityVisitsPerVenue = new Chart(ctx, {
+            type: 'bar',
+            plugins: [{
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    const meta = chart.getDatasetMeta(0);
+                    
+                    // Draw values in front of each bar (on top of the bar)
+                    meta.data.forEach((bar, index) => {
+                        const value = data[index];
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = 'bold 20px Arial';
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(value, bar.x - 10, bar.y);
+                    });
+                    
+                    // Draw venue names on the left
+                    meta.data.forEach((bar, index) => {
+                        const venueName = labels[index];
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+                        const label = venueName.length > 20 ? venueName.substring(0, 20) + '...' : venueName;
+                        ctx.fillText(label, 10, bar.y);
+                    });
+                }
+            }],
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Visits',
+                    data: data,
+                    backgroundColor: this.defaultColors.black,
+                    borderColor: this.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // This makes it horizontal
+                interaction: {
+                    intersect: false,
+                    mode: 'none' // Disable all hover interactions
+                },
+                hover: {
+                    mode: null // Disable hover mode
+                },
+                layout: {
+                    padding: {
+                        left: 10 // Add small padding for value labels in front of bars
+                    }
+                },
+                elements: {
+                    bar: {
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false // Disable tooltips
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        display: false, // Hide x-axis ticks
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 16
+                            },
+                            callback: function(value, index, values) {
+                                // Return empty string, we'll draw venue names separately
+                                return '';
+                            }
+                        },
+                        grid: {
+                            display: false
+                        },
+                        afterFit: function(scale) {
+                            scale.width = 200; // Increase width for venue names
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create City Capacity Per Venue Horizontal Bar Chart
+    createCityCapacityPerVenueChart(cityName) {
+        const ctx = document.getElementById('city-capacity-per-venue-chart');
+        if (!ctx) return;
+
+        // Get all venues in this city
+        const cityVenues = venuesData.filter(v =>
+            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+        );
+        
+        if (cityVenues.length === 0) {
+            console.warn(`No venues found for city: ${cityName}`);
+            return;
+        }
+
+        // Process venue capacity data - skip venues with unknown capacity
+        const venueCapacities = cityVenues
+            .filter(venue => venue.capacity && venue.capacity > 0) // Skip venues with null/0/unknown capacity
+            .map(venue => ({
+                name: venue.name,
+                capacity: venue.capacity
+            }));
+
+        // Sort venues by capacity (descending order - largest venues first)
+        venueCapacities.sort((a, b) => b.capacity - a.capacity);
+
+        const labels = venueCapacities.map(venue => venue.name);
+        const data = venueCapacities.map(venue => venue.capacity);
+
+        // Destroy existing chart if it exists first
+        if (this.charts.cityCapacityPerVenue) {
+            this.charts.cityCapacityPerVenue.destroy();
+        }
+
+        // Calculate and set dynamic container height with consistent 40px bar height
+        // Use the filtered venue count (venueCapacities.length) instead of original count
+        const chartHeight = this.calculateHorizontalBarChartHeight(venueCapacities.length, 40, 80);
+        this.setChartContainerHeight('city-capacity-per-venue-chart', chartHeight);
+
+        this.charts.cityCapacityPerVenue = new Chart(ctx, {
+            type: 'bar',
+            plugins: [{
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    const meta = chart.getDatasetMeta(0);
+                    
+                    // Draw capacity values - inside bar if it fits, otherwise to the right
+                    meta.data.forEach((bar, index) => {
+                        const value = data[index];
+                        const displayValue = value.toLocaleString();
+                        
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = 'bold 20px Arial';
+                        ctx.textBaseline = 'middle';
+                        
+                        // Measure text width to determine if it fits in the bar
+                        const textWidth = ctx.measureText(displayValue).width;
+                        const barWidth = bar.x - chart.chartArea.left;
+                        
+                        if (textWidth + 20 <= barWidth) {
+                            // Text fits inside the bar
+                            ctx.textAlign = 'right';
+                            ctx.fillText(displayValue, bar.x - 10, bar.y);
+                        } else {
+                            // Text doesn't fit, place it to the right of the bar
+                            ctx.textAlign = 'left';
+                            ctx.fillText(displayValue, bar.x + 10, bar.y);
+                        }
+                    });
+                    
+                    // Draw venue names on the left
+                    meta.data.forEach((bar, index) => {
+                        const venueName = labels[index];
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+                        const label = venueName.length > 20 ? venueName.substring(0, 20) + '...' : venueName;
+                        ctx.fillText(label, 10, bar.y);
+                    });
+                }
+            }],
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Venue Capacity',
+                    data: data,
+                    backgroundColor: this.defaultColors.black,
+                    borderColor: this.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // This makes it horizontal
+                interaction: {
+                    intersect: false,
+                    mode: 'none' // Disable all hover interactions
+                },
+                hover: {
+                    mode: null // Disable hover mode
+                },
+                layout: {
+                    padding: {
+                        left: 10 // Add small padding for value labels in front of bars
+                    }
+                },
+                elements: {
+                    bar: {
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false // Disable tooltips
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        display: false, // Hide x-axis ticks
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 16
+                            },
+                            callback: function(value, index, values) {
+                                // Return empty string, we'll draw venue names separately
+                                return '';
+                            }
+                        },
+                        grid: {
+                            display: false
+                        },
+                        afterFit: function(scale) {
+                            scale.width = 200; // Increase width for venue names
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
 }
 
 // Create global instance

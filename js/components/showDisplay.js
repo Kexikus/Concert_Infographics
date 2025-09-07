@@ -175,6 +175,51 @@ class ShowDisplayManager {
             </div>
         `;
     }
+
+    // Initialize city show displays - shows all events for a specific city
+    initializeCityShowDisplays(cityName) {
+        const allEventsContainer = document.getElementById('city-all-events');
+        if (!allEventsContainer) return;
+
+        // Get all venues and filter by city name
+        const allVenues = dataManager.getVenues();
+        const cityVenues = allVenues.filter(venue =>
+            venue.city.toLowerCase() === cityName.toLowerCase()
+        );
+        
+        if (!cityVenues || cityVenues.length === 0) {
+            allEventsContainer.innerHTML = '<div class="no-city-events-grid">No venues found for this city</div>';
+            return;
+        }
+
+        // Get venue IDs for this city
+        const cityVenueIds = cityVenues.map(venue => venue.id);
+        
+        // Get all concerts and filter by city venues
+        const allConcerts = dataManager.getConcerts();
+        const cityConcerts = allConcerts.filter(concert =>
+            cityVenueIds.includes(concert.venueId)
+        );
+
+        // Sort concerts by date (chronologically - first event first)
+        const sortedConcerts = cityConcerts.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        if (sortedConcerts.length === 0) {
+            allEventsContainer.innerHTML = '<div class="no-city-events-grid">No events found for this city</div>';
+            return;
+        }
+
+        // Create compact show displays for all concerts (no highlighted artist)
+        const showsHtml = sortedConcerts.map(concert =>
+            this.createShowDisplay(concert.id, null, { compact: true, showPrice: true })
+        ).join('');
+
+        allEventsContainer.innerHTML = `
+            <div class="city-events-grid">
+                ${showsHtml}
+            </div>
+        `;
+    }
 }
 
 // Create global instance

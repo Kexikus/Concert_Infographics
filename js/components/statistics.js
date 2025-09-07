@@ -513,6 +513,48 @@ class StatisticsManager {
     initializeYearStatistics(year) {
         this.updateYearStatistics(year);
     }
+
+    // Update city statistics
+    updateCityStatistics(cityName) {
+        // Get all venues in this city
+        const cityVenues = dataManager.getVenues().filter(venue =>
+            venue.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+        );
+        
+        if (cityVenues.length === 0) {
+            console.warn(`No venues found for city: ${cityName}`);
+            return;
+        }
+        
+        // Get venue IDs for this city
+        const cityVenueIds = cityVenues.map(venue => venue.id);
+        
+        // Get all concerts that happened at venues in this city
+        const cityConcerts = dataManager.getConcerts().filter(concert =>
+            cityVenueIds.includes(concert.venueId)
+        );
+        
+        // Calculate statistics
+        const totalEvents = cityConcerts.length;
+        const totalVenues = cityVenues.length;
+        
+        // Find the city statistics elements
+        const totalEventsElement = document.getElementById('city-total-events');
+        const totalVenuesElement = document.getElementById('city-total-venues');
+        
+        // Animate the city statistics
+        if (totalEventsElement) {
+            this.animateNumber(totalEventsElement, 0, totalEvents);
+        }
+        if (totalVenuesElement) {
+            this.animateNumber(totalVenuesElement, 0, totalVenues);
+        }
+    }
+
+    // Initialize city statistics display
+    initializeCityStatistics(cityName) {
+        this.updateCityStatistics(cityName);
+    }
 }
 
 // Create global instance
