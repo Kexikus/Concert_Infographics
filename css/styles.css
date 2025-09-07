@@ -2672,3 +2672,646 @@ font-weight: 500;
         max-height: 125px;
     }
 }
+
+/* Artist Statistics Section */
+.artist-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.artist-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal width boxes */
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+}
+
+.artist-stat-box {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Left box (total shows): Light red background with dark red labels */
+.artist-stat-left {
+    background-color: var(--red);
+}
+
+.artist-stat-left .artist-stat-label {
+    color: var(--dark-red);
+}
+
+/* Right box (headline shows): Dark red background with red labels */
+.artist-stat-right {
+    background-color: var(--dark-red);
+}
+
+.artist-stat-right .artist-stat-label {
+    color: var(--red);
+}
+
+.artist-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.artist-stat-number {
+    font-size: 6rem; /* Larger numbers for two-box layout */
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.artist-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Responsive Design for Artist Statistics */
+@media (max-width: 1200px) {
+    .artist-stat-number {
+        font-size: 5rem;
+    }
+    
+    .artist-stat-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .artist-stat-number {
+        font-size: 4.5rem;
+    }
+    
+    .artist-stat-label {
+        font-size: 1rem;
+    }
+    
+    .artist-stats-grid {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .artist-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
+    .artist-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .artist-stat-number {
+        font-size: 4rem;
+    }
+    
+    .artist-stat-label {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .artist-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .artist-stats-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 1rem;
+        padding: 0 1rem;
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .artist-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .artist-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .artist-stat-label {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .artist-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .artist-stat-number {
+        font-size: 3rem;
+    }
+    
+    .artist-stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Artist Shows Section */
+.artist-shows-section {
+    background: transparent;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.artist-shows-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal width boxes */
+    gap: 2rem;
+    padding: 0 2rem;
+}
+
+.artist-show-box {
+    background-color: var(--black);
+    border: 2px solid var(--dark-red);
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.artist-show-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(220, 53, 69, 0.2);
+}
+
+.artist-show-box h3 {
+    color: var(--red);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    border-bottom: 1px solid var(--dark-red);
+    padding-bottom: 0.5rem;
+}
+
+.artist-show-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Show Display Component Styles */
+.show-display {
+    width: 100%;
+    text-align: center;
+}
+
+.show-event-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.show-date-venue {
+    font-size: 1rem;
+    color: var(--light-grey);
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.red-dot {
+    color: var(--red);
+    font-weight: bold;
+}
+
+.show-artists {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.show-artist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 200px;
+    transition: all 0.2s ease;
+}
+
+.show-artist.highlighted .show-artist-logo {
+    /* Convert white logos to red using CSS filters */
+    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+    -webkit-filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+.show-artist.highlighted .show-artist-text {
+    color: var(--red);
+    font-weight: 600;
+}
+
+.show-artist-logo {
+    width: 100%;
+    max-height: 40px;
+    object-fit: contain;
+    filter: brightness(0.9);
+    margin-bottom: 0.25rem;
+}
+
+.show-artist-text {
+    font-size: 1.8rem; /* Doubled from 0.9rem */
+    color: var(--white);
+    line-height: 1.2;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* No show state */
+.no-show {
+    color: var(--light-grey);
+    font-style: italic;
+    font-size: 1rem;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Responsive Design for Artist Shows Section */
+@media (max-width: 768px) {
+    .artist-shows-grid {
+        grid-template-columns: 1fr; /* Single column on tablets and mobile */
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .artist-show-box {
+        min-height: 180px;
+        padding: 1.25rem;
+    }
+    
+    .artist-show-box h3 {
+        font-size: 1.2rem;
+    }
+    
+    .show-event-name {
+        font-size: 1.1rem;
+    }
+    
+    .show-date-venue {
+        font-size: 0.9rem;
+    }
+    
+    .show-artist {
+        width: 85%;
+        max-width: 180px;
+    }
+    
+    .show-artist-logo {
+        max-height: 35px;
+    }
+    
+    .show-artist-text {
+        font-size: 1.7rem; /* Doubled from 0.85rem */
+    }
+}
+
+@media (max-width: 550px) {
+    .artist-shows-section {
+        padding: 1.5rem 0;
+        margin-top: 1.5rem;
+    }
+    
+    .artist-show-box {
+        min-height: 160px;
+        padding: 1rem;
+    }
+    
+    .artist-show-box h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .show-event-name {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .show-date-venue {
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .show-artists {
+        gap: 0.5rem;
+    }
+    
+    .show-artist {
+        width: 90%;
+        max-width: 160px;
+    }
+    
+    .show-artist-logo {
+        max-height: 30px;
+    }
+    
+    .show-artist-text {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .artist-show-box {
+        min-height: 140px;
+        padding: 0.75rem;
+    }
+    
+    .artist-show-box h3 {
+        font-size: 1rem;
+    }
+    
+    .show-event-name {
+        font-size: 0.95rem;
+    }
+    
+    .show-date-venue {
+        font-size: 0.8rem;
+    }
+    
+    .show-artist {
+        width: 95%;
+        max-width: 140px;
+    }
+    
+    .show-artist-logo {
+        max-height: 25px;
+    }
+    
+    .show-artist-text {
+        font-size: 0.75rem;
+    }
+    
+    .no-show {
+        font-size: 0.9rem;
+        padding: 1.5rem;
+    }
+}
+
+/* All Shows Section */
+.artist-all-shows-section {
+    background: transparent;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.artist-all-shows-section h2 {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.artist-all-shows-container {
+    width: 100%;
+}
+
+.all-shows-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 0 2rem;
+}
+
+.no-shows-grid {
+    color: var(--light-grey);
+    font-style: italic;
+    font-size: 1rem;
+    text-align: center;
+    padding: 2rem;
+    grid-column: 1 / -1;
+}
+
+/* Compact Show Display Styles */
+.show-display.compact {
+    background-color: var(--black);
+    border: 1px solid var(--dark-red);
+    border-radius: 6px;
+    padding: 1rem;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.show-display.compact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.15);
+}
+
+.show-display.compact .show-event-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.show-display.compact .show-date-venue {
+    font-size: 0.85rem;
+    color: var(--light-grey);
+    margin-bottom: 0.75rem;
+    font-style: italic;
+}
+
+.show-artists.compact {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.show-artist.compact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    max-width: none;
+    min-width: 60px;
+    flex: 0 0 auto;
+}
+
+.show-artist.compact .show-artist-logo {
+    width: auto;
+    max-width: 80px;
+    max-height: 25px;
+    object-fit: contain;
+    filter: brightness(0.9);
+    margin-bottom: 0.15rem;
+}
+
+.show-artist.compact .show-artist-text {
+    font-size: 0.7rem;
+    color: var(--white);
+    line-height: 1.1;
+    text-align: center;
+    word-break: break-word;
+}
+
+.show-artist.compact.highlighted .show-artist-logo {
+    /* Convert white logos to red using CSS filters */
+    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+    -webkit-filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+.show-artist.compact.highlighted .show-artist-text {
+    color: var(--red);
+    font-weight: 600;
+}
+
+/* Responsive Design for All Shows Grid */
+@media (max-width: 1200px) {
+    .all-shows-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        padding: 0 1.5rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .all-shows-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .show-display.compact {
+        min-height: 140px;
+        padding: 0.875rem;
+    }
+    
+    .show-display.compact .show-event-name {
+        font-size: 0.95rem;
+    }
+    
+    .show-display.compact .show-date-venue {
+        font-size: 0.8rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .show-artist.compact .show-artist-logo {
+        max-width: 70px;
+        max-height: 22px;
+    }
+    
+    .show-artist.compact .show-artist-text {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .artist-all-shows-section {
+        padding: 1.5rem 0;
+        margin-top: 1.5rem;
+    }
+    
+    .artist-all-shows-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .all-shows-grid {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+        padding: 0 0.5rem;
+    }
+    
+    .show-display.compact {
+        min-height: 130px;
+        padding: 0.75rem;
+    }
+    
+    .show-display.compact .show-event-name {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .show-display.compact .show-date-venue {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .show-artists.compact {
+        gap: 0.4rem;
+    }
+    
+    .show-artist.compact {
+        min-width: 50px;
+    }
+    
+    .show-artist.compact .show-artist-logo {
+        max-width: 60px;
+        max-height: 20px;
+    }
+    
+    .show-artist.compact .show-artist-text {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .artist-all-shows-section {
+        padding: 1rem 0;
+        margin-top: 1rem;
+    }
+    
+    .artist-all-shows-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .show-display.compact {
+        min-height: 120px;
+        padding: 0.6rem;
+    }
+    
+    .show-display.compact .show-event-name {
+        font-size: 0.85rem;
+    }
+    
+    .show-display.compact .show-date-venue {
+        font-size: 0.7rem;
+    }
+    
+    .show-artist.compact .show-artist-logo {
+        max-width: 50px;
+        max-height: 18px;
+    }
+    
+    .show-artist.compact .show-artist-text {
+        font-size: 0.55rem;
+    }
+    
+    .no-shows-grid {
+        font-size: 0.9rem;
+        padding: 1.5rem;
+    }
+}

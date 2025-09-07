@@ -1501,6 +1501,266 @@ class ChartsManager {
             }
         });
     }
+
+    // Create Artist Average Venue Size per Year Line Chart
+    createArtistVenueSizeChart(artistId) {
+        const ctx = document.getElementById('artist-venue-size-chart');
+        if (!ctx) return;
+
+        const venueSizeData = dataManager.getArtistVenueSizePerYear(artistId);
+        const years = Object.keys(venueSizeData).sort();
+
+        // Prepare data arrays
+        const allShowsData = years.map(year => venueSizeData[year]?.allShows || null);
+        const concertsOnlyData = years.map(year => venueSizeData[year]?.concertsOnly || null);
+        const headlineShowsData = years.map(year => venueSizeData[year]?.headlineShows || null);
+
+        // Destroy existing chart if it exists
+        if (this.charts.artistVenueSize) {
+            this.charts.artistVenueSize.destroy();
+        }
+
+        this.charts.artistVenueSize = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    // All Shows (black line)
+                    {
+                        label: 'All Shows',
+                        data: allShowsData,
+                        borderColor: this.defaultColors.black,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointBackgroundColor: this.defaultColors.black,
+                        pointBorderColor: this.defaultColors.black,
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0, // Straight lines
+                        spanGaps: false
+                    },
+                    // Concerts Only (dark red line)
+                    {
+                        label: 'Concerts Only',
+                        data: concertsOnlyData,
+                        borderColor: this.defaultColors.darkRed,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointBackgroundColor: this.defaultColors.darkRed,
+                        pointBorderColor: this.defaultColors.darkRed,
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0, // Straight lines
+                        spanGaps: false
+                    },
+                    // Headline Shows (bright red line)
+                    {
+                        label: 'Headline Shows',
+                        data: headlineShowsData,
+                        borderColor: this.defaultColors.red,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointBackgroundColor: this.defaultColors.red,
+                        pointBorderColor: this.defaultColors.red,
+                        pointBorderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0, // Straight lines
+                        spanGaps: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return context[0].label;
+                            },
+                            label: function(context) {
+                                const datasetLabel = context.dataset.label;
+                                const value = context.parsed.y;
+                                return value !== null ? `${datasetLabel}: ${value.toLocaleString()}` : `${datasetLabel}: No data`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '20'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            },
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create artist-specific shows per year chart (moved from router.js)
+    createArtistShowsPerYearChart(artistId) {
+        const ctx = document.getElementById('artist-shows-per-year-chart');
+        if (!ctx) return;
+
+        // Get all available years from the entire concert history
+        const allYears = dataManager.getAvailableYears();
+        
+        // Get concerts for this specific artist
+        const artistConcerts = dataManager.getConcertsByArtist(artistId);
+        
+        // Group concerts by year and count shows (artist appearances)
+        const showsPerYear = {};
+        
+        // Initialize all years with 0
+        allYears.forEach(year => {
+            showsPerYear[year] = 0;
+        });
+        
+        // Count actual shows for this artist
+        artistConcerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            // Count how many times this artist appears in this concert (should be 1, but being safe)
+            const artistAppearances = concert.artistIds.filter(id => id === artistId).length;
+            showsPerYear[year] = (showsPerYear[year] || 0) + artistAppearances;
+        });
+
+        const years = allYears.sort();
+        const data = years.map(year => showsPerYear[year] || 0);
+
+        // Destroy existing chart if it exists
+        if (this.charts.artistShowsPerYear) {
+            this.charts.artistShowsPerYear.destroy();
+        }
+
+        // Create chart using the same styling as the main shows per year chart
+        this.charts.artistShowsPerYear = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Shows',
+                    data: data,
+                    backgroundColor: this.defaultColors.black,
+                    borderColor: this.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.9
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `Year ${context[0].label}`;
+                            },
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                return `Shows: ${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        offset: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
 }
 
 // Create global instance

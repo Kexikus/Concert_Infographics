@@ -425,6 +425,40 @@ class StatisticsManager {
     initializeEventsStatistics() {
         this.updateEventsStatistics();
     }
+
+    // Update artist statistics (moved from router.js)
+    updateArtistStatistics(artistId) {
+        // Get all concerts for this artist
+        const artistConcerts = dataManager.getConcertsByArtist(artistId);
+        
+        // Calculate total shows (number of concerts this artist appeared in)
+        const totalShows = artistConcerts.length;
+        
+        // Calculate headline shows (concerts only, not festivals, where this artist is listed first)
+        const headlineShows = artistConcerts.filter(concert => {
+            // Check if this artist is the first in the artistIds array (headliner) AND it's a concert (not festival)
+            return concert.type === 'concert' &&
+                   concert.artistIds.length > 0 &&
+                   concert.artistIds[0] === artistId;
+        }).length;
+        
+        // Update the statistics display with animation
+        const totalShowsElement = document.getElementById('artist-total-shows');
+        const headlineShowsElement = document.getElementById('artist-headline-shows');
+        
+        if (totalShowsElement) {
+            this.animateNumber(totalShowsElement, 0, totalShows);
+        }
+        
+        if (headlineShowsElement) {
+            this.animateNumber(headlineShowsElement, 0, headlineShows);
+        }
+    }
+
+    // Initialize artist statistics display
+    initializeArtistStatistics(artistId) {
+        this.updateArtistStatistics(artistId);
+    }
 }
 
 // Create global instance

@@ -866,6 +866,57 @@ class DataManager {
         };
     }
 
+    // Get average venue size per year statistics for a specific artist
+    getArtistVenueSizePerYear(artistId) {
+        // Get all concerts for this artist
+        const artistConcerts = this.getConcertsByArtist(artistId);
+        
+        const yearStats = {};
+        
+        artistConcerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            const venue = this.getVenueById(concert.venueId);
+            
+            if (venue && venue.capacity !== null && venue.capacity !== undefined) {
+                if (!yearStats[year]) {
+                    yearStats[year] = {
+                        allShows: [],
+                        concertsOnly: [],
+                        headlineShows: []
+                    };
+                }
+                
+                // All shows where this artist appeared
+                yearStats[year].allShows.push(venue.capacity);
+                
+                // Concerts only (not festivals)
+                if (concert.type === 'concert') {
+                    yearStats[year].concertsOnly.push(venue.capacity);
+                    
+                    // Headline shows (concerts where this artist is listed first)
+                    if (concert.artistIds.length > 0 && concert.artistIds[0] === artistId) {
+                        yearStats[year].headlineShows.push(venue.capacity);
+                    }
+                }
+            }
+        });
+        
+        // Calculate averages for each year
+        const result = {};
+        Object.keys(yearStats).forEach(year => {
+            result[year] = {
+                allShows: yearStats[year].allShows.length > 0 ?
+                    Math.round(yearStats[year].allShows.reduce((sum, cap) => sum + cap, 0) / yearStats[year].allShows.length) : null,
+                concertsOnly: yearStats[year].concertsOnly.length > 0 ?
+                    Math.round(yearStats[year].concertsOnly.reduce((sum, cap) => sum + cap, 0) / yearStats[year].concertsOnly.length) : null,
+                headlineShows: yearStats[year].headlineShows.length > 0 ?
+                    Math.round(yearStats[year].headlineShows.reduce((sum, cap) => sum + cap, 0) / yearStats[year].headlineShows.length) : null
+            };
+        });
+        
+        return result;
+    }
+
     // Get events per year statistics (concerts only, no shows)
     getEventsPerYearStatsEvents() {
         const stats = {};

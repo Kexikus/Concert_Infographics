@@ -224,124 +224,22 @@ class Router {
             }
         }
         
-        // Initialize artist-specific shows per year chart
-        this.createArtistShowsPerYearChart(artist.id);
+        // Update country information
+        this.updateArtistCountryInfo(artist);
+        
+        // Delegate to component managers
+        statisticsManager.initializeArtistStatistics(artist.id);
+        chartsManager.createArtistShowsPerYearChart(artist.id);
+        chartsManager.createArtistVenueSizeChart(artist.id);
+        showDisplayManager.initializeArtistShowDisplays(artist.id);
     }
 
-    // Create artist-specific shows per year chart
-    createArtistShowsPerYearChart(artistId) {
-        const ctx = document.getElementById('artist-shows-per-year-chart');
-        if (!ctx) return;
-
-        // Get all available years from the entire concert history
-        const allYears = dataManager.getAvailableYears();
-        
-        // Get concerts for this specific artist
-        const artistConcerts = dataManager.getConcertsByArtist(artistId);
-        
-        // Group concerts by year and count shows (artist appearances)
-        const showsPerYear = {};
-        
-        // Initialize all years with 0
-        allYears.forEach(year => {
-            showsPerYear[year] = 0;
-        });
-        
-        // Count actual shows for this artist
-        artistConcerts.forEach(concert => {
-            const year = new Date(concert.date).getFullYear();
-            // Count how many times this artist appears in this concert (should be 1, but being safe)
-            const artistAppearances = concert.artistIds.filter(id => id === artistId).length;
-            showsPerYear[year] = (showsPerYear[year] || 0) + artistAppearances;
-        });
-
-        const years = allYears.sort();
-        const data = years.map(year => showsPerYear[year] || 0);
-
-        // Destroy existing chart if it exists
-        if (chartsManager.charts.artistShowsPerYear) {
-            chartsManager.charts.artistShowsPerYear.destroy();
+    // Update artist country information
+    updateArtistCountryInfo(artist) {
+        const countryElement = document.getElementById('artist-country');
+        if (countryElement && artist.country) {
+            countryElement.textContent = artist.country;
         }
-
-        // Create chart using the same styling as the main shows per year chart
-        chartsManager.charts.artistShowsPerYear = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: years,
-                datasets: [{
-                    label: 'Shows',
-                    data: data,
-                    backgroundColor: chartsManager.defaultColors.black,
-                    borderColor: chartsManager.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.9
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: chartsManager.defaultColors.black,
-                        titleColor: chartsManager.defaultColors.white,
-                        bodyColor: chartsManager.defaultColors.white,
-                        borderColor: chartsManager.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            label: function(context) {
-                                const value = context.parsed.y;
-                                return `Shows: ${value}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: chartsManager.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: chartsManager.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: chartsManager.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
-            }
-        });
     }
 
     // Show City page

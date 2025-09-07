@@ -428,8 +428,29 @@
                             <img id="artist-logo" class="artist-logo-header" style="display: none;" alt="Artist Logo">
                             <h1 id="artist-title">Artist</h1>
                         </div>
-                        <p class="subpage-description">Detailed information about this artist</p>
+                        <p id="artist-country-info" class="subpage-description">from <span id="artist-country">Country</span></p>
                     </header>
+                    
+                    <!-- Artist Statistics Section -->
+                    <section class="artist-stats-overview">
+                        <div class="artist-stats-grid">
+                            <!-- Left cell: Total Shows -->
+                            <div class="artist-stat-box artist-stat-left">
+                                <div class="artist-stat-content">
+                                    <div class="artist-stat-number" id="artist-total-shows">0</div>
+                                    <div class="artist-stat-label">total shows</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right cell: Headline Shows -->
+                            <div class="artist-stat-box artist-stat-right">
+                                <div class="artist-stat-content">
+                                    <div class="artist-stat-number" id="artist-headline-shows">0</div>
+                                    <div class="artist-stat-label">headline shows</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     
                     <div class="subpage-content">
                         <!-- Shows per Year Chart -->
@@ -437,6 +458,44 @@
                             <h2>Shows per Year</h2>
                             <div class="chart-container">
                                 <canvas id="artist-shows-per-year-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- First Show and First Headline Show Sections -->
+                        <section class="artist-shows-section">
+                            <h2>Show-Highlights</h2>
+                            <div class="artist-shows-grid">
+                                <!-- First Show -->
+                                <div class="artist-show-box">
+                                    <h3>First Show</h3>
+                                    <div id="artist-first-show" class="artist-show-content">
+                                        <!-- First show details will be populated here -->
+                                    </div>
+                                </div>
+                                
+                                <!-- First Headline Show -->
+                                <div class="artist-show-box">
+                                    <h3>First Headline Show</h3>
+                                    <div id="artist-first-headline-show" class="artist-show-content">
+                                        <!-- First headline show details will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Average Venue Size Section -->
+                        <section class="chart-section">
+                            <h2>Average Venue Size</h2>
+                            <div class="chart-container">
+                                <canvas id="artist-venue-size-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- All Shows Section -->
+                        <section class="artist-all-shows-section">
+                            <h2>All Shows</h2>
+                            <div id="artist-all-shows" class="artist-all-shows-container">
+                                <!-- All shows grid will be populated here -->
                             </div>
                         </section>
                     </div>
@@ -492,6 +551,7 @@
     <script src="js/utils/repellantForcesLabelPlacer.js"></script>
     <script src="js/components/charts.js"></script>
     <script src="js/components/statistics.js"></script>
+    <script src="js/components/showDisplay.js"></script>
     <script src="js/components/worldMap.js"></script>
     <script src="js/components/germanMap.js"></script>
     <script src="js/router.js"></script>
