@@ -2584,3 +2584,91 @@ font-weight: 500;
         margin: 1.5rem 0;
     }
 }
+
+/* Dynamic Page Styles */
+.dynamic-page-section {
+    background: transparent;
+    padding: 2rem 0;
+}
+
+.dynamic-page-content {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.dynamic-page-content p {
+    font-size: 1.1rem;
+    color: var(--light-grey);
+    font-style: italic;
+    margin: 0.5rem 0;
+}
+
+/* Responsive Design for Dynamic Pages */
+@media (max-width: 768px) {
+    .dynamic-page-content {
+        padding: 2rem;
+        min-height: 150px;
+    }
+    
+    .dynamic-page-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .dynamic-page-section {
+        padding: 1.5rem 0;
+    }
+    
+    .dynamic-page-content {
+        padding: 1.5rem;
+        min-height: 120px;
+    }
+}
+
+/* Artist Page Styles */
+.artist-logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.artist-logo-header {
+    max-width: 600px;
+    max-height: 300px;
+    object-fit: contain;
+    filter: brightness(0.9);
+    transition: filter 0.2s ease;
+}
+
+.artist-logo-header:hover {
+    filter: brightness(1);
+}
+
+/* When logo is displayed, hide the text title */
+.artist-logo-container.has-logo #artist-title {
+    display: none;
+}
+
+/* Responsive Design for Artist Logo */
+@media (max-width: 768px) {
+    .artist-logo-header {
+        max-width: 90%;
+        max-height: 200px;
+    }
+}
+
+@media (max-width: 550px) {
+    .artist-logo-header {
+        max-height: 125px;
+    }
+}

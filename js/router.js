@@ -29,12 +29,52 @@ class Router {
         const hash = window.location.hash.slice(1); // Remove the # symbol
         const route = hash || 'dashboard'; // Default to dashboard if no hash
         
+        // Parse route segments for dynamic routing
+        const routeSegments = route.split('/');
+        const baseRoute = routeSegments[0];
+        const parameter = routeSegments[1];
+        
+        // Check for exact route match first
         if (this.routes[route]) {
             this.currentRoute = route;
             this.routes[route]();
-        } else {
+        }
+        // Check for dynamic routes (artist, city, year)
+        else if (this.isDynamicRoute(baseRoute) && parameter) {
+            this.currentRoute = route;
+            this.handleDynamicRoute(baseRoute, parameter);
+        }
+        // Check for base route match
+        else if (this.routes[baseRoute]) {
+            this.currentRoute = baseRoute;
+            this.routes[baseRoute]();
+        }
+        else {
             console.warn(`Route '${route}' not found, redirecting to dashboard`);
             this.navigateTo('dashboard');
+        }
+    }
+
+    // Check if route is dynamic
+    isDynamicRoute(route) {
+        return ['artist', 'city', 'year'].includes(route);
+    }
+
+    // Handle dynamic routes
+    handleDynamicRoute(type, parameter) {
+        switch (type) {
+            case 'artist':
+                this.showArtistPage(parameter);
+                break;
+            case 'city':
+                this.showCityPage(parameter);
+                break;
+            case 'year':
+                this.showYearPage(parameter);
+                break;
+            default:
+                console.warn(`Unknown dynamic route type: ${type}`);
+                this.navigateTo('dashboard');
         }
     }
 
@@ -130,6 +170,237 @@ class Router {
         }, 100);
         
         console.log('Cost page loaded');
+    }
+
+    // Show Artist page
+    showArtistPage(artistId) {
+        this.showView('artist-view');
+        
+        // Find artist data
+        const artist = artistsData.find(a => a.id === artistId);
+        if (!artist) {
+            console.warn(`Artist '${artistId}' not found, redirecting to bands`);
+            this.navigateTo('bands');
+            return;
+        }
+        
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            this.initializeArtistPage(artist);
+        }, 100);
+        
+        console.log(`Artist page loaded: ${artist.name}`);
+    }
+
+    // Initialize artist page with logo and chart
+    initializeArtistPage(artist) {
+        // Handle logo display
+        const logoContainer = document.getElementById('artist-logo-container');
+        const logoElement = document.getElementById('artist-logo');
+        const titleElement = document.getElementById('artist-title');
+        
+        if (logoContainer && logoElement && titleElement) {
+            // Get artist logo path
+            const logoPath = dataManager.getArtistLogo(artist.id);
+            
+            if (logoPath) {
+                // Show logo and hide text title
+                logoElement.src = logoPath;
+                logoElement.alt = artist.name;
+                logoElement.style.display = 'block';
+                logoContainer.classList.add('has-logo');
+                
+                // Handle logo load error - fallback to text
+                logoElement.onerror = function() {
+                    logoElement.style.display = 'none';
+                    logoContainer.classList.remove('has-logo');
+                    titleElement.textContent = artist.name;
+                };
+            } else {
+                // No logo available, show text title
+                logoElement.style.display = 'none';
+                logoContainer.classList.remove('has-logo');
+                titleElement.textContent = artist.name;
+            }
+        }
+        
+        // Initialize artist-specific shows per year chart
+        this.createArtistShowsPerYearChart(artist.id);
+    }
+
+    // Create artist-specific shows per year chart
+    createArtistShowsPerYearChart(artistId) {
+        const ctx = document.getElementById('artist-shows-per-year-chart');
+        if (!ctx) return;
+
+        // Get all available years from the entire concert history
+        const allYears = dataManager.getAvailableYears();
+        
+        // Get concerts for this specific artist
+        const artistConcerts = dataManager.getConcertsByArtist(artistId);
+        
+        // Group concerts by year and count shows (artist appearances)
+        const showsPerYear = {};
+        
+        // Initialize all years with 0
+        allYears.forEach(year => {
+            showsPerYear[year] = 0;
+        });
+        
+        // Count actual shows for this artist
+        artistConcerts.forEach(concert => {
+            const year = new Date(concert.date).getFullYear();
+            // Count how many times this artist appears in this concert (should be 1, but being safe)
+            const artistAppearances = concert.artistIds.filter(id => id === artistId).length;
+            showsPerYear[year] = (showsPerYear[year] || 0) + artistAppearances;
+        });
+
+        const years = allYears.sort();
+        const data = years.map(year => showsPerYear[year] || 0);
+
+        // Destroy existing chart if it exists
+        if (chartsManager.charts.artistShowsPerYear) {
+            chartsManager.charts.artistShowsPerYear.destroy();
+        }
+
+        // Create chart using the same styling as the main shows per year chart
+        chartsManager.charts.artistShowsPerYear = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Shows',
+                    data: data,
+                    backgroundColor: chartsManager.defaultColors.black,
+                    borderColor: chartsManager.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.9
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: chartsManager.defaultColors.black,
+                        titleColor: chartsManager.defaultColors.white,
+                        bodyColor: chartsManager.defaultColors.white,
+                        borderColor: chartsManager.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `Year ${context[0].label}`;
+                            },
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                return `Shows: ${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        offset: true,
+                        ticks: {
+                            color: chartsManager.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: chartsManager.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: chartsManager.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Show City page
+    showCityPage(cityName) {
+        this.showView('city-view');
+        
+        // Find city data (check if any venues exist in this city)
+        const cityVenues = venuesData.filter(v =>
+            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+        );
+        
+        if (cityVenues.length === 0) {
+            console.warn(`City '${cityName}' not found, redirecting to locations`);
+            this.navigateTo('locations');
+            return;
+        }
+        
+        // Get the actual city name from venue data
+        const actualCityName = cityVenues[0].city;
+        
+        // Update page title
+        const titleElement = document.getElementById('city-title');
+        if (titleElement) {
+            titleElement.textContent = actualCityName;
+        }
+        
+        console.log(`City page loaded: ${actualCityName}`);
+    }
+
+    // Show Year page
+    showYearPage(year) {
+        this.showView('year-view');
+        
+        // Validate year
+        const yearNum = parseInt(year);
+        if (isNaN(yearNum) || yearNum < 2010 || yearNum > 2100) {
+            console.warn(`Invalid year '${year}', redirecting to events`);
+            this.navigateTo('events');
+            return;
+        }
+        
+        // Check if any concerts exist for this year
+        const yearConcerts = concertsData.filter(c =>
+            new Date(c.date).getFullYear() === yearNum
+        );
+        
+        if (yearConcerts.length === 0) {
+            console.warn(`No concerts found for year '${year}', redirecting to events`);
+            this.navigateTo('events');
+            return;
+        }
+        
+        // Update page title
+        const titleElement = document.getElementById('year-title');
+        if (titleElement) {
+            titleElement.textContent = year;
+        }
+        
+        console.log(`Year page loaded: ${year}`);
     }
 
     // Navigate programmatically
