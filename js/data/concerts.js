@@ -1,6 +1,30 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "30-jahre-das-jubilumsfestival",
+        "name": "30 Jahre - Das Jubiläumsfestival",
+        "date": "2025-09-04",
+        "endDate": "2025-09-06",
+        "type": "festival",
+        "artistIds": [
+            "in-extremo",
+            "asp",
+            "eisbrecher",
+            "feuerschwanz",
+            "versengold",
+            "faun",
+            "wind-rose",
+            "schandmaul",
+            "tanzwut",
+            "rauhbein",
+            "fabula"
+        ],
+        "venueId": "loreley-freilichtbhne",
+        "price": null,
+        "logo": null,
+        "notes": null
+    },
+    {
         "id": "burgentour-finsterwacht-2025",
         "name": "Burgentour Finsterwacht 2025",
         "date": "2025-08-30",

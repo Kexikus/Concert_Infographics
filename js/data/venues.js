@@ -388,6 +388,15 @@ const venuesData = [
         "capacity": null
     },
     {
+        "id": "loreley-freilichtbhne",
+        "name": "Loreley Freilichtbühne",
+        "city": "St. Goarshausen",
+        "country": "Germany",
+        "latitude": 50.142589065399065,
+        "longitude": 7.731245469369651,
+        "capacity": 15000
+    },
+    {
         "id": "loewensaal-nuernberg",
         "name": "Löwensaal",
         "city": "Nürnberg",

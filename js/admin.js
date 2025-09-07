@@ -116,6 +116,42 @@ class AdminManager {
     // ==================== UTILITY FUNCTIONS ====================
 
     /**
+     * Parse comma-separated coordinates string into latitude and longitude
+     * @param {string} coordinatesStr - Coordinates string in format "latitude, longitude"
+     * @returns {Object} Object with latitude and longitude properties, or null if invalid
+     */
+    parseCoordinates(coordinatesStr) {
+        if (!coordinatesStr || typeof coordinatesStr !== 'string') {
+            return null;
+        }
+        
+        // Clean and split the coordinates string
+        const parts = coordinatesStr.trim().split(',');
+        if (parts.length !== 2) {
+            return null;
+        }
+        
+        // Parse latitude and longitude
+        const latitude = parseFloat(parts[0].trim());
+        const longitude = parseFloat(parts[1].trim());
+        
+        // Validate the parsed values
+        if (isNaN(latitude) || isNaN(longitude)) {
+            return null;
+        }
+        
+        // Validate coordinate ranges
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+            return null;
+        }
+        
+        return {
+            latitude: latitude,
+            longitude: longitude
+        };
+    }
+
+    /**
      * Generate unique ID from name (kebab-case)
      * @param {string} name - Name to convert to ID
      * @returns {string} Generated ID
@@ -182,16 +218,17 @@ class AdminManager {
                 if (!data.country || data.country.trim() === '') {
                     errors.push('Country is required');
                 }
-                if (data.latitude === null || data.latitude === undefined || data.latitude === '') {
-                    errors.push('Latitude is required');
+                // Validate coordinates - they should already be parsed in handleVenueSubmit
+                if (data.latitude === null || data.latitude === undefined) {
+                    errors.push('Valid coordinates are required (format: latitude, longitude)');
                 } else {
                     const lat = parseFloat(data.latitude);
                     if (isNaN(lat) || lat < -90 || lat > 90) {
                         errors.push('Latitude must be a number between -90 and 90');
                     }
                 }
-                if (data.longitude === null || data.longitude === undefined || data.longitude === '') {
-                    errors.push('Longitude is required');
+                if (data.longitude === null || data.longitude === undefined) {
+                    errors.push('Valid coordinates are required (format: latitude, longitude)');
                 } else {
                     const lng = parseFloat(data.longitude);
                     if (isNaN(lng) || lng < -180 || lng > 180) {
@@ -583,13 +620,18 @@ class AdminManager {
         e.preventDefault();
         
         const formData = new FormData(e.target);
+        
+        // Get coordinates from the single coordinates field and parse them
+        const coordinatesStr = formData.get('coordinates');
+        const parsedCoords = this.parseCoordinates(coordinatesStr);
+        
         const venueData = {
             id: formData.get('id').trim(),
             name: formData.get('name').trim(),
             city: formData.get('city').trim(),
             country: formData.get('country').trim(),
-            latitude: formData.get('latitude') ? parseFloat(formData.get('latitude')) : null,
-            longitude: formData.get('longitude') ? parseFloat(formData.get('longitude')) : null,
+            latitude: parsedCoords ? parsedCoords.latitude : null,
+            longitude: parsedCoords ? parsedCoords.longitude : null,
             capacity: formData.get('capacity') ? parseInt(formData.get('capacity')) : null
         };
         
@@ -654,8 +696,17 @@ class AdminManager {
         document.getElementById('venue-name').value = venue.name;
         document.getElementById('venue-city').value = venue.city;
         document.getElementById('venue-country').value = venue.country;
-        document.getElementById('venue-latitude').value = venue.latitude || '';
-        document.getElementById('venue-longitude').value = venue.longitude || '';
+        
+        // Combine latitude and longitude into coordinates field
+        const coordinatesField = document.getElementById('venue-coordinates');
+        if (coordinatesField) {
+            if (venue.latitude !== null && venue.longitude !== null) {
+                coordinatesField.value = `${venue.latitude}, ${venue.longitude}`;
+            } else {
+                coordinatesField.value = '';
+            }
+        }
+        
         document.getElementById('venue-capacity').value = venue.capacity || '';
         
         // Update submit button

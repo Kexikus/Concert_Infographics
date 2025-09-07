@@ -349,6 +349,12 @@ const artistsData = [
         "logo": "Evertale.png"
     },
     {
+        "id": "fabula",
+        "name": "Fabula",
+        "country": "Germany",
+        "logo": null
+    },
+    {
         "id": "farin-urlaub-racing-team",
         "name": "Farin Urlaub Racing Team",
         "country": "Germany",
