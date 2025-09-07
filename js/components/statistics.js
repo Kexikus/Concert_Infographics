@@ -459,6 +459,60 @@ class StatisticsManager {
     initializeArtistStatistics(artistId) {
         this.updateArtistStatistics(artistId);
     }
+
+    // Update year statistics
+    updateYearStatistics(year) {
+        // Filter concerts for the specific year
+        const yearConcerts = dataManager.getConcerts().filter(concert =>
+            new Date(concert.date).getFullYear() === year
+        );
+        
+        // Calculate year-specific statistics
+        const concerts = yearConcerts.filter(c => c.type === 'concert').length;
+        const festivals = yearConcerts.filter(c => c.type === 'festival').length;
+        const events = concerts + festivals;
+        
+        // Calculate shows as total number of artist performances (sum of artistIds.length)
+        const shows = yearConcerts.reduce((sum, concert) => sum + concert.artistIds.length, 0);
+        
+        // Get unique bands for this year
+        const uniqueBandIds = new Set();
+        yearConcerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => {
+                uniqueBandIds.add(artistId);
+            });
+        });
+        const bands = uniqueBandIds.size;
+        
+        // Find the year statistics elements
+        const concertsElement = document.getElementById('year-concerts');
+        const eventsElement = document.getElementById('year-events');
+        const festivalsElement = document.getElementById('year-festivals');
+        const showsElement = document.getElementById('year-shows');
+        const bandsElement = document.getElementById('year-bands');
+        
+        // Animate the year statistics
+        if (concertsElement) {
+            this.animateNumber(concertsElement, 0, concerts);
+        }
+        if (eventsElement) {
+            this.animateNumber(eventsElement, 0, events);
+        }
+        if (festivalsElement) {
+            this.animateNumber(festivalsElement, 0, festivals);
+        }
+        if (showsElement) {
+            this.animateNumber(showsElement, 0, shows);
+        }
+        if (bandsElement) {
+            this.animateNumber(bandsElement, 0, bands);
+        }
+    }
+
+    // Initialize year statistics display
+    initializeYearStatistics(year) {
+        this.updateYearStatistics(year);
+    }
 }
 
 // Create global instance

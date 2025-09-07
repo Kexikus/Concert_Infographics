@@ -16,8 +16,8 @@ class ChartsManager {
         ];
     }
 
-    // Helper function to calculate dynamic chart container height
-    calculateChartHeight(dataCount, barHeight = 40, padding = 80) {
+    // Helper function to calculate dynamic chart container height for horizontal bar charts
+    calculateHorizontalBarChartHeight(dataCount, barHeight = 40, padding = 80) {
         return (dataCount * barHeight) + padding;
     }
 
@@ -27,6 +27,11 @@ class ChartsManager {
         if (container) {
             container.style.height = height + 'px';
         }
+    }
+
+    // Legacy method for backward compatibility - redirects to new method
+    calculateChartHeight(dataCount, barHeight = 40, padding = 80) {
+        return this.calculateHorizontalBarChartHeight(dataCount, barHeight, padding);
     }
 
     // Initialize all charts (removed Events per Year chart from main dashboard)
@@ -328,14 +333,14 @@ class ChartsManager {
         const data = frequentArtists.map(artist => artist.count);
         const logos = frequentArtists.map(artist => artist.logo);
 
-        // Calculate and set dynamic container height
-        const chartHeight = this.calculateChartHeight(data.length);
-        this.setChartContainerHeight('band-frequency-chart', chartHeight);
-
-        // Destroy existing chart if it exists
+        // Destroy existing chart if it exists first
         if (this.charts.bandFrequency) {
             this.charts.bandFrequency.destroy();
         }
+
+        // Calculate and set dynamic container height with consistent 40px bar height
+        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
+        this.setChartContainerHeight('band-frequency-chart', chartHeight);
 
         this.charts.bandFrequency = new Chart(ctx, {
             type: 'bar',
@@ -512,14 +517,14 @@ class ChartsManager {
         const labels = topVenues.map(venue => venue.name);
         const data = topVenues.map(venue => venue.count);
 
-        // Calculate and set dynamic container height
-        const chartHeight = this.calculateChartHeight(data.length);
-        this.setChartContainerHeight('top-venues-chart', chartHeight);
-
-        // Destroy existing chart if it exists
+        // Destroy existing chart if it exists first
         if (this.charts.topVenues) {
             this.charts.topVenues.destroy();
         }
+
+        // Calculate and set dynamic container height with consistent 40px bar height
+        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
+        this.setChartContainerHeight('top-venues-chart', chartHeight);
 
         this.charts.topVenues = new Chart(ctx, {
             type: 'bar',
@@ -636,14 +641,14 @@ class ChartsManager {
         const labels = topCities.map(city => city.name);
         const data = topCities.map(city => city.count);
 
-        // Calculate and set dynamic container height
-        const chartHeight = this.calculateChartHeight(data.length);
-        this.setChartContainerHeight('top-cities-chart', chartHeight);
-
-        // Destroy existing chart if it exists
+        // Destroy existing chart if it exists first
         if (this.charts.topCities) {
             this.charts.topCities.destroy();
         }
+
+        // Calculate and set dynamic container height with consistent 40px bar height
+        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
+        this.setChartContainerHeight('top-cities-chart', chartHeight);
 
         this.charts.topCities = new Chart(ctx, {
             type: 'bar',
@@ -1751,6 +1756,482 @@ class ChartsManager {
                         },
                         grid: {
                             color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Helper function to convert month number to month name
+    getMonthName(monthNumber) {
+        const monthNames = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+        return monthNames[monthNumber - 1] || '';
+    }
+
+    // Create Events Per Month Chart for a specific year (modified from createEventsPerYearChartEvents)
+    createEventsPerMonthChart(year) {
+        const ctx = document.getElementById('year-events-per-month-chart');
+        if (!ctx) return;
+
+        // Filter concerts for the specific year
+        const yearConcerts = dataManager.getConcertsByYear(year);
+        
+        // Group events by month and type
+        const monthlyData = {};
+        for (let month = 1; month <= 12; month++) {
+            monthlyData[month] = { concert: 0, festival: 0 };
+        }
+
+        yearConcerts.forEach(concert => {
+            const month = new Date(concert.date).getMonth() + 1; // getMonth() returns 0-11
+            monthlyData[month][concert.type] = (monthlyData[month][concert.type] || 0) + 1;
+        });
+
+        // Prepare data arrays
+        const months = Array.from({length: 12}, (_, i) => i + 1);
+        const monthLabels = months.map(month => this.getMonthName(month));
+        const concertData = months.map(month => monthlyData[month]?.concert || 0);
+        const festivalData = months.map(month => monthlyData[month]?.festival || 0);
+        const totalData = months.map(month => (monthlyData[month]?.concert || 0) + (monthlyData[month]?.festival || 0));
+
+        // Destroy existing chart if it exists
+        if (this.charts.eventsPerMonth) {
+            this.charts.eventsPerMonth.destroy();
+        }
+
+        this.charts.eventsPerMonth = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: monthLabels,
+                datasets: [
+                    // Festivals dataset (top of stack) - LEGEND ORDER: First
+                    {
+                        label: 'Festivals',
+                        data: festivalData,
+                        backgroundColor: this.defaultColors.red,
+                        borderColor: this.defaultColors.red,
+                        borderWidth: 1,
+                        borderSkipped: false,
+                        stack: 'events',
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9,
+                        order: 1
+                    },
+                    // Concerts dataset (bottom of stack) - LEGEND ORDER: Second
+                    {
+                        label: 'Concerts',
+                        data: concertData,
+                        backgroundColor: this.defaultColors.darkRed,
+                        borderColor: this.defaultColors.darkRed,
+                        borderWidth: 1,
+                        borderSkipped: false,
+                        stack: 'events',
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9,
+                        order: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `${context[0].label} ${year}`;
+                            },
+                            beforeBody: function(context) {
+                                const monthIndex = context[0].dataIndex;
+                                const totalEvents = totalData[monthIndex];
+                                return `Total Events: ${totalEvents}`;
+                            },
+                            label: function(context) {
+                                const datasetLabel = context.dataset.label;
+                                const value = context.parsed.y;
+                                return `${datasetLabel}: ${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        offset: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create Shows Per Month Chart for a specific year (modified from createShowsPerYearChart)
+    createShowsPerMonthChart(year) {
+        const ctx = document.getElementById('year-shows-per-month-chart');
+        if (!ctx) return;
+
+        // Filter concerts for the specific year
+        const yearConcerts = dataManager.getConcertsByYear(year);
+        
+        // Group shows by month
+        const monthlyShows = {};
+        for (let month = 1; month <= 12; month++) {
+            monthlyShows[month] = 0;
+        }
+
+        yearConcerts.forEach(concert => {
+            const month = new Date(concert.date).getMonth() + 1; // getMonth() returns 0-11
+            const showCount = concert.artistIds.length;
+            monthlyShows[month] = (monthlyShows[month] || 0) + showCount;
+        });
+
+        // Prepare data arrays
+        const months = Array.from({length: 12}, (_, i) => i + 1);
+        const monthLabels = months.map(month => this.getMonthName(month));
+        const data = months.map(month => monthlyShows[month] || 0);
+
+        // Destroy existing chart if it exists
+        if (this.charts.showsPerMonth) {
+            this.charts.showsPerMonth.destroy();
+        }
+
+        this.charts.showsPerMonth = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: monthLabels,
+                datasets: [{
+                    label: 'Shows',
+                    data: data,
+                    backgroundColor: this.defaultColors.black,
+                    borderColor: this.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.9
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: this.defaultColors.black,
+                        titleColor: this.defaultColors.white,
+                        bodyColor: this.defaultColors.white,
+                        borderColor: this.defaultColors.lightGrey,
+                        borderWidth: 1,
+                        callbacks: {
+                            title: function(context) {
+                                return `${context[0].label} ${year}`;
+                            },
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                return `Shows: ${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        offset: true,
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: this.defaultColors.lightGrey + '40'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // Create Year Top Bands Horizontal Bar Chart
+    createYearTopBandsChart(year) {
+        const ctx = document.getElementById('year-top-bands-chart');
+        if (!ctx) return;
+
+        // Filter concerts for the specific year
+        const yearConcerts = dataManager.getConcertsByYear(year);
+        
+        // Count how many times each band was seen in that year
+        const bandFrequency = {};
+        yearConcerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => {
+                const artist = dataManager.getArtistById(artistId);
+                if (artist) {
+                    bandFrequency[artist.name] = (bandFrequency[artist.name] || 0) + 1;
+                }
+            });
+        });
+
+        // Convert to array and sort by frequency, then limit to top 10
+        const topBands = Object.entries(bandFrequency)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 10)
+            .map(([name, count]) => {
+                // Find the artist object to get additional info like ID and logo
+                const artist = dataManager.getArtists().find(a => a.name === name);
+                return {
+                    name,
+                    count,
+                    id: artist ? artist.id : null,
+                    logo: artist ? dataManager.getArtistLogo(artist.id) : null
+                };
+            });
+
+        const labels = topBands.map(band => band.name);
+        const data = topBands.map(band => band.count);
+        const logos = topBands.map(band => band.logo);
+
+        // Destroy existing chart if it exists first
+        if (this.charts.yearTopBands) {
+            this.charts.yearTopBands.destroy();
+        }
+
+        // Calculate and set dynamic container height with consistent 40px bar height
+        // This must be done after destroying the chart to ensure proper resizing
+        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
+        this.setChartContainerHeight('year-top-bands-chart', chartHeight);
+
+        this.charts.yearTopBands = new Chart(ctx, {
+            type: 'bar',
+            plugins: [{
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    const meta = chart.getDatasetMeta(0);
+                    
+                    // Draw values in front of each bar (on top of the bar)
+                    meta.data.forEach((bar, index) => {
+                        const value = data[index];
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = 'bold 20px Arial';
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(value, bar.x - 10, bar.y);
+                    });
+                    
+                    // Draw logos and artist names (moved from animation callback to prevent disappearing)
+                    meta.data.forEach((bar, index) => {
+                        const bandData = topBands[index];
+                        if (bandData && bandData.logo) {
+                            const img = new Image();
+                            img.onload = function() {
+                                // Calculate original image dimensions
+                                const originalWidth = img.naturalWidth;
+                                const originalHeight = img.naturalHeight;
+                                
+                                // Define constraints
+                                const maxHeight = 28; // Slightly smaller than bar height for padding
+                                const maxWidth = 150; // Reasonable width limit for logos
+                                
+                                // Calculate aspect ratio
+                                const aspectRatio = originalWidth / originalHeight;
+                                
+                                // Calculate scaled dimensions preserving aspect ratio
+                                let scaledWidth, scaledHeight;
+                                
+                                if (originalHeight > maxHeight) {
+                                    // Height is the limiting factor
+                                    scaledHeight = maxHeight;
+                                    scaledWidth = scaledHeight * aspectRatio;
+                                } else {
+                                    // Use original height if it fits
+                                    scaledHeight = originalHeight;
+                                    scaledWidth = originalWidth;
+                                }
+                                
+                                // Check if width exceeds maximum and adjust if needed
+                                if (scaledWidth > maxWidth) {
+                                    scaledWidth = maxWidth;
+                                    scaledHeight = scaledWidth / aspectRatio;
+                                }
+                                
+                                // Position the logo (centered vertically)
+                                const x = 10;
+                                const y = bar.y - scaledHeight / 2;
+                                
+                                // Draw the image with calculated dimensions
+                                ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                            };
+                            img.onerror = function() {
+                                // Fallback to text if image fails to load
+                                ctx.fillStyle = '#ffffff';
+                                ctx.font = '16px Arial';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                const label = bandData.name.length > 20 ? bandData.name.substring(0, 20) + '...' : bandData.name;
+                                ctx.fillText(label, 10, bar.y);
+                            };
+                            img.src = bandData.logo;
+                        } else if (bandData) {
+                            // Draw text for artists without logos
+                            ctx.fillStyle = '#ffffff';
+                            ctx.font = '16px Arial';
+                            ctx.textAlign = 'left';
+                            ctx.textBaseline = 'middle';
+                            const label = bandData.name.length > 20 ? bandData.name.substring(0, 20) + '...' : bandData.name;
+                            ctx.fillText(label, 10, bar.y);
+                        }
+                    });
+                }
+            }],
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Shows',
+                    data: data,
+                    backgroundColor: this.defaultColors.black,
+                    borderColor: this.defaultColors.darkGrey,
+                    borderWidth: 1,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // This makes it horizontal
+                interaction: {
+                    intersect: false,
+                    mode: 'none' // Disable all hover interactions
+                },
+                hover: {
+                    mode: null // Disable hover mode
+                },
+                layout: {
+                    padding: {
+                        left: 10 // Add small padding for value labels in front of bars
+                    }
+                },
+                elements: {
+                    bar: {
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false // Disable tooltips
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        display: false, // Hide x-axis ticks
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: this.defaultColors.white,
+                            font: {
+                                size: 16
+                            },
+                            callback: function(value, index, values) {
+                                const bandData = topBands[index];
+                                if (bandData && bandData.logo) {
+                                    // Return empty string for logo artists, we'll draw images separately
+                                    return '';
+                                } else {
+                                    // Return text for artists without logos
+                                    const label = this.getLabelForValue(value);
+                                    return label.length > 20 ? label.substring(0, 20) + '...' : label;
+                                }
+                            }
+                        },
+                        grid: {
+                            display: false
+                        },
+                        afterFit: function(scale) {
+                            scale.width = 200; // Increase width for logos/text
                         }
                     }
                 },

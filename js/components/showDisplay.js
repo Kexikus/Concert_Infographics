@@ -149,6 +149,32 @@ class ShowDisplayManager {
     initializeArtistShowDisplays(artistId) {
         this.initializeShowSections(artistId);
     }
+
+    // Initialize year show displays - shows all events for a specific year
+    initializeYearShowDisplays(year) {
+        const allEventsContainer = document.getElementById('year-all-events');
+        if (!allEventsContainer) return;
+
+        // Get all concerts for this year, sorted chronologically (oldest first)
+        const yearConcerts = dataManager.getConcertsByYear(year);
+        const sortedConcerts = yearConcerts.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        if (sortedConcerts.length === 0) {
+            allEventsContainer.innerHTML = '<div class="no-shows-grid">No events found for this year</div>';
+            return;
+        }
+
+        // Create compact show displays for all concerts (no highlighted artist)
+        const showsHtml = sortedConcerts.map(concert =>
+            this.createShowDisplay(concert.id, null, { compact: true, showPrice: true })
+        ).join('');
+
+        allEventsContainer.innerHTML = `
+            <div class="all-shows-grid">
+                ${showsHtml}
+            </div>
+        `;
+    }
 }
 
 // Create global instance

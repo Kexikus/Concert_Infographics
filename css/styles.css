@@ -3315,3 +3315,371 @@ font-weight: 500;
         padding: 1.5rem;
     }
 }
+
+/* Year Statistics Section */
+.year-stats-overview {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.year-stats-grid {
+    display: grid;
+    /* Desktop layout: abbc/ddee (concerts | events events | festivals / shows | bands) */
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* a bb c pattern for first row */
+    grid-template-rows: auto auto; /* Two rows */
+    grid-template-areas:
+        "concerts events events festivals"
+        "shows shows bands bands";
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg); /* Apply skew to entire grid */
+}
+
+.year-stat-box {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Grid area assignments */
+.year-stat-concerts {
+    grid-area: concerts;
+}
+
+.year-stat-events {
+    grid-area: events;
+}
+
+.year-stat-festivals {
+    grid-area: festivals;
+}
+
+.year-stat-shows {
+    grid-area: shows;
+}
+
+.year-stat-bands {
+    grid-area: bands;
+}
+
+/* Color assignments */
+/* concerts: dark red */
+.year-stat-concerts {
+    background-color: var(--dark-red);
+}
+
+.year-stat-concerts .year-stat-label {
+    color: var(--red);
+}
+
+/* events: red */
+.year-stat-events {
+    background-color: var(--red);
+}
+
+.year-stat-events .year-stat-label {
+    color: var(--dark-red);
+}
+
+/* festivals: dark red */
+.year-stat-festivals {
+    background-color: var(--dark-red);
+}
+
+.year-stat-festivals .year-stat-label {
+    color: var(--red);
+}
+
+/* shows: black */
+.year-stat-shows {
+    background-color: var(--black);
+}
+
+.year-stat-shows .year-stat-label {
+    color: var(--dark-red);
+}
+
+/* bands: black */
+.year-stat-bands {
+    background-color: var(--black);
+}
+
+.year-stat-bands .year-stat-label {
+    color: var(--dark-red);
+}
+
+.year-stat-content {
+    text-align: center;
+    width: 100%;
+}
+
+.year-stat-number {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+/* Large number class for events */
+.year-stat-number.large-number {
+    font-size: 8rem; /* 2x bigger for events */
+}
+
+/* Standard size for other boxes */
+.year-stat-concerts .year-stat-number,
+.year-stat-festivals .year-stat-number,
+.year-stat-shows .year-stat-number,
+.year-stat-bands .year-stat-number {
+    font-size: 6rem; /* 1.5x bigger */
+}
+
+.year-stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Year All Events Section */
+.year-all-events-section {
+    background: transparent;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.year-all-events-section h2 {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.year-all-events-container {
+    width: 100%;
+}
+
+.year-events-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 0 2rem;
+}
+
+.no-events-grid {
+    color: var(--light-grey);
+    font-style: italic;
+    font-size: 1rem;
+    text-align: center;
+    padding: 2rem;
+    grid-column: 1 / -1;
+}
+
+/* Responsive Design for Year Statistics */
+@media (max-width: 1200px) {
+    .year-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .year-stat-number.large-number {
+        font-size: 7rem; /* 2x bigger for events */
+    }
+    
+    .year-stat-concerts .year-stat-number,
+    .year-stat-festivals .year-stat-number,
+    .year-stat-shows .year-stat-number,
+    .year-stat-bands .year-stat-number {
+        font-size: 5.25rem; /* 1.5x bigger */
+    }
+    
+    .year-stat-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 1050px) {
+    .year-stats-grid {
+        /* Mobile layout: bb/ac/de (events events / concerts festivals / shows bands) */
+        grid-template-columns: 1fr 1fr; /* 2-column layout */
+        grid-template-areas:
+            "events events"
+            "concerts festivals"
+            "shows bands";
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .year-stat-number {
+        font-size: 3rem;
+    }
+    
+    .year-stat-number.large-number {
+        font-size: 6rem; /* 2x bigger for events */
+    }
+    
+    .year-stat-concerts .year-stat-number,
+    .year-stat-festivals .year-stat-number,
+    .year-stat-shows .year-stat-number,
+    .year-stat-bands .year-stat-number {
+        font-size: 4.5rem; /* 1.5x bigger */
+    }
+    
+    .year-stat-label {
+        font-size: 1rem;
+    }
+    
+    .year-stats-grid {
+        gap: 1.5rem;
+    }
+    
+    .year-events-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        padding: 0 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .year-stats-grid {
+        transform: skewX(-10deg); /* Reduce skew on smaller screens */
+    }
+    
+    .year-stat-box {
+        padding: 1.5rem;
+        min-height: 100px;
+    }
+    
+    .year-stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .year-stat-number.large-number {
+        font-size: 5rem; /* 2x bigger for events */
+    }
+    
+    .year-stat-concerts .year-stat-number,
+    .year-stat-festivals .year-stat-number,
+    .year-stat-shows .year-stat-number,
+    .year-stat-bands .year-stat-number {
+        font-size: 3.75rem; /* 1.5x bigger */
+    }
+    
+    .year-stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .year-events-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .year-all-events-section {
+        padding: 1.5rem 0;
+        margin-top: 1.5rem;
+    }
+    
+    .year-all-events-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .year-stats-overview {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .year-stats-grid {
+        grid-template-columns: 1fr; /* Single column */
+        grid-template-areas:
+            "events"
+            "concerts"
+            "festivals"
+            "shows"
+            "bands";
+        gap: 1rem;
+        padding: 0 1rem;
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .year-stat-box {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .year-stat-number {
+        font-size: 2rem;
+    }
+    
+    .year-stat-number.large-number {
+        font-size: 4rem; /* 2x bigger for events */
+    }
+    
+    .year-stat-concerts .year-stat-number,
+    .year-stat-festivals .year-stat-number,
+    .year-stat-shows .year-stat-number,
+    .year-stat-bands .year-stat-number {
+        font-size: 3rem; /* 1.5x bigger */
+    }
+    
+    .year-stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .year-events-grid {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+        padding: 0 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .year-stat-box {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .year-stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .year-stat-number.large-number {
+        font-size: 3.6rem; /* 2x bigger for events */
+    }
+    
+    .year-stat-concerts .year-stat-number,
+    .year-stat-festivals .year-stat-number,
+    .year-stat-shows .year-stat-number,
+    .year-stat-bands .year-stat-number {
+        font-size: 2.7rem; /* 1.5x bigger */
+    }
+    
+    .year-stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .year-all-events-section {
+        padding: 1rem 0;
+        margin-top: 1rem;
+    }
+    
+    .year-all-events-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .no-events-grid {
+        font-size: 0.9rem;
+        padding: 1.5rem;
+    }
+}

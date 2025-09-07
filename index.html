@@ -529,11 +529,81 @@
                         <p class="subpage-description">All concerts from this year</p>
                     </header>
                     
+                    <!-- Year Statistics Section -->
+                    <section class="year-stats-overview">
+                        <div class="year-stats-grid">
+                            <!-- concerts: dark red -->
+                            <div class="year-stat-box year-stat-concerts">
+                                <div class="year-stat-content">
+                                    <div class="year-stat-number" id="year-concerts">0</div>
+                                    <div class="year-stat-label">concerts</div>
+                                </div>
+                            </div>
+                            
+                            <!-- events: red, spans 2 columns, large font -->
+                            <div class="year-stat-box year-stat-events">
+                                <div class="year-stat-content">
+                                    <div class="year-stat-number large-number" id="year-events">0</div>
+                                    <div class="year-stat-label">events</div>
+                                </div>
+                            </div>
+                            
+                            <!-- festivals: dark red -->
+                            <div class="year-stat-box year-stat-festivals">
+                                <div class="year-stat-content">
+                                    <div class="year-stat-number" id="year-festivals">0</div>
+                                    <div class="year-stat-label">festivals</div>
+                                </div>
+                            </div>
+                            
+                            <!-- shows: black -->
+                            <div class="year-stat-box year-stat-shows">
+                                <div class="year-stat-content">
+                                    <div class="year-stat-number" id="year-shows">0</div>
+                                    <div class="year-stat-label">shows</div>
+                                </div>
+                            </div>
+                            
+                            <!-- bands: black -->
+                            <div class="year-stat-box year-stat-bands">
+                                <div class="year-stat-content">
+                                    <div class="year-stat-number" id="year-bands">0</div>
+                                    <div class="year-stat-label">bands</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
                     <div class="subpage-content">
-                        <section class="dynamic-page-section">
-                            <div class="dynamic-page-content">
-                                <p>Year page content will be implemented here.</p>
-                                <p>This is a placeholder for the dynamic year page.</p>
+                        <!-- Events per Month Chart -->
+                        <section class="chart-section">
+                            <h2>Events per Month</h2>
+                            <div class="chart-container">
+                                <canvas id="year-events-per-month-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Shows per Month Chart -->
+                        <section class="chart-section">
+                            <h2>Shows per Month</h2>
+                            <div class="chart-container">
+                                <canvas id="year-shows-per-month-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Top 10 Bands Chart -->
+                        <section class="chart-section">
+                            <h2>Top 10 Bands</h2>
+                            <div class="chart-container">
+                                <canvas id="year-top-bands-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- All Events Section -->
+                        <section class="year-all-events-section">
+                            <h2>All Events</h2>
+                            <div id="year-all-events" class="year-all-events-container">
+                                <!-- All events grid will be populated here -->
                             </div>
                         </section>
                     </div>

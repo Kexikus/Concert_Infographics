@@ -298,7 +298,27 @@ class Router {
             titleElement.textContent = year;
         }
         
+        // Initialize year-related components
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            this.initializeYearPage(yearNum);
+        }, 100);
+        
         console.log(`Year page loaded: ${year}`);
+    }
+
+    // Initialize year page with data filtering and component loading
+    initializeYearPage(year) {
+        // Initialize year statistics
+        statisticsManager.initializeYearStatistics(year);
+        
+        // Initialize year charts
+        chartsManager.createEventsPerMonthChart(year);
+        chartsManager.createShowsPerMonthChart(year);
+        chartsManager.createYearTopBandsChart(year);
+        
+        // Initialize year events display
+        showDisplayManager.initializeYearShowDisplays(year);
     }
 
     // Navigate programmatically
