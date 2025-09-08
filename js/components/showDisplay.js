@@ -22,10 +22,17 @@ class ShowDisplayManager {
             day: 'numeric'
         });
 
-        // Format price if available and requested
+        // Format price if available and requested (only in standard view)
         let priceText = '';
-        if (showPrice && event.price !== null && event.price !== undefined) {
-            priceText = ` <span class="red-dot">•</span> €${event.price.toFixed(2)}`;
+        if (!compact && showPrice && event.price !== null && event.price !== undefined) {
+            priceText = ` <span class="red-dot">•</span> ${event.price.toFixed(2)}€`;
+        }
+
+        // Format capacity if available (only in standard view)
+        let capacityText = '';
+        if (!compact && venue.capacity !== null && venue.capacity !== undefined) {
+            const formattedCapacity = venue.capacity.toLocaleString('de-DE');
+            capacityText = ` <span class="red-dot">•</span> ${formattedCapacity} attendants`;
         }
 
         // Create artist lineup HTML
@@ -58,10 +65,29 @@ class ShowDisplayManager {
         // For compact mode, arrange artists horizontally
         const artistsClass = compact ? 'show-artists compact' : 'show-artists';
 
+        // Check if event has a logo
+        const eventLogoPath = dataManager.getConcertLogo(eventId);
+        
+        // Create event name/logo HTML
+        let eventNameHtml;
+        if (eventLogoPath) {
+            // Use logo with text fallback
+            eventNameHtml = `
+                <div class="show-event-name">
+                    <img src="${eventLogoPath}" alt="${event.name}" class="show-event-logo"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span class="show-event-text" style="display: none;">${event.name}</span>
+                </div>
+            `;
+        } else {
+            // Use text only
+            eventNameHtml = `<div class="show-event-name">${event.name}</div>`;
+        }
+
         return `
             <div class="show-display ${compact ? 'compact' : ''}">
-                <div class="show-event-name">${event.name}</div>
-                <div class="show-date-venue">${formattedDate} <span class="red-dot">•</span> ${venue.name}, ${venue.city}${priceText}</div>
+                ${eventNameHtml}
+                <div class="show-date-venue">${formattedDate} <span class="red-dot">•</span> ${venue.name}, ${venue.city}${priceText}${capacityText}</div>
                 <div class="${artistsClass}">${artistsHtml}</div>
             </div>
         `;

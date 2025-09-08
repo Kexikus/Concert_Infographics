@@ -21,7 +21,7 @@ const concertsData = [
         ],
         "venueId": "loreley-freilichtbhne",
         "price": null,
-        "logo": null,
+        "logo": "mobile_800x800.jpg",
         "notes": null
     },
     {

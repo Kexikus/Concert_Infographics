@@ -339,6 +339,15 @@ class DataManager {
         return logoPath ? `assets/images/${logoPath}` : null;
     }
 
+    // Get concert logo with automatic path prepending
+    getConcertLogo(concertId) {
+        const concert = this.getConcertById(concertId);
+        if (!concert || !concert.logo) return null;
+
+        // Automatically prepend assets/images/ path
+        return `assets/images/${concert.logo}`;
+    }
+
     // Get venue coordinates for mapping
     getVenueCoordinates() {
         return this.venues.map(venue => ({

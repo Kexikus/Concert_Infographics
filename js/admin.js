@@ -829,7 +829,7 @@ class AdminManager {
             artistIds: selectedArtists,
             venueId: formData.get('venueId'),
             price: formData.get('price') ? parseFloat(formData.get('price')) : null,
-            logo: null, // Not implemented in form yet
+            logo: formData.get('logo').trim() || null,
             notes: formData.get('notes').trim() || null
         };
         
@@ -894,6 +894,7 @@ class AdminManager {
         // Populate form
         document.getElementById('concert-id').value = concert.id;
         document.getElementById('concert-name').value = concert.name;
+        document.getElementById('concert-logo').value = concert.logo || '';
         document.getElementById('concert-date').value = concert.date;
         document.getElementById('concert-end-date').value = concert.endDate || '';
         document.getElementById('concert-type').value = concert.type;
@@ -1036,6 +1037,7 @@ class AdminManager {
                         <p><strong>Type:</strong> ${this.escapeHtml(concert.type)}</p>
                         <p><strong>Artists:</strong> ${this.escapeHtml(artistNames)}</p>
                         <p><strong>Venue:</strong> ${this.escapeHtml(venueName)}</p>
+                        ${concert.logo ? `<p><strong>Logo:</strong> ${this.escapeHtml(concert.logo)}</p>` : ''}
                         ${concert.price ? `<p><strong>Price:</strong> €${concert.price.toFixed(2)}</p>` : ''}
                         ${concert.notes ? `<p><strong>Notes:</strong> ${this.escapeHtml(concert.notes)}</p>` : ''}
                     </div>
