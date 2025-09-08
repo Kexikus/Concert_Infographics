@@ -518,7 +518,7 @@ class StatisticsManager {
     updateCityStatistics(cityName) {
         // Get all venues in this city
         const cityVenues = dataManager.getVenues().filter(venue =>
-            venue.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+            normalizeStringForId(venue.city) === normalizeStringForId(cityName)
         );
         
         if (cityVenues.length === 0) {

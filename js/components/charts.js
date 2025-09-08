@@ -2250,7 +2250,7 @@ class ChartsManager {
 
         // Get all concerts for venues in this city
         const cityVenues = venuesData.filter(v =>
-            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+            normalizeStringForId(v.city) === normalizeStringForId(cityName)
         );
         
         if (cityVenues.length === 0) {
@@ -2442,7 +2442,7 @@ class ChartsManager {
 
         // Get all concerts for venues in this city
         const cityVenues = venuesData.filter(v =>
-            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+            normalizeStringForId(v.city) === normalizeStringForId(cityName)
         );
         
         if (cityVenues.length === 0) {
@@ -2595,7 +2595,7 @@ class ChartsManager {
 
         // Get all venues in this city
         const cityVenues = venuesData.filter(v =>
-            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+            normalizeStringForId(v.city) === normalizeStringForId(cityName)
         );
         
         if (cityVenues.length === 0) {

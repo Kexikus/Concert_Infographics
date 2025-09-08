@@ -120,6 +120,7 @@ class Router {
         // Small delay to ensure DOM is ready
         setTimeout(() => {
             statisticsManager.initializeEventsStatistics();
+            showDisplayManager.initializeAllEventsDisplay();
         }, 100);
         
         console.log('Events page loaded');
@@ -248,7 +249,7 @@ class Router {
         
         // Find city data (check if any venues exist in this city)
         const cityVenues = venuesData.filter(v =>
-            v.city.toLowerCase().replace(/\s+/g, '-') === cityName.toLowerCase()
+            normalizeStringForId(v.city) === normalizeStringForId(cityName)
         );
         
         if (cityVenues.length === 0) {

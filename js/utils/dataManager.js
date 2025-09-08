@@ -1040,5 +1040,85 @@ class DataManager {
     }
 }
 
+// Utility function to normalize strings for ID generation
+// Converts German umlauts and other diacritics to ASCII equivalents
+// and formats the string as kebab-case for use as IDs
+function normalizeStringForId(str) {
+    if (!str || typeof str !== 'string') {
+        return '';
+    }
+    
+    // Define character mappings for diacritics and special characters
+    const charMap = {
+        // German umlauts (lowercase)
+        'ä': 'ae',
+        'ö': 'oe',
+        'ü': 'ue',
+        'ß': 'ss',
+        
+        // German umlauts (uppercase)
+        'Ä': 'Ae',
+        'Ö': 'Oe',
+        'Ü': 'Ue',
+        
+        // Common diacritics (lowercase)
+        'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'å': 'a', 'æ': 'ae',
+        'ç': 'c',
+        'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+        'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+        'ñ': 'n',
+        'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ø': 'o',
+        'ù': 'u', 'ú': 'u', 'û': 'u',
+        'ý': 'y', 'ÿ': 'y',
+        
+        // Common diacritics (uppercase)
+        'À': 'A', 'Á': 'A', 'Â': 'A', 'Ã': 'A', 'Å': 'A', 'Æ': 'Ae',
+        'Ç': 'C',
+        'È': 'E', 'É': 'E', 'Ê': 'E', 'Ë': 'E',
+        'Ì': 'I', 'Í': 'I', 'Î': 'I', 'Ï': 'I',
+        'Ñ': 'N',
+        'Ò': 'O', 'Ó': 'O', 'Ô': 'O', 'Õ': 'O', 'Ø': 'O',
+        'Ù': 'U', 'Ú': 'U', 'Û': 'U',
+        'Ý': 'Y', 'Ÿ': 'Y',
+        
+        // Additional European characters
+        'š': 's', 'Š': 'S',
+        'ž': 'z', 'Ž': 'Z',
+        'č': 'c', 'Č': 'C',
+        'ř': 'r', 'Ř': 'R',
+        'ď': 'd', 'Ď': 'D',
+        'ť': 't', 'Ť': 'T',
+        'ň': 'n', 'Ň': 'N',
+        'ľ': 'l', 'Ľ': 'L',
+        'ĺ': 'l', 'Ĺ': 'L',
+        'ŕ': 'r', 'Ŕ': 'R',
+        
+        // Polish characters
+        'ą': 'a', 'Ą': 'A',
+        'ć': 'c', 'Ć': 'C',
+        'ę': 'e', 'Ę': 'E',
+        'ł': 'l', 'Ł': 'L',
+        'ń': 'n', 'Ń': 'N',
+        'ś': 's', 'Ś': 'S',
+        'ź': 'z', 'Ź': 'Z',
+        'ż': 'z', 'Ż': 'Z'
+    };
+    
+    // Replace special characters with their ASCII equivalents
+    let normalized = str;
+    for (const [char, replacement] of Object.entries(charMap)) {
+        normalized = normalized.replace(new RegExp(char, 'g'), replacement);
+    }
+    
+    // Convert to lowercase and create kebab-case
+    return normalized
+        .toLowerCase()                    // Convert to lowercase
+        .trim()                          // Remove leading/trailing whitespace
+        .replace(/[^a-z0-9\s-]/g, '')   // Remove non-alphanumeric chars (except spaces and hyphens)
+        .replace(/\s+/g, '-')           // Replace spaces with hyphens
+        .replace(/-+/g, '-')            // Replace multiple hyphens with single hyphen
+        .replace(/^-+|-+$/g, '');       // Remove leading/trailing hyphens
+}
+
 // Create global instance
 const dataManager = new DataManager();

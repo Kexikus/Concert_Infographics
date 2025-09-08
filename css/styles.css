@@ -3999,3 +3999,47 @@ font-weight: 500;
         padding: 1.5rem;
     }
 }
+
+/* All Events Section */
+.all-events-section {
+    background: transparent;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.all-events-section h2 {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.all-events-container {
+    width: 100%;
+}
+
+/* Responsive Design for All Events Section */
+@media (max-width: 768px) {
+    .all-events-section {
+        padding: 1.5rem 0;
+        margin-top: 1.5rem;
+    }
+    
+    .all-events-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .all-events-section {
+        padding: 1rem 0;
+        margin-top: 1rem;
+    }
+    
+    .all-events-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+}
