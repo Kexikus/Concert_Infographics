@@ -36,6 +36,7 @@ class AdminManager {
         this.setupEventListeners();
         this.showSection('artists'); // Show artists section by default
         this.loadArtistsList();
+        this.initializeMultiLogoInterface(); // Initialize multi-logo interface
         // this.updateDatabaseStats(); // Remove this call for now since method doesn't exist
     }
 
@@ -57,6 +58,9 @@ class AdminManager {
         document.getElementById('artist-name').addEventListener('input', (e) => this.autoGenerateId('artist', e.target.value));
         document.getElementById('venue-name').addEventListener('input', (e) => this.autoGenerateId('venue', e.target.value));
         document.getElementById('concert-name').addEventListener('input', (e) => this.autoGenerateId('concert', e.target.value));
+        
+        // Multi-logo interface
+        document.getElementById('add-logo-btn').addEventListener('click', () => this.addLogoRow());
         
         // Modal close events
         document.querySelector('.close').addEventListener('click', () => this.closeModal());
@@ -198,6 +202,15 @@ class AdminManager {
                 if (!data.country || data.country.trim() === '') {
                     errors.push('Country is required');
                 }
+                
+                // Validate logos if present
+                if (data.logo && Array.isArray(data.logo)) {
+                    const logoValidation = this.validateLogos(data.logo);
+                    if (!logoValidation.isValid) {
+                        errors.push(...logoValidation.errors);
+                    }
+                }
+                
                 // Check for duplicate ID (excluding current editing item)
                 const existingArtist = this.artists.find(a => a.id === data.id);
                 if (existingArtist && (!this.currentEditingItem || this.currentEditingItem.id !== data.id)) {
@@ -378,6 +391,11 @@ class AdminManager {
             this.currentEditingItem = null;
             this.currentEditingType = null;
             
+            // Special handling for artist form with multi-logo interface
+            if (formId === 'artist-form') {
+                this.clearLogosForm();
+            }
+            
             // Special handling for concert form with enhanced selects
             if (formId === 'concert-form') {
                 // Clear artist selection
@@ -453,11 +471,15 @@ class AdminManager {
         e.preventDefault();
         
         const formData = new FormData(e.target);
+        
+        // Get logos from the multi-logo interface
+        const logos = this.getLogosFromForm();
+        
         const artistData = {
             id: formData.get('id').trim(),
             name: formData.get('name').trim(),
             country: formData.get('country').trim(),
-            logo: formData.get('logo').trim() || null
+            logo: logos.length > 0 ? logos : null
         };
         
         // Validate form data
@@ -520,7 +542,9 @@ class AdminManager {
         document.getElementById('artist-id').value = artist.id;
         document.getElementById('artist-name').value = artist.name;
         document.getElementById('artist-country').value = artist.country;
-        document.getElementById('artist-logo').value = artist.logo || '';
+        
+        // Populate logos
+        this.populateLogosForm(artist);
         
         // Update submit button
         const submitBtn = document.querySelector('#artist-form button[type="submit"]');
@@ -592,20 +616,47 @@ class AdminManager {
             return;
         }
         
-        const html = filteredArtists.map(artist => `
-            <div class="data-item">
-                <div class="data-info">
-                    <h4>${this.escapeHtml(artist.name)}</h4>
-                    <p><strong>ID:</strong> ${this.escapeHtml(artist.id)}</p>
-                    <p><strong>Country:</strong> ${this.escapeHtml(artist.country)}</p>
-                    ${artist.logo ? `<p><strong>Logo:</strong> ${this.escapeHtml(artist.logo)}</p>` : ''}
+        const html = filteredArtists.map(artist => {
+            let logoDisplay = '';
+            if (artist.logo) {
+                if (typeof artist.logo === 'string') {
+                    logoDisplay = `<p><strong>Logo:</strong> ${this.escapeHtml(artist.logo)}</p>`;
+                } else if (Array.isArray(artist.logo)) {
+                    const logoCount = artist.logo.length;
+                    // Get the most recent logo (current logo) - not the original one
+                    const sortedLogos = artist.logo
+                        .filter(logo => logo.from !== null)
+                        .sort((a, b) => new Date(b.from) - new Date(a.from));
+                    
+                    let currentLogo;
+                    if (sortedLogos.length > 0) {
+                        // Use the most recent logo with a date
+                        currentLogo = sortedLogos[0].filename;
+                    } else {
+                        // Fallback to original logo if no dated logos exist
+                        const originalLogo = artist.logo.find(logo => logo.from === null);
+                        currentLogo = originalLogo ? originalLogo.filename : artist.logo[0].filename;
+                    }
+                    
+                    logoDisplay = `<p><strong>Logos:</strong> ${logoCount} logo${logoCount > 1 ? 's' : ''} (current: ${this.escapeHtml(currentLogo)})</p>`;
+                }
+            }
+            
+            return `
+                <div class="data-item">
+                    <div class="data-info">
+                        <h4>${this.escapeHtml(artist.name)}</h4>
+                        <p><strong>ID:</strong> ${this.escapeHtml(artist.id)}</p>
+                        <p><strong>Country:</strong> ${this.escapeHtml(artist.country)}</p>
+                        ${logoDisplay}
+                    </div>
+                    <div class="data-actions">
+                        <button onclick="adminManager.editArtist('${artist.id}')" class="btn-edit">Edit</button>
+                        <button onclick="adminManager.deleteArtist('${artist.id}')" class="btn-delete">Delete</button>
+                    </div>
                 </div>
-                <div class="data-actions">
-                    <button onclick="adminManager.editArtist('${artist.id}')" class="btn-edit">Edit</button>
-                    <button onclick="adminManager.deleteArtist('${artist.id}')" class="btn-delete">Delete</button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
         
         container.innerHTML = html;
     }
@@ -1855,6 +1906,201 @@ class AdminManager {
             select._searchableElements.searchInput.value = selectedOption ? selectedOption.textContent : '';
             select._searchableElements.dropdownList.style.display = 'none';
         }
+    }
+
+    // ==================== MULTI-LOGO MANAGEMENT ====================
+
+    /**
+     * Initialize multi-logo interface
+     */
+    initializeMultiLogoInterface() {
+        this.clearLogosForm();
+        this.addLogoRow(); // Add one empty row by default
+    }
+
+    /**
+     * Add a new logo row to the table
+     * @param {Object} logoData - Optional logo data to populate
+     */
+    addLogoRow(logoData = null) {
+        const tableBody = document.getElementById('logos-table-body');
+        const rowIndex = tableBody.children.length;
+        
+        const row = document.createElement('tr');
+        row.className = 'logo-row';
+        row.dataset.index = rowIndex;
+        
+        row.innerHTML = `
+            <td>
+                <input type="text" class="logo-filename" placeholder="logo-filename.png"
+                       value="${logoData ? logoData.filename : ''}" />
+            </td>
+            <td>
+                <input type="date" class="logo-from-date"
+                       value="${logoData && logoData.from ? logoData.from : ''}" />
+            </td>
+            <td>
+                <button type="button" class="btn-remove-logo" onclick="adminManager.removeLogoRow(${rowIndex})">Delete</button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+        this.updateLogoRowIndices();
+    }
+
+    /**
+     * Remove a logo row from the table
+     * @param {number} index - Index of row to remove
+     */
+    removeLogoRow(index) {
+        const tableBody = document.getElementById('logos-table-body');
+        const rows = tableBody.querySelectorAll('.logo-row');
+        
+        if (rows.length <= 1) {
+            this.showErrorMessage('At least one logo entry is required');
+            return;
+        }
+        
+        const rowToRemove = tableBody.querySelector(`[data-index="${index}"]`);
+        if (rowToRemove) {
+            rowToRemove.remove();
+            this.updateLogoRowIndices();
+        }
+    }
+
+    /**
+     * Update indices of logo rows after add/remove operations
+     */
+    updateLogoRowIndices() {
+        const tableBody = document.getElementById('logos-table-body');
+        const rows = tableBody.querySelectorAll('.logo-row');
+        
+        rows.forEach((row, index) => {
+            row.dataset.index = index;
+            const removeBtn = row.querySelector('.btn-remove-logo');
+            if (removeBtn) {
+                removeBtn.setAttribute('onclick', `adminManager.removeLogoRow(${index})`);
+            }
+        });
+    }
+
+    /**
+     * Get logos data from the form
+     * @returns {Array} Array of logo objects
+     */
+    getLogosFromForm() {
+        const tableBody = document.getElementById('logos-table-body');
+        const rows = tableBody.querySelectorAll('.logo-row');
+        const logos = [];
+        
+        rows.forEach(row => {
+            const filename = row.querySelector('.logo-filename').value.trim();
+            const fromDate = row.querySelector('.logo-from-date').value.trim();
+            
+            if (filename) {
+                logos.push({
+                    filename: filename,
+                    from: fromDate || null
+                });
+            }
+        });
+        
+        return logos;
+    }
+
+    /**
+     * Populate logos form with existing artist data
+     * @param {Object} artist - Artist object
+     */
+    populateLogosForm(artist) {
+        this.clearLogosForm();
+        
+        if (!artist.logo) {
+            // No logos, add one empty row
+            this.addLogoRow();
+            return;
+        }
+        
+        if (typeof artist.logo === 'string') {
+            // Backward compatibility: single logo string
+            this.addLogoRow({
+                filename: artist.logo,
+                from: null
+            });
+        } else if (Array.isArray(artist.logo)) {
+            // Multi-logo format
+            if (artist.logo.length === 0) {
+                this.addLogoRow();
+            } else {
+                artist.logo.forEach(logo => {
+                    this.addLogoRow(logo);
+                });
+            }
+        } else {
+            // Fallback: add empty row
+            this.addLogoRow();
+        }
+    }
+
+    /**
+     * Clear all logo rows from the table
+     */
+    clearLogosForm() {
+        const tableBody = document.getElementById('logos-table-body');
+        tableBody.innerHTML = '';
+    }
+
+    /**
+     * Validate logos data
+     * @param {Array} logos - Array of logo objects
+     * @returns {Object} Validation result
+     */
+    validateLogos(logos) {
+        const errors = [];
+        
+        if (!logos || logos.length === 0) {
+            return { isValid: true, errors: [] }; // No logos is valid
+        }
+        
+        // Check that exactly one logo has no "from" date (original logo)
+        const originalLogos = logos.filter(logo => logo.from === null || logo.from === '');
+        if (originalLogos.length === 0) {
+            errors.push('Exactly one logo must have no "from" date (the original logo)');
+        } else if (originalLogos.length > 1) {
+            errors.push('Only one logo can have no "from" date (the original logo)');
+        }
+        
+        // Validate filenames
+        logos.forEach((logo, index) => {
+            if (!logo.filename || logo.filename.trim() === '') {
+                errors.push(`Logo ${index + 1}: Filename is required`);
+            }
+        });
+        
+        // Validate date formats
+        logos.forEach((logo, index) => {
+            if (logo.from && logo.from.trim() !== '') {
+                const date = new Date(logo.from);
+                if (isNaN(date.getTime())) {
+                    errors.push(`Logo ${index + 1}: Invalid date format`);
+                }
+            }
+        });
+        
+        // Check for duplicate filenames with same from date
+        const seen = new Set();
+        logos.forEach((logo, index) => {
+            const key = `${logo.filename}|${logo.from || 'null'}`;
+            if (seen.has(key)) {
+                errors.push(`Logo ${index + 1}: Duplicate filename and date combination`);
+            }
+            seen.add(key);
+        });
+        
+        return {
+            isValid: errors.length === 0,
+            errors: errors
+        };
     }
 }
 

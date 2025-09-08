@@ -308,35 +308,121 @@ class DataManager {
             });
     }
 
-    // Get artist logo with automatic path prepending
+    // Get artist logo with automatic path prepending and multi-logo support
     getArtistLogo(artistId, concertDate = null) {
         const artist = this.getArtistById(artistId);
-        if (!artist) return null;
+        if (!artist || !artist.logo) return null;
 
         let logoPath = '';
 
         if (typeof artist.logo === 'string') {
-            // Simple string logo
+            // Backward compatibility: Simple string logo
             logoPath = artist.logo;
         } else if (Array.isArray(artist.logo)) {
-            // Array of logos with date ranges
-            if (concertDate) {
-                const date = new Date(concertDate);
-                const applicableLogo = artist.logo.find(logoObj => {
-                    const startDate = new Date(logoObj.startDate);
-                    const endDate = logoObj.endDate ? new Date(logoObj.endDate) : null;
-                    return date >= startDate && (!endDate || date <= endDate);
-                });
-                logoPath = applicableLogo ? applicableLogo.logo : artist.logo[0].logo;
-            } else {
-                // Return the most recent logo (last in array or one without endDate)
-                const currentLogo = artist.logo.find(logoObj => !logoObj.endDate);
-                logoPath = currentLogo ? currentLogo.logo : artist.logo[artist.logo.length - 1].logo;
-            }
+            // New multi-logo format: array of {filename, from} objects
+            logoPath = this.selectLogoFromArray(artist.logo, concertDate);
         }
 
         // Automatically prepend assets/images/ path
         return logoPath ? `assets/images/${logoPath}` : null;
+    }
+
+    // Select appropriate logo from multi-logo array based on date
+    selectLogoFromArray(logoArray, concertDate = null) {
+        if (!Array.isArray(logoArray) || logoArray.length === 0) {
+            return '';
+        }
+
+        if (concertDate) {
+            // Find logo applicable for the specific concert date
+            const concertDateObj = new Date(concertDate);
+            
+            // Find the logo that was active at the concert date
+            // We want the most recent logo that started before or on the concert date
+            let applicableLogo = null;
+            
+            for (const logo of logoArray) {
+                if (logo.from === null) {
+                    // Original logo - always a candidate
+                    if (!applicableLogo) {
+                        applicableLogo = logo;
+                    }
+                } else {
+                    const logoStartDate = new Date(logo.from);
+                    // If this logo started before or on the concert date
+                    if (concertDateObj >= logoStartDate) {
+                        // If we don't have an applicable logo yet, or this one is more recent
+                        if (!applicableLogo ||
+                            (applicableLogo.from === null) ||
+                            (new Date(logo.from) > new Date(applicableLogo.from))) {
+                            applicableLogo = logo;
+                        }
+                    }
+                }
+            }
+
+            return applicableLogo ? applicableLogo.filename : logoArray[0].filename;
+        } else {
+            // Return current logo (most recent one or the one with from: null)
+            // For current logo, we want the most recent logo available
+            let currentLogo = null;
+            
+            for (const logo of logoArray) {
+                if (logo.from === null) {
+                    // Original logo - only use if no dated logo exists
+                    if (!currentLogo) {
+                        currentLogo = logo;
+                    }
+                } else {
+                    // Dated logo - use the most recent one
+                    if (!currentLogo ||
+                        (currentLogo.from === null) ||
+                        (new Date(logo.from) > new Date(currentLogo.from))) {
+                        currentLogo = logo;
+                    }
+                }
+            }
+            
+            return currentLogo ? currentLogo.filename : logoArray[0].filename;
+        }
+    }
+
+    // Get all logos for an artist (for admin interface)
+    getArtistLogos(artistId) {
+        const artist = this.getArtistById(artistId);
+        if (!artist || !artist.logo) return [];
+
+        if (typeof artist.logo === 'string') {
+            return [{
+                filename: artist.logo,
+                from: null,
+                fullPath: `assets/images/${artist.logo}`,
+                isCurrent: true,
+                isOriginal: true
+            }];
+        }
+
+        if (Array.isArray(artist.logo)) {
+            return artist.logo.map(logo => ({
+                ...logo,
+                fullPath: `assets/images/${logo.filename}`,
+                isCurrent: logo.from === null,
+                isOriginal: logo.from === null
+            })).sort((a, b) => {
+                // Sort: original first, then by date
+                if (a.from === null) return -1;
+                if (b.from === null) return 1;
+                return new Date(a.from) - new Date(b.from);
+            });
+        }
+
+        return [];
+    }
+
+    // Check if artist has multiple logos
+    hasMultipleLogos(artistId) {
+        const artist = this.getArtistById(artistId);
+        return artist && Array.isArray(artist.logo) && artist.logo.length > 1;
     }
 
     // Get concert logo with automatic path prepending

@@ -868,7 +868,16 @@ const artistsData = [
         "id": "subway-to-sally",
         "name": "Subway to Sally",
         "country": "Germany",
-        "logo": "Subway_to_Sally.png"
+        "logo": [
+            {
+                "filename": "Subway_to_Sally_old.png",
+                "from": null
+            },
+            {
+                "filename": "Subway_to_Sally.png",
+                "from": "2011-08-20"
+            }
+        ]
     },
     {
         "id": "swiss-die-andern",
