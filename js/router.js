@@ -57,7 +57,7 @@ class Router {
 
     // Check if route is dynamic
     isDynamicRoute(route) {
-        return ['artist', 'city', 'year'].includes(route);
+        return ['artist', 'city', 'year', 'event'].includes(route);
     }
 
     // Handle dynamic routes
@@ -71,6 +71,9 @@ class Router {
                 break;
             case 'year':
                 this.showYearPage(parameter);
+                break;
+            case 'event':
+                this.showEventPage(parameter);
                 break;
             default:
                 console.warn(`Unknown dynamic route type: ${type}`);
@@ -330,6 +333,93 @@ class Router {
         
         // Initialize year events display
         showDisplayManager.initializeYearShowDisplays(year);
+    }
+
+    // Show Event page
+    showEventPage(eventId) {
+        this.showView('event-view');
+        
+        // Validate the eventId exists using dataManager.getConcertById(eventId)
+        const event = dataManager.getConcertById(eventId);
+        if (!event) {
+            console.warn(`Event '${eventId}' not found, redirecting to events`);
+            this.navigateTo('events');
+            return;
+        }
+        
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            this.initializeEventPage(event);
+        }, 100);
+        
+        console.log(`Event page loaded: ${event.id}`);
+    }
+
+    // Initialize event page with event display
+    initializeEventPage(event) {
+        // Handle event logo/title display (similar to artist page)
+        this.updateEventTitleAndLogo(event);
+        
+        // Update event description
+        this.updateEventDescription(event);
+        
+        // Update event content (artists)
+        this.updateEventContent(event);
+        
+        console.log(`Event page initialized for: ${event.id}`);
+    }
+
+    // Update event title and logo (similar to artist page)
+    updateEventTitleAndLogo(event) {
+        const titleElement = document.getElementById('event-title');
+        if (!titleElement) return;
+
+        // Check if event has a logo
+        if (showDisplayManager.hasEventLogo(event.id)) {
+            const logoPath = showDisplayManager.getEventLogoPath(event.id);
+            
+            // Create logo element and hide text title
+            titleElement.innerHTML = `<img src="${logoPath}" alt="${event.name}" class="event-logo-header" style="max-width: 600px; max-height: 300px; object-fit: contain;">`;
+            
+            // Handle logo load error - fallback to text
+            const logoImg = titleElement.querySelector('img');
+            if (logoImg) {
+                logoImg.onerror = function() {
+                    titleElement.textContent = event.name || 'Event Details';
+                };
+            }
+        } else {
+            // No logo available, show text title
+            titleElement.textContent = event.name || 'Event Details';
+        }
+    }
+
+    // Update event description with date, venue, price, capacity
+    updateEventDescription(event) {
+        const descriptionElement = document.querySelector('#event-view .subpage-description');
+        if (!descriptionElement) return;
+
+        const description = showDisplayManager.getEventDescription(event.id);
+        if (description) {
+            descriptionElement.innerHTML = description;
+        }
+    }
+
+    // Update event content with artists
+    updateEventContent(event) {
+        const contentElement = document.querySelector('#event-view .subpage-content');
+        if (!contentElement) return;
+
+        const artistsHtml = showDisplayManager.getEventArtistsHtml(event.id);
+        if (artistsHtml) {
+            contentElement.innerHTML = `
+                <section class="event-artists-section">
+                    ${artistsHtml}
+                </section>
+            `;
+        } else {
+            contentElement.innerHTML = '<div class="no-artists">No artists found for this event</div>';
+        }
     }
 
     // Navigate programmatically

@@ -4,71 +4,21 @@ class ShowDisplayManager {
         // Initialize any needed properties
     }
 
-    // Create reusable show display component (moved from router.js)
+    // Create reusable show display component (refactored to use helper methods)
     createShowDisplay(eventId, highlightArtistId, options = {}) {
         const event = dataManager.getConcertById(eventId);
         if (!event) return '';
 
-        const venue = dataManager.getVenueById(event.venueId);
-        if (!venue) return '';
-
         const { compact = false, showPrice = true } = options;
 
-        // Format date in German format
-        const eventDate = new Date(event.date);
-        const formattedDate = eventDate.toLocaleDateString('de-DE', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+        // Use helper method for description
+        const description = this.getEventDescription(eventId, { compact, showPrice });
 
-        // Format price if available and requested (only in standard view)
-        let priceText = '';
-        if (!compact && showPrice && event.price !== null && event.price !== undefined) {
-            priceText = ` <span class="red-dot">•</span> ${event.price.toFixed(2)}€`;
-        }
+        // Use helper method for artists HTML
+        const artistsHtml = this.getEventArtistsHtml(eventId, highlightArtistId, { compact });
 
-        // Format capacity if available (only in standard view)
-        let capacityText = '';
-        if (!compact && venue.capacity !== null && venue.capacity !== undefined) {
-            const formattedCapacity = venue.capacity.toLocaleString('de-DE');
-            capacityText = ` <span class="red-dot">•</span> ${formattedCapacity} attendants`;
-        }
-
-        // Create artist lineup HTML
-        const artistsHtml = event.artistIds.map(artistId => {
-            const artist = dataManager.getArtistById(artistId);
-            if (!artist) return '';
-
-            const isHighlighted = artistId === highlightArtistId;
-            const logoPath = dataManager.getArtistLogo(artistId, event.date);
-            
-            if (logoPath) {
-                // Use logo with text fallback
-                return `
-                    <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
-                        <img src="${logoPath}" alt="${artist.name}" class="show-artist-logo"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                        <span class="show-artist-text" style="display: none;">${artist.name}</span>
-                    </div>
-                `;
-            } else {
-                // Use text only
-                return `
-                    <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
-                        <span class="show-artist-text">${artist.name}</span>
-                    </div>
-                `;
-            }
-        }).join('');
-
-        // For compact mode, arrange artists horizontally
-        const artistsClass = compact ? 'show-artists compact' : 'show-artists';
-
-        // Check if event has a logo
-        const eventLogoPath = dataManager.getConcertLogo(eventId);
-        
-        // Create event name/logo HTML
+        // Create event name/logo HTML using existing logic
+        const eventLogoPath = this.getEventLogoPath(eventId);
         let eventNameHtml;
         if (eventLogoPath) {
             // Use logo with text fallback
@@ -87,8 +37,8 @@ class ShowDisplayManager {
         return `
             <div class="show-display ${compact ? 'compact' : ''}">
                 ${eventNameHtml}
-                <div class="show-date-venue">${formattedDate} <span class="red-dot">•</span> ${venue.name}, ${venue.city}${priceText}${capacityText}</div>
-                <div class="${artistsClass}">${artistsHtml}</div>
+                <div class="show-date-venue">${description}</div>
+                ${artistsHtml}
             </div>
         `;
     }
@@ -271,6 +221,89 @@ class ShowDisplayManager {
                 ${showsHtml}
             </div>
         `;
+    }
+
+    // Extract event description (date, venue, price, capacity) for event page
+    getEventDescription(eventId, options = {}) {
+        const event = dataManager.getConcertById(eventId);
+        if (!event) return '';
+
+        const venue = dataManager.getVenueById(event.venueId);
+        if (!venue) return '';
+
+        const { compact = false, showPrice = true } = options;
+
+        // Format date in German format
+        const eventDate = new Date(event.date);
+        const formattedDate = eventDate.toLocaleDateString('de-DE', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        // Format price if available and requested
+        let priceText = '';
+        if ((!compact || showPrice) && event.price !== null && event.price !== undefined) {
+            priceText = ` <span style="color: var(--red);">•</span> ${event.price.toFixed(2)}€`;
+        }
+
+        // Format capacity if available (only in standard view)
+        let capacityText = '';
+        if (!compact && venue.capacity !== null && venue.capacity !== undefined) {
+            const formattedCapacity = venue.capacity.toLocaleString('de-DE');
+            capacityText = ` <span style="color: var(--red);">•</span> ${formattedCapacity} attendants`;
+        }
+
+        return `${formattedDate} <span style="color: var(--red);">•</span> ${venue.name}, ${venue.city}${priceText}${capacityText}`;
+    }
+
+    // Extract artists HTML for event page
+    getEventArtistsHtml(eventId, highlightArtistId = null, options = {}) {
+        const event = dataManager.getConcertById(eventId);
+        if (!event) return '';
+
+        const { compact = false } = options;
+
+        // Create artist lineup HTML
+        const artistsHtml = event.artistIds.map(artistId => {
+            const artist = dataManager.getArtistById(artistId);
+            if (!artist) return '';
+
+            const isHighlighted = artistId === highlightArtistId;
+            const logoPath = dataManager.getArtistLogo(artistId, event.date);
+            
+            if (logoPath) {
+                // Use logo with text fallback
+                return `
+                    <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
+                        <img src="${logoPath}" alt="${artist.name}" class="show-artist-logo"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span class="show-artist-text" style="display: none;">${artist.name}</span>
+                    </div>
+                `;
+            } else {
+                // Use text only
+                return `
+                    <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
+                        <span class="show-artist-text">${artist.name}</span>
+                    </div>
+                `;
+            }
+        }).join('');
+
+        const artistsClass = compact ? 'show-artists compact' : 'show-artists';
+        return `<div class="${artistsClass}">${artistsHtml}</div>`;
+    }
+
+    // Check if event has a logo
+    hasEventLogo(eventId) {
+        const eventLogoPath = dataManager.getConcertLogo(eventId);
+        return eventLogoPath !== null && eventLogoPath !== undefined;
+    }
+
+    // Get event logo path
+    getEventLogoPath(eventId) {
+        return dataManager.getConcertLogo(eventId);
     }
 }
 

@@ -4043,3 +4043,169 @@ font-weight: 500;
         margin-bottom: 1rem;
     }
 }
+
+/* Event Page Styles */
+.event-logo-header {
+    max-width: 600px;
+    max-height: 300px;
+    object-fit: contain;
+    filter: brightness(0.9);
+    transition: filter 0.2s ease;
+}
+
+.event-logo-header:hover {
+    filter: brightness(1);
+}
+
+.event-artists-section {
+    background: transparent;
+    padding: 2rem 0;
+}
+
+.event-artists-section h2 {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.event-artists-section .show-artists {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.event-artists-section .show-artist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    transition: all 0.2s ease;
+    filter: brightness(0.9);
+}
+
+.event-artists-section .show-artist:hover {
+    filter: brightness(1);
+}
+
+.event-artists-section .show-artist-logo {
+    width: 100%;
+    max-height: 80px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+}
+
+.event-artists-section .show-artist-text {
+    font-size: 2.4rem; /* 2x the original 1.2rem */
+    color: var(--white);
+    line-height: 1.2;
+    text-align: center;
+    word-break: break-word;
+    font-weight: 500;
+}
+
+.event-artists-section .show-artist.highlighted .show-artist-logo {
+    /* Convert white logos to red using CSS filters */
+    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+    -webkit-filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+.event-artists-section .show-artist.highlighted .show-artist-text {
+    color: var(--red);
+    font-weight: 600;
+}
+
+.no-artists {
+    color: var(--light-grey);
+    font-style: italic;
+    font-size: 1rem;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Responsive Design for Event Page */
+@media (max-width: 768px) {
+    .event-logo-header {
+        max-width: 90%;
+        max-height: 200px;
+    }
+    
+    .event-artists-section {
+        padding: 1.5rem 0;
+    }
+    
+    .event-artists-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .event-artists-section .show-artists {
+        gap: 1rem;
+        max-width: 600px;
+    }
+    
+    .event-artists-section .show-artist {
+        max-width: 350px;
+    }
+    
+    .event-artists-section .show-artist-logo {
+        max-height: 60px;
+    }
+    
+    .event-artists-section .show-artist-text {
+        font-size: 2.2rem; /* 2x the original 1.1rem */
+    }
+}
+
+@media (max-width: 550px) {
+    .event-logo-header {
+        max-height: 125px;
+    }
+    
+    .event-artists-section .show-artists {
+        gap: 0.75rem;
+        max-width: 500px;
+    }
+    
+    .event-artists-section .show-artist {
+        max-width: 300px;
+    }
+    
+    .event-artists-section .show-artist-logo {
+        max-height: 50px;
+    }
+    
+    .event-artists-section .show-artist-text {
+        font-size: 2rem; /* 2x the original 1rem */
+    }
+}
+
+@media (max-width: 400px) {
+    .event-artists-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .event-artists-section .show-artist {
+        max-width: 250px;
+    }
+    
+    .event-artists-section .show-artist-logo {
+        max-height: 40px;
+    }
+    
+    .event-artists-section .show-artist-text {
+        font-size: 1.8rem; /* 2x the original 0.9rem */
+    }
+    
+    .no-artists {
+        font-size: 0.9rem;
+        padding: 1.5rem;
+    }
+}
