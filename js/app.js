@@ -8,6 +8,7 @@ class ConcertInfographicsApp {
             statisticsManager: null,
             worldMapManager: null,
             germanMapManager: null,
+            navigationManager: null,
             router: null
         };
     }
@@ -55,6 +56,7 @@ class ConcertInfographicsApp {
         this.components.statisticsManager = statisticsManager;
         this.components.worldMapManager = worldMapManager;
         this.components.germanMapManager = germanMapManager;
+        this.components.navigationManager = navigationManager;
         this.components.router = router;
         
         // Verify all components are available
@@ -226,6 +228,10 @@ class ConcertInfographicsApp {
             
             if (this.components.germanMapManager) {
                 this.components.germanMapManager.destroy();
+            }
+            
+            if (this.components.navigationManager) {
+                this.components.navigationManager.destroy();
             }
             
             // Clear component references

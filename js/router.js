@@ -53,6 +53,11 @@ class Router {
             console.warn(`Route '${route}' not found, redirecting to dashboard`);
             this.navigateTo('dashboard');
         }
+        
+        // Update navigation state if navigation manager is available
+        if (typeof navigationManager !== 'undefined' && navigationManager.isInitialized) {
+            navigationManager.updateNavigationState();
+        }
     }
 
     // Check if route is dynamic
@@ -94,6 +99,9 @@ class Router {
         if (targetView) {
             targetView.classList.add('active');
         }
+        
+        // Scroll to top of page when switching views
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Route handlers
