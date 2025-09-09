@@ -181,6 +181,19 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const dataIndex = elements[0].index;
+                        const year = years[dataIndex];
+                        console.log('Events per year chart clicked - navigating to year:', year);
+                        router.navigateTo(`year/${year}`);
+                    }
+                },
+                onHover: (event, elements) => {
+                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
+                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
+                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });
@@ -318,6 +331,19 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const dataIndex = elements[0].index;
+                        const year = years[dataIndex];
+                        console.log('Bands per year chart clicked - navigating to year:', year);
+                        router.navigateTo(`year/${year}`);
+                    }
+                },
+                onHover: (event, elements) => {
+                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
+                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
+                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });
@@ -441,11 +467,12 @@ class ChartsManager {
                 indexAxis: 'y', // This makes it horizontal
                 interaction: {
                     intersect: false,
-                    mode: 'none' // Disable all hover interactions
+                    mode: 'none' // Disable all interactions to prevent logo disappearing
                 },
                 hover: {
-                    mode: null // Disable hover mode
+                    mode: null // Disable hover to prevent logo disappearing
                 },
+                onHover: null, // Completely disable hover
                 layout: {
                     padding: {
                         left: 10 // Add small padding for value labels in front of bars
@@ -504,6 +531,64 @@ class ChartsManager {
                     easing: 'easeOutQuart'
                 }
             }
+        });
+
+        // Add custom click handler to canvas element
+        ctx.addEventListener('click', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.bandFrequency;
+            const meta = chart.getDatasetMeta(0);
+            
+            // Check if click is within any bar area (including logo area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from logo area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    const artistData = frequentArtists[index];
+                    if (artistData && artistData.id) {
+                        console.log('Custom click handler - navigating to:', `artist/${artistData.id}`);
+                        router.navigateTo(`artist/${artistData.id}`);
+                    }
+                }
+            });
+        });
+
+        // Add mousemove handler for pointer cursor
+        ctx.addEventListener('mousemove', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.bandFrequency;
+            const meta = chart.getDatasetMeta(0);
+            
+            let isOverClickableArea = false;
+            
+            // Check if mouse is over any bar area (including logo area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from logo area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    const artistData = frequentArtists[index];
+                    if (artistData && artistData.id) {
+                        isOverClickableArea = true;
+                    }
+                }
+            });
+            
+            // Set cursor style
+            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
         });
     }
 
@@ -629,6 +714,65 @@ class ChartsManager {
                 }
             }
         });
+
+        // Add custom click handler to canvas element
+        ctx.addEventListener('click', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.topVenues;
+            const meta = chart.getDatasetMeta(0);
+            
+            // Check if click is within any bar area (including venue name area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from venue name area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    const venueName = topVenues[index].name;
+                    if (venueName) {
+                        // Find the city for this venue
+                        const venue = dataManager.getVenues().find(v => v.name === venueName);
+                        if (venue && venue.city) {
+                            console.log('Top venues chart clicked - navigating to city:', venue.city);
+                            router.navigateTo(`city/${normalizeStringForId(venue.city)}`);
+                        }
+                    }
+                }
+            });
+        });
+
+        // Add mousemove handler for pointer cursor
+        ctx.addEventListener('mousemove', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.topVenues;
+            const meta = chart.getDatasetMeta(0);
+            
+            let isOverClickableArea = false;
+            
+            // Check if mouse is over any bar area (including venue name area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from venue name area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    isOverClickableArea = true;
+                }
+            });
+            
+            // Set cursor style
+            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
+        });
     }
 
     // Create Top Cities Horizontal Bar Chart
@@ -752,6 +896,61 @@ class ChartsManager {
                     easing: 'easeOutQuart'
                 }
             }
+        });
+
+        // Add custom click handler to canvas element
+        ctx.addEventListener('click', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.topCities;
+            const meta = chart.getDatasetMeta(0);
+            
+            // Check if click is within any bar area (including city name area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from city name area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    const cityName = topCities[index].name;
+                    if (cityName) {
+                        console.log('Top cities chart clicked - navigating to city:', cityName);
+                        router.navigateTo(`city/${normalizeStringForId(cityName)}`);
+                    }
+                }
+            });
+        });
+
+        // Add mousemove handler for pointer cursor
+        ctx.addEventListener('mousemove', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.topCities;
+            const meta = chart.getDatasetMeta(0);
+            
+            let isOverClickableArea = false;
+            
+            // Check if mouse is over any bar area (including city name area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from city name area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    isOverClickableArea = true;
+                }
+            });
+            
+            // Set cursor style
+            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
         });
     }
 
@@ -987,6 +1186,19 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const dataIndex = elements[0].index;
+                        const year = years[dataIndex];
+                        console.log('Cost per year chart clicked - navigating to year:', year);
+                        router.navigateTo(`year/${year}`);
+                    }
+                },
+                onHover: (event, elements) => {
+                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
+                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
+                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });
@@ -1189,8 +1401,12 @@ class ChartsManager {
         otherArtistsGrid.innerHTML = '';
 
         otherArtists.forEach(artist => {
-            const artistItem = document.createElement('div');
-            artistItem.className = 'artist-item';
+            // Create link element that wraps the artist item
+            const artistLink = document.createElement('a');
+            artistLink.href = artist.id ? `#artist/${artist.id}` : '#';
+            artistLink.className = 'artist-item';
+            artistLink.style.textDecoration = 'none';
+            artistLink.style.color = 'inherit';
 
             // Create logo/name element
             if (artist.logo) {
@@ -1205,21 +1421,21 @@ class ChartsManager {
                     const textElement = document.createElement('div');
                     textElement.className = 'artist-name';
                     textElement.textContent = artist.name;
-                    artistItem.innerHTML = '';
-                    artistItem.appendChild(textElement);
+                    artistLink.innerHTML = '';
+                    artistLink.appendChild(textElement);
                 };
 
                 // Only add the logo - no name when logo exists and loads successfully
-                artistItem.appendChild(logoImg);
+                artistLink.appendChild(logoImg);
             } else {
                 // No logo, just show name
                 const nameElement = document.createElement('div');
                 nameElement.className = 'artist-name';
                 nameElement.textContent = artist.name;
-                artistItem.appendChild(nameElement);
+                artistLink.appendChild(nameElement);
             }
 
-            otherArtistsGrid.appendChild(artistItem);
+            otherArtistsGrid.appendChild(artistLink);
         });
     }
 
@@ -1349,6 +1565,19 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const dataIndex = elements[0].index;
+                        const year = years[dataIndex];
+                        console.log('Events per year (events view) chart clicked - navigating to year:', year);
+                        router.navigateTo(`year/${year}`);
+                    }
+                },
+                onHover: (event, elements) => {
+                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
+                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
+                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });
@@ -1443,6 +1672,19 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const dataIndex = elements[0].index;
+                        const year = years[dataIndex];
+                        console.log('Shows per year chart clicked - navigating to year:', year);
+                        router.navigateTo(`year/${year}`);
+                    }
+                },
+                onHover: (event, elements) => {
+                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
+                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
+                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });
@@ -1762,6 +2004,19 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const dataIndex = elements[0].index;
+                        const year = years[dataIndex];
+                        console.log('Artist shows per year chart clicked - navigating to year:', year);
+                        router.navigateTo(`year/${year}`);
+                    }
+                },
+                onHover: (event, elements) => {
+                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
+                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
+                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });
@@ -2177,11 +2432,12 @@ class ChartsManager {
                 indexAxis: 'y', // This makes it horizontal
                 interaction: {
                     intersect: false,
-                    mode: 'none' // Disable all hover interactions
+                    mode: 'none' // Disable all interactions to prevent logo disappearing
                 },
                 hover: {
-                    mode: null // Disable hover mode
+                    mode: null // Disable hover to prevent logo disappearing
                 },
+                onHover: null, // Completely disable hover
                 layout: {
                     padding: {
                         left: 10 // Add small padding for value labels in front of bars
@@ -2238,8 +2494,66 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
-                }
+                },
             }
+        });
+
+        // Add custom click handler to canvas element
+        ctx.addEventListener('click', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.yearTopBands;
+            const meta = chart.getDatasetMeta(0);
+            
+            // Check if click is within any bar area (including logo area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from logo area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    const bandData = topBands[index];
+                    if (bandData && bandData.id) {
+                        console.log('Custom click handler - navigating to:', `artist/${bandData.id}`);
+                        router.navigateTo(`artist/${bandData.id}`);
+                    }
+                }
+            });
+        });
+
+        // Add mousemove handler for pointer cursor
+        ctx.addEventListener('mousemove', (event) => {
+            const rect = ctx.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Get chart area bounds
+            const chart = this.charts.yearTopBands;
+            const meta = chart.getDatasetMeta(0);
+            
+            let isOverClickableArea = false;
+            
+            // Check if mouse is over any bar area (including logo area on the left)
+            meta.data.forEach((bar, index) => {
+                const barTop = bar.y - 20; // Bar height/2
+                const barBottom = bar.y + 20; // Bar height/2
+                const barLeft = 10; // Start from logo area (left padding)
+                const barRight = bar.x;
+                
+                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                    const bandData = topBands[index];
+                    if (bandData && bandData.id) {
+                        isOverClickableArea = true;
+                    }
+                }
+            });
+            
+            // Set cursor style
+            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
         });
     }
 
@@ -2430,6 +2744,19 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const dataIndex = elements[0].index;
+                        const year = allYears[dataIndex];
+                        console.log('City events per year chart clicked - navigating to year:', year);
+                        router.navigateTo(`year/${year}`);
+                    }
+                },
+                onHover: (event, elements) => {
+                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
+                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
+                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });

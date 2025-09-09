@@ -608,6 +608,7 @@ class GermanMapManager {
         // Add tooltip functionality and cross-highlighting
         this.addTooltipEvents(dot, cityName, cityData);
         this.addCrossHighlighting(dot, cityName);
+        this.addCityNavigation(dot, cityName);
         
         return dot;
     }
@@ -658,6 +659,7 @@ class GermanMapManager {
         // Add tooltip functionality and cross-highlighting
         this.addTooltipEvents(group, cityName, cityData);
         this.addCrossHighlighting(group, cityName);
+        this.addCityNavigation(group, cityName);
         
         return group;
     }
@@ -782,6 +784,19 @@ class GermanMapManager {
                     countCircle.style.stroke = '';
                 }
             }
+        });
+    }
+
+    // Add city navigation functionality
+    addCityNavigation(element, cityName) {
+        element.style.cursor = 'pointer';
+        
+        element.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            console.log('German map city clicked - navigating to city:', cityName);
+            router.navigateTo(`city/${normalizeStringForId(cityName)}`);
         });
     }
 
