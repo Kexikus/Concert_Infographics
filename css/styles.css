@@ -3067,7 +3067,7 @@ font-weight: 500;
 }
 
 .show-event-name {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--white);
     margin-bottom: 0.75rem;
@@ -3117,7 +3117,6 @@ font-weight: 500;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80%;
     max-width: 200px;
     transition: all 0.2s ease;
 }
@@ -3176,7 +3175,7 @@ font-weight: 500;
     }
     
     .show-event-name {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
     }
     
     .show-date-venue {
@@ -3214,7 +3213,7 @@ font-weight: 500;
     }
     
     .show-event-name {
-        font-size: 1rem;
+        font-size: 1.1rem;
         margin-bottom: 0.5rem;
     }
     
@@ -3252,7 +3251,7 @@ font-weight: 500;
     }
     
     .show-event-name {
-        font-size: 0.95rem;
+        font-size: 1rem;
     }
     
     .show-date-venue {
@@ -4208,4 +4207,40 @@ font-weight: 500;
         font-size: 0.9rem;
         padding: 1.5rem;
     }
+}
+
+/* Show Display Link Styles */
+.show-display-link, .date-link, .venue-link {
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    cursor: pointer;
+}
+
+.show-display-link:hover > .show-event-name {
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.show-display-link:hover, .date-link:hover, .venue-link:hover {
+    text-decoration: none;
+    color: inherit;
+    filter: brightness(1.1);
+}
+
+.show-display-link:hover > .show-event-name, .date-link:hover, .venue-link:hover, .artist-link:hover > .show-artist {
+    transform: scale(1.02);
+}
+
+/* Artist link styling */
+.artist-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.artist-link:hover {
+    text-decoration: none;
+    color: inherit;
+    filter: brightness(1.1);
 }

@@ -34,13 +34,11 @@ class ShowDisplayManager {
             eventNameHtml = `<div class="show-event-name">${event.name}</div>`;
         }
 
-        return `
-            <div class="show-display ${compact ? 'compact' : ''}">
-                ${eventNameHtml}
-                <div class="show-date-venue">${description}</div>
-                ${artistsHtml}
-            </div>
-        `;
+        return `<div class="show-display ${compact ? 'compact' : ''}">
+                    <a href="#event/${eventId}" class="show-display-link">${eventNameHtml}</a>
+                    <div class="show-date-venue">${description}</div>
+                    ${artistsHtml}
+                </div>`;
     }
 
     // Find first show for an artist (moved from router.js)
@@ -240,6 +238,12 @@ class ShowDisplayManager {
             month: 'short',
             day: 'numeric'
         });
+        
+        // Get year for the date link
+        const year = eventDate.getFullYear();
+        
+        // Sanitize city name for the city link
+        const sanitizedCity = normalizeStringForId(venue.city);
 
         // Format price if available and requested
         let priceText = '';
@@ -254,7 +258,7 @@ class ShowDisplayManager {
             capacityText = ` <span style="color: var(--red);">•</span> ${formattedCapacity} attendants`;
         }
 
-        return `${formattedDate} <span style="color: var(--red);">•</span> ${venue.name}, ${venue.city}${priceText}${capacityText}`;
+        return `<a href="#year/${year}" class="date-link">${formattedDate}</a> <span style="color: var(--red);">•</span> <a href="#city/${sanitizedCity}" class="venue-link">${venue.name}, ${venue.city}</a>${priceText}${capacityText}`;
     }
 
     // Extract artists HTML for event page
@@ -275,18 +279,22 @@ class ShowDisplayManager {
             if (logoPath) {
                 // Use logo with text fallback
                 return `
-                    <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
-                        <img src="${logoPath}" alt="${artist.name}" class="show-artist-logo"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                        <span class="show-artist-text" style="display: none;">${artist.name}</span>
-                    </div>
+                    <a href="#artist/${artistId}" class="artist-link">
+                        <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
+                            <img src="${logoPath}" alt="${artist.name}" class="show-artist-logo"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                            <span class="show-artist-text" style="display: none;">${artist.name}</span>
+                        </div>
+                    </a>
                 `;
             } else {
                 // Use text only
                 return `
-                    <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
-                        <span class="show-artist-text">${artist.name}</span>
-                    </div>
+                    <a href="#artist/${artistId}" class="artist-link">
+                        <div class="show-artist ${isHighlighted ? 'highlighted' : ''} ${compact ? 'compact' : ''}">
+                            <span class="show-artist-text">${artist.name}</span>
+                        </div>
+                    </a>
                 `;
             }
         }).join('');
