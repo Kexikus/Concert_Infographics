@@ -515,6 +515,15 @@ class DataManager {
             });
     }
 
+    // Check if an artist is a headliner (has been listed first in at least one concert - not festivals)
+    isHeadliner(artistId) {
+        return this.concerts.some(concert =>
+            concert.type === 'concert' &&
+            concert.artistIds && concert.artistIds.length > 0 &&
+            concert.artistIds[0] === artistId
+        );
+    }
+
     // Get country band statistics for world map based on artist origins
     getCountryBandStats() {
         const countryStats = {};

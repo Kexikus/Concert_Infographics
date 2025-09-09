@@ -425,12 +425,52 @@ class ChartsManager {
                                 const x = 10;
                                 const y = bar.y - scaledHeight / 2;
                                 
-                                // Draw the image with calculated dimensions
-                                ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                                // Check if this artist is a headliner and apply red tint if so
+                                if (dataManager.isHeadliner(artistData.id)) {
+                                    // Create an off-screen canvas to process the image
+                                    const tempCanvas = document.createElement('canvas');
+                                    const tempCtx = tempCanvas.getContext('2d');
+                                    tempCanvas.width = scaledWidth;
+                                    tempCanvas.height = scaledHeight;
+                                    
+                                    // Draw the original image to the temp canvas
+                                    tempCtx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+                                    
+                                    // Get the image data
+                                    const imageData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
+                                    const data = imageData.data;
+                                    
+                                    // Process each pixel to convert white to red
+                                    for (let i = 0; i < data.length; i += 4) {
+                                        const r = data[i];
+                                        const g = data[i + 1];
+                                        const b = data[i + 2];
+                                        const a = data[i + 3];
+                                        
+                                        // If pixel is white or light (assuming logo is white)
+                                        if (r > 200 && g > 200 && b > 200 && a > 0) {
+                                            // Convert to red (#dc3545)
+                                            data[i] = 220;     // Red component
+                                            data[i + 1] = 53;  // Green component
+                                            data[i + 2] = 69;  // Blue component
+                                            // Keep original alpha
+                                        }
+                                    }
+                                    
+                                    // Put the modified image data back
+                                    tempCtx.putImageData(imageData, 0, 0);
+                                    
+                                    // Draw the processed image to the main canvas
+                                    ctx.drawImage(tempCanvas, x, y);
+                                } else {
+                                    // Draw the image normally for non-headliners
+                                    ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                                }
                             };
                             img.onerror = function() {
                                 // Fallback to text if image fails to load
-                                ctx.fillStyle = '#ffffff';
+                                // Color text red if artist is a headliner, white otherwise
+                                ctx.fillStyle = dataManager.isHeadliner(artistData.id) ? '#dc3545' : '#ffffff';
                                 ctx.font = '16px Arial';
                                 ctx.textAlign = 'left';
                                 ctx.textBaseline = 'middle';
@@ -440,7 +480,8 @@ class ChartsManager {
                             img.src = artistData.logo;
                         } else if (artistData) {
                             // Draw text for artists without logos
-                            ctx.fillStyle = '#ffffff';
+                            // Color text red if artist is a headliner, white otherwise
+                            ctx.fillStyle = dataManager.isHeadliner(artistData.id) ? '#dc3545' : '#ffffff';
                             ctx.font = '16px Arial';
                             ctx.textAlign = 'left';
                             ctx.textBaseline = 'middle';
@@ -1415,12 +1456,21 @@ class ChartsManager {
                 logoImg.src = artist.logo;
                 logoImg.alt = artist.name;
                 
+                // Apply red filter to headliner logos
+                if (dataManager.isHeadliner(artist.id)) {
+                    logoImg.style.filter = 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)';
+                }
+                
                 // Add error handling for missing logos
                 logoImg.onerror = function() {
                     // Replace with text if logo fails to load
                     const textElement = document.createElement('div');
                     textElement.className = 'artist-name';
                     textElement.textContent = artist.name;
+                    // Color text red if artist is a headliner
+                    if (dataManager.isHeadliner(artist.id)) {
+                        textElement.style.color = '#dc3545';
+                    }
                     artistLink.innerHTML = '';
                     artistLink.appendChild(textElement);
                 };
@@ -1432,6 +1482,10 @@ class ChartsManager {
                 const nameElement = document.createElement('div');
                 nameElement.className = 'artist-name';
                 nameElement.textContent = artist.name;
+                // Color text red if artist is a headliner
+                if (dataManager.isHeadliner(artist.id)) {
+                    nameElement.style.color = '#dc3545';
+                }
                 artistLink.appendChild(nameElement);
             }
 
