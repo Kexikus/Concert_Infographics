@@ -3674,12 +3674,12 @@ font-weight: 500;
 
 .year-stats-grid {
     display: grid;
-    /* Desktop layout: abbc/ddee (concerts | events events | festivals / shows | bands) */
-    grid-template-columns: 1fr 1fr 1fr 1fr; /* a bb c pattern for first row */
+    /* 12-column grid layout: first row has 1/4 + 1/2 + 1/4, second row has 1/3 + 1/3 + 1/3 */
+    grid-template-columns: repeat(12, 1fr); /* 12 equal columns */
     grid-template-rows: auto auto; /* Two rows */
     grid-template-areas:
-        "concerts events events festivals"
-        "shows shows bands bands";
+        "concerts concerts concerts events events events events events events festivals festivals festivals"
+        "shows shows shows shows bands bands bands bands total-cost total-cost total-cost total-cost";
     gap: 2rem;
     padding: 0 2rem;
     transform: skewX(-15deg); /* Apply skew to entire grid */
@@ -3714,6 +3714,10 @@ font-weight: 500;
 
 .year-stat-bands {
     grid-area: bands;
+}
+
+.year-stat-total-cost {
+    grid-area: total-cost;
 }
 
 /* Color assignments */
@@ -3762,6 +3766,20 @@ font-weight: 500;
     color: var(--dark-red);
 }
 
+/* total cost: black */
+.year-stat-total-cost {
+    background-color: var(--black);
+}
+
+.year-stat-total-cost .year-stat-label {
+    color: var(--dark-red);
+}
+
+/* Adjust total cost content to align with other boxes that have labels */
+.year-stat-total-cost .year-stat-content {
+    padding-bottom: 2rem; /* Add space equivalent to label height */
+}
+
 .year-stat-content {
     text-align: center;
     width: 100%;
@@ -3784,7 +3802,8 @@ font-weight: 500;
 .year-stat-concerts .year-stat-number,
 .year-stat-festivals .year-stat-number,
 .year-stat-shows .year-stat-number,
-.year-stat-bands .year-stat-number {
+.year-stat-bands .year-stat-number,
+.year-stat-total-cost .year-stat-number {
     font-size: 6rem; /* 1.5x bigger */
 }
 
@@ -3843,23 +3862,31 @@ font-weight: 500;
     .year-stat-concerts .year-stat-number,
     .year-stat-festivals .year-stat-number,
     .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number {
+    .year-stat-bands .year-stat-number,
+    .year-stat-total-cost .year-stat-number {
         font-size: 5.25rem; /* 1.5x bigger */
     }
     
     .year-stat-label {
         font-size: 1.1rem;
     }
+    
+    /* Adjust total cost padding for smaller label size */
+    .year-stat-total-cost .year-stat-content {
+        padding-top: 0.9rem;
+        padding-bottom: 0.9rem;
+    }
 }
 
 @media (max-width: 1050px) {
     .year-stats-grid {
-        /* Mobile layout: bb/ac/de (events events / concerts festivals / shows bands) */
+        /* Mobile layout: events events / concerts festivals / shows bands total-cost */
         grid-template-columns: 1fr 1fr; /* 2-column layout */
         grid-template-areas:
             "events events"
             "concerts festivals"
-            "shows bands";
+            "shows bands"
+            "total-cost total-cost";
         gap: 1.5rem;
         padding: 0 1rem;
     }
@@ -3877,12 +3904,19 @@ font-weight: 500;
     .year-stat-concerts .year-stat-number,
     .year-stat-festivals .year-stat-number,
     .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number {
+    .year-stat-bands .year-stat-number,
+    .year-stat-total-cost .year-stat-number {
         font-size: 4.5rem; /* 1.5x bigger */
     }
     
     .year-stat-label {
         font-size: 1rem;
+    }
+    
+    /* Adjust total cost padding for smaller label size */
+    .year-stat-total-cost .year-stat-content {
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
     }
     
     .year-stats-grid {
@@ -3917,12 +3951,19 @@ font-weight: 500;
     .year-stat-concerts .year-stat-number,
     .year-stat-festivals .year-stat-number,
     .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number {
+    .year-stat-bands .year-stat-number,
+    .year-stat-total-cost .year-stat-number {
         font-size: 3.75rem; /* 1.5x bigger */
     }
     
     .year-stat-label {
         font-size: 0.9rem;
+    }
+    
+    /* Adjust total cost padding for smaller label size - symmetric for smaller screens */
+    .year-stat-total-cost .year-stat-content {
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
     }
     
     .year-events-grid {
@@ -3955,7 +3996,8 @@ font-weight: 500;
             "concerts"
             "festivals"
             "shows"
-            "bands";
+            "bands"
+            "total-cost";
         gap: 1rem;
         padding: 0 1rem;
         transform: skewX(-8deg); /* Further reduce skew on mobile */
@@ -3977,12 +4019,19 @@ font-weight: 500;
     .year-stat-concerts .year-stat-number,
     .year-stat-festivals .year-stat-number,
     .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number {
+    .year-stat-bands .year-stat-number,
+    .year-stat-total-cost .year-stat-number {
         font-size: 3rem; /* 1.5x bigger */
     }
     
     .year-stat-label {
         font-size: 0.8rem;
+    }
+    
+    /* Adjust total cost padding for smaller label size - symmetric for mobile */
+    .year-stat-total-cost .year-stat-content {
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
     }
     
     .year-events-grid {
@@ -4009,12 +4058,19 @@ font-weight: 500;
     .year-stat-concerts .year-stat-number,
     .year-stat-festivals .year-stat-number,
     .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number {
+    .year-stat-bands .year-stat-number,
+    .year-stat-total-cost .year-stat-number {
         font-size: 2.7rem; /* 1.5x bigger */
     }
     
     .year-stat-label {
         font-size: 0.7rem;
+    }
+    
+    /* Adjust total cost padding for smallest label size - symmetric for smallest screens */
+    .year-stat-total-cost .year-stat-content {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
     }
     
     .year-all-events-section {

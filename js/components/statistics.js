@@ -484,12 +484,16 @@ class StatisticsManager {
         });
         const bands = uniqueBandIds.size;
         
+        // Get total cost for this year
+        const totalCost = dataManager.getYearTotalCost(year);
+        
         // Find the year statistics elements
         const concertsElement = document.getElementById('year-concerts');
         const eventsElement = document.getElementById('year-events');
         const festivalsElement = document.getElementById('year-festivals');
         const showsElement = document.getElementById('year-shows');
         const bandsElement = document.getElementById('year-bands');
+        const totalCostElement = document.getElementById('year-total-cost');
         
         // Animate the year statistics
         if (concertsElement) {
@@ -506,6 +510,9 @@ class StatisticsManager {
         }
         if (bandsElement) {
             this.animateNumber(bandsElement, 0, bands);
+        }
+        if (totalCostElement) {
+            this.animateEuro(totalCostElement, 0, totalCost);
         }
     }
 

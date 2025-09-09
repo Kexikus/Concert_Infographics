@@ -1021,6 +1021,20 @@ class DataManager {
         return result;
     }
 
+    // Get total cost for a specific year
+    getYearTotalCost(year) {
+        const yearConcerts = this.concerts.filter(concert => {
+            const concertYear = new Date(concert.date).getFullYear();
+            return concertYear === year;
+        });
+        
+        // Calculate total cost only from concerts with non-null prices
+        const concertsWithPrice = yearConcerts.filter(concert => concert.price !== null && concert.price !== undefined);
+        const totalCost = concertsWithPrice.reduce((sum, concert) => sum + concert.price, 0);
+        
+        return Math.round(totalCost);
+    }
+
     // Get events per year statistics (concerts only, no shows)
     getEventsPerYearStatsEvents() {
         const stats = {};
