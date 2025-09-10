@@ -691,18 +691,18 @@ class GermanMapManager {
     // Create tooltip element
     createTooltip(cityName, cityData) {
         const tooltip = document.createElement('div');
-        tooltip.className = 'german-map-tooltip';
+        tooltip.className = 'map-tooltip';
         
         // Sort venues alphabetically and create list with visit counts
         const sortedVenues = cityData.venueVisits ? Array.from(cityData.venueVisits.entries())
             .sort((a, b) => a[0].localeCompare(b[0])) // Sort by venue name alphabetically
-            .map(([venueName, visitCount]) => `<div class="german-tooltip-venue">${venueName} (${visitCount})</div>`)
+            .map(([venueName, visitCount]) => `<div class="map-tooltip-list-item">${venueName} (${visitCount})</div>`)
             .join('') : '';
         
         tooltip.innerHTML = `
-            <div class="german-tooltip-state">${cityName}</div>
-            <div class="german-tooltip-venues">${cityData.count} concert${cityData.count !== 1 ? 's' : ''}</div>
-            <div class="german-tooltip-venues-list">
+            <div class="map-tooltip-title">${cityName}</div>
+            <div class="map-tooltip-numbering">${cityData.count} concert${cityData.count !== 1 ? 's' : ''}</div>
+            <div class="map-tooltip-list">
                 ${sortedVenues}
             </div>
         `;
@@ -837,7 +837,7 @@ class GermanMapManager {
         
         if (this.mapContainer) {
             this.mapContainer.innerHTML = `
-                <div class="german-map-error">
+                <div class="map-error">
                     <h3>German Map Loading Error</h3>
                     <p>Unable to load the German map visualization.</p>
                     <button onclick="germanMapManager.initializeGermanMap()" class="retry-button">

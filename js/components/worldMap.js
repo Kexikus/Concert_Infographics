@@ -386,18 +386,18 @@ class WorldMapManager {
         
         // Create tooltip element
         const tooltip = document.createElement('div');
-        tooltip.className = 'world-map-tooltip';
+        tooltip.className = 'map-tooltip';
         
         let tooltipContent = `
-            <div class="tooltip-country">${countryName}</div>
-            <div class="tooltip-bands">${bandCount} band${bandCount !== 1 ? 's' : ''}</div>
+            <div class="map-tooltip-title">${countryName}</div>
+            <div class="map-tooltip-numbering">${bandCount} band${bandCount !== 1 ? 's' : ''}</div>
         `;
         
         // Add artist list if there are any
         if (artistNames.length > 0) {
-            tooltipContent += `<div class="tooltip-artists">`;
+            tooltipContent += `<div class="map-tooltip-list">`;
             artistNames.forEach(artistName => {
-                tooltipContent += `<div class="tooltip-artist">${artistName}</div>`;
+                tooltipContent += `<div class="map-tooltip-list-item">${artistName}</div>`;
             });
             tooltipContent += `</div>`;
         }
@@ -435,7 +435,7 @@ class WorldMapManager {
 
     // Hide tooltip
     hideTooltip() {
-        const existingTooltip = this.mapContainer.querySelector('.world-map-tooltip');
+        const existingTooltip = this.mapContainer.querySelector('.map-tooltip');
         if (existingTooltip) {
             existingTooltip.remove();
         }
@@ -469,7 +469,7 @@ class WorldMapManager {
         
         if (this.mapContainer) {
             this.mapContainer.innerHTML = `
-                <div class="world-map-error">
+                <div class="map-error">
                     <h3>Map Loading Error</h3>
                     <p>Unable to load the world map visualization.</p>
                     <button onclick="worldMapManager.initializeWorldMap()" class="retry-button">

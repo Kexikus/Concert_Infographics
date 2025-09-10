@@ -187,35 +187,18 @@ body {
     grid-area: stats;
 }
 
-/* Dashboard specific grid areas */
-.dashboard-grid .chart-section:nth-child(2) {
-    grid-area: years;
-}
-
-.dashboard-grid .chart-section:nth-child(3) {
-    grid-area: frequency;
-}
-
 /* Subpage chart sections - reset grid areas */
 .subpage-content .chart-section {
     grid-area: unset;
 }
 
 /* Common Header Styles */
-.stats-overview h2 {
+h2 {
     margin-bottom: 2rem;
     color: var(--white);
     font-weight: 300;
     font-size: 2rem;
     text-align: center;
-}
-
-.chart-section h2 {
-    margin-bottom: 2rem;
-    color: var(--white);
-    font-weight: 600;
-    font-size: 1.5rem;
-    text-align: left;
 }
 
 /* Statistics Overview */
@@ -273,14 +256,14 @@ body {
     background-color: var(--dark-red);
 }
 
-.left-stat,
-.right-stat {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    padding: 1rem;
+/* Text colors for odd rows (light red background) */
+.paired-stat-link:nth-child(odd) .stat-label, .paired-stat-link:nth-child(odd) .connector-label {
+    color: var(--dark-red);
+}
+
+/* Text colors for even rows (dark red background) */
+.paired-stat-link:nth-child(even) .stat-label, .paired-stat-link:nth-child(even) .connector-label {
+    color: var(--red);
 }
 
 .paired-stat-connector {
@@ -302,30 +285,12 @@ body {
     border-radius: 4px;
 }
 
-.stat-number {
-    font-size: 9rem;
-    font-weight: bold;
-    line-height: 0.9;
-    color: var(--white);
-}
-
 .stat-label {
     font-size: 1.8rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 500;
 }
-
-/* Text colors for odd rows (light red background) */
-.paired-stat-link:nth-child(odd) .stat-label, .paired-stat-link:nth-child(odd) .connector-label {
-    color: var(--dark-red);
-}
-
-/* Text colors for even rows (dark red background) */
-.paired-stat-link:nth-child(even) .stat-label, .paired-stat-link:nth-child(even) .connector-label {
-    color: var(--red);
-}
-
 
 /* Chart Sections */
 .chart-section {
@@ -336,6 +301,7 @@ body {
     position: relative;
     width: 100%;
     background: transparent;
+    min-height: 200px;
 }
 
 .chart-container canvas {
@@ -455,217 +421,6 @@ body {
     display: none !important;
 }
 
-.text-center {
-    text-align: center;
-}
-
-.mb-1 { margin-bottom: 0.5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.mb-3 { margin-bottom: 1.5rem; }
-.mb-4 { margin-bottom: 2rem; }
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .stat-number {
-        font-size: 7rem;
-    }
-    
-    .stat-label {
-        font-size: 1.5rem;
-    }
-    
-    .sub-stat {
-        font-size: 1.8rem;
-    }
-    
-    .connector-label {
-        font-size: 1.3rem;
-        padding: 0.4rem 0.8rem;
-    }
-    
-    .paired-stat-connector {
-        flex: 0 0 100px;
-    }
-}
-
-@media (max-width: 900px) {
-    .stat-number {
-        font-size: 6rem;
-    }
-    
-    .stat-label {
-        font-size: 1.3rem;
-    }
-    
-    .sub-stat {
-        font-size: 1.5rem;
-    }
-    
-    .connector-label {
-        font-size: 1.2rem;
-        padding: 0.3rem 0.6rem;
-    }
-    
-    .paired-stat-connector {
-        flex: 0 0 80px;
-    }
-}
-
-@media (max-width: 768px) {
-    .chart-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .other-artists-grid {
-        gap: 1.5rem;
-    }
-    
-    .artist-logo {
-        max-width: 70px;
-        max-height: 55px;
-    }
-    
-    .artist-name {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 700px) {
-    .stat-number {
-        font-size: 5.5rem;
-    }
-    
-    .stat-label {
-        font-size: 1.2rem;
-    }
-    
-    .sub-stat {
-        font-size: 1.4rem;
-    }
-}
-
-@media (max-width: 550px) {
-    #main-content {
-        padding: 1rem;
-    }
-    
-    .stats-overview h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .paired-stats-list {
-        gap: 1rem;
-    }
-    
-    .paired-stat-row {
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        padding: 2rem 1rem;      
-        transform: skewX(-10deg);
-    }
-    
-    .paired-stat-link:nth-child(odd) .paired-stat-row {
-        margin-right: -100vw;
-        padding-right: 100vw;
-        padding-left: 4rem;
-    }
-    
-    .paired-stat-link:nth-child(even) .paired-stat-row {
-        flex-direction: column;
-        margin-left: -100vw;
-        padding-left: 100vw;
-        padding-right: 4rem;
-    }
-    
-    .left-stat,
-    .right-stat {
-        text-align: center;
-        padding: 0.5rem;
-    }
-    
-    .paired-stat-connector {
-        flex: 0 0 60px;
-    }
-    
-    .connector-label {
-        font-size: 1rem;
-        padding: 0.2rem 0.5rem;
-        transform: rotate(0deg);
-    }
-    
-    .stat-number {
-        font-size: 5rem;
-    }
-    
-    .stat-label {
-        font-size: 1rem;
-    }
-    
-    
-    .chart-section {
-        padding: 1.5rem 0;
-    }
-    
-    .chart-container {
-        min-height: 180px;
-    }
-}
-
-@media (max-width: 480px) {
-    .other-artists-grid {
-        gap: 1rem;
-    }
-    
-    .artist-logo {
-        max-width: 60px;
-        max-height: 45px;
-    }
-    
-    .artist-name {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .paired-stat-row {
-        padding: 1.5rem 0.5rem;
-        transform: skewX(-8deg);
-    }
-    
-    .paired-stat-link:nth-child(odd) .paired-stat-row {
-        padding-left: 3rem;
-    }
-    
-    .paired-stat-link:nth-child(even) .paired-stat-row {
-        padding-right: 3rem;
-    }
-    
-    .paired-stat-connector {
-        flex: 0 0 50px;
-    }
-    
-    .connector-label {
-        font-size: 0.9rem;
-        padding: 0.1rem 0.3rem;
-    }
-    
-    .stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .stat-label {
-        font-size: 0.9rem;
-    }
-    
-    
-    .chart-container {
-        min-height: 160px;
-    }
-}
-
 /* Subpage Styles */
 .subpage-container {
     max-width: 1400px;
@@ -680,7 +435,7 @@ body {
 }
 
 .subpage-header h1 {
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 300;
     color: var(--white);
     margin-bottom: 1rem;
@@ -703,65 +458,15 @@ body {
     gap: 3rem;
 }
 
-.placeholder-section {
-    background: transparent;
-    padding: 2rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.placeholder-section:last-child {
-    border-bottom: none;
-}
-
-.placeholder-section h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 2rem;
-    text-align: left;
-}
-
-.placeholder-content {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 3rem;
-    text-align: center;
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.placeholder-content p {
-    font-size: 1.1rem;
-    color: var(--light-grey);
-    font-style: italic;
-    margin: 0;
-}
-
 /* Responsive Design for Subpages */
 @media (max-width: 768px) {
     .subpage-header h1 {
-        font-size: 2.5rem;
+        font-size: 3rem;
     }
     
     .subpage-description {
         font-size: 1.1rem;
         padding: 0 1rem;
-    }
-    
-    .placeholder-section h2 {
-        font-size: 1.5rem;
-    }
-    
-    .placeholder-content {
-        padding: 2rem;
-        min-height: 150px;
-    }
-    
-    .placeholder-content p {
-        font-size: 1rem;
     }
 }
 
@@ -803,7 +508,7 @@ body {
     filter: brightness(1.2);
 }
 
-.world-map-tooltip {
+.map-tooltip {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.9);
     color: var(--white);
@@ -819,32 +524,32 @@ body {
     overflow-y: auto;
 }
 
-.tooltip-country {
+.map-tooltip-title {
     font-weight: bold;
     margin-bottom: 0.25rem;
 }
 
-.tooltip-bands {
+.map-tooltip-numbering {
     color: var(--light-grey);
     font-size: 0.8rem;
     margin-bottom: 0.5rem;
 }
 
-.tooltip-artists {
+.map-tooltip-list {
     border-top: 1px solid var(--light-grey);
     padding-top: 0.5rem;
     max-height: 200px;
     overflow-y: auto;
 }
 
-.tooltip-artist {
+.map-tooltip-list-item {
     font-size: 0.75rem;
     color: var(--white);
     padding: 0.1rem 0;
     line-height: 1.2;
 }
 
-.world-map-error {
+.map-error {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -855,13 +560,13 @@ body {
     padding: 2rem;
 }
 
-.world-map-error h3 {
+.map-error h3 {
     color: var(--red);
     margin-bottom: 1rem;
     font-size: 1.2rem;
 }
 
-.world-map-error p {
+.map-error p {
     margin-bottom: 1.5rem;
     font-size: 1rem;
 }
@@ -883,16 +588,16 @@ body {
 
 /* World Map Responsive Design */
 @media (max-width: 768px) {
-    .world-map-tooltip {
+    .map-tooltip {
         font-size: 0.8rem;
         padding: 0.4rem 0.6rem;
     }
     
-    .tooltip-country {
+    .map-tooltip-title {
         font-size: 0.8rem;
     }
     
-    .tooltip-bands {
+    .map-tooltip-numbering {
         font-size: 0.7rem;
     }
 }
@@ -910,31 +615,6 @@ body {
     
     .country-path:hover {
         stroke-width: 1;
-    }
-}
-
-/* Fallback for browsers that don't support aspect-ratio */
-@supports not (aspect-ratio: 1) {
-    .world-map-container {
-        height: 400px;
-    }
-    
-    @media (max-width: 768px) {
-        .world-map-container {
-            height: 300px;
-        }
-    }
-    
-    @media (max-width: 550px) {
-        .world-map-container {
-            height: 250px;
-        }
-    }
-    
-    @media (max-width: 400px) {
-        .world-map-container {
-            height: 200px;
-        }
     }
 }
 
@@ -977,85 +657,6 @@ body {
     filter: brightness(1.2);
 }
 
-.german-map-tooltip {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: var(--white);
-    padding: 0.5rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    pointer-events: none;
-    z-index: 1000;
-    border: 1px solid var(--light-grey);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    max-width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.german-tooltip-state {
-    font-weight: bold;
-    margin-bottom: 0.25rem;
-}
-
-.german-tooltip-venues {
-    color: var(--light-grey);
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-}
-
-.german-tooltip-venues-list {
-    border-top: 1px solid var(--light-grey);
-    padding-top: 0.5rem;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.german-tooltip-venue {
-    font-size: 0.75rem;
-    color: var(--white);
-    padding: 0.1rem 0;
-    line-height: 1.2;
-}
-
-.german-map-error {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    text-align: center;
-    color: var(--light-grey);
-    padding: 2rem;
-}
-
-.german-map-error h3 {
-    color: var(--red);
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
-
-.german-map-error p {
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
-}
-
-/* German Map Responsive Design */
-@media (max-width: 768px) {
-    .german-map-tooltip {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.6rem;
-    }
-    
-    .german-tooltip-state {
-        font-size: 0.8rem;
-    }
-    
-    .german-tooltip-venues {
-        font-size: 0.7rem;
-    }
-}
-
 @media (max-width: 550px) {
     .german-map-section {
         padding: 1.5rem 0;
@@ -1070,31 +671,6 @@ body {
     
     .german-state-path:hover {
         stroke-width: 1;
-    }
-}
-
-/* Fallback for browsers that don't support aspect-ratio */
-@supports not (aspect-ratio: 1) {
-    .german-map-container {
-        height: 350px;
-    }
-    
-    @media (max-width: 768px) {
-        .german-map-container {
-            height: 280px;
-        }
-    }
-    
-    @media (max-width: 550px) {
-        .german-map-container {
-            height: 220px;
-        }
-    }
-    
-    @media (max-width: 400px) {
-        .german-map-container {
-            height: 180px;
-        }
     }
 }
 
@@ -1115,62 +691,112 @@ body {
     .subpage-content {
         gap: 2rem;
     }
-    
-    .placeholder-section {
-        padding: 1.5rem 0;
-    }
-    
-    .placeholder-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .placeholder-content {
-        padding: 1.5rem;
-        min-height: 120px;
-    }
 }
 
-/* Bands Statistics Section */
-.bands-stats-overview {
-padding: 2rem 0;
-margin-bottom: 2rem;
-animation: fadeIn 0.6s ease-out;
+/* Base Statistics Classes */
+
+/* Base stats overview section */
+.stats-overview-base {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Base stats grid */
+.stats-grid-base {
+    display: grid;
+    gap: 2rem;
+    padding: 0 2rem;
+    transform: skewX(-15deg);
+}
+
+/* Base stat box */
+.stat-box-base {
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Base stat content */
+.stat-content-base {
+    text-align: center;
+    width: 100%;
+}
+
+/* Base stat number */
+.stat-number-base {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+/* Size variations */
+.stat-number-small {
+    font-size: 6rem; /* 1.5x bigger */
+}
+
+.stat-number-large {
+    font-size: 9rem;
+}
+
+/* Base stat label */
+.stat-label-base {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Color variations */
+.stat-box-red {
+    background-color: var(--red);
+}
+
+.stat-box-red .stat-label-base {
+    color: var(--dark-red);
+}
+
+.stat-box-dark-red {
+    background-color: var(--dark-red);
+}
+
+.stat-box-dark-red .stat-label-base {
+    color: var(--red);
+}
+
+.stat-box-black {
+    background-color: var(--black);
+}
+
+.stat-box-black .stat-label-base {
+    color: var(--dark-red);
 }
 
 .bands-stats-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
     grid-template-rows: auto auto; /* Two rows */
     grid-template-areas:
-        "left center center right"
+        "avg-per-year total total twice"
         "shows-per-band shows-per-band countries countries";
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-}
-
-.bands-stat-box {
-position: relative;
-padding: 2rem;
-overflow: hidden;
-min-height: 120px;
-display: flex;
-align-items: center;
-justify-content: center;
 }
 
 /* Grid area assignments */
-.bands-stat-left {
-    grid-area: left;
+.bands-stat-avg-per-year {
+    grid-area: avg-per-year;
 }
 
-.bands-stat-center {
-    grid-area: center;
+.bands-stat-total {
+    grid-area: total;
 }
 
-.bands-stat-right {
-    grid-area: right;
+.bands-stat-twice {
+    grid-area: twice;
 }
 
 .bands-stat-shows-per-band {
@@ -1181,425 +807,41 @@ justify-content: center;
     grid-area: countries;
 }
 
-/* Outer boxes (left and right): Dark red background with light red labels */
-.bands-stat-left,
-.bands-stat-right {
-background-color: var(--dark-red);
-}
-
-.bands-stat-left .bands-stat-label,
-.bands-stat-right .bands-stat-label {
-color: var(--red);
-}
-
-/* Inner box (center): Light red background with dark red labels */
-.bands-stat-center {
-background-color: var(--red);
-}
-
-.bands-stat-center .bands-stat-label {
-color: var(--dark-red);
-}
-
-/* Second row boxes: Dark red background with light red labels */
-.bands-stat-shows-per-band,
-.bands-stat-countries {
-    background-color: var(--dark-red);
-}
-
-.bands-stat-shows-per-band .bands-stat-label,
-.bands-stat-countries .bands-stat-label {
-    color: var(--red);
-}
-
-.bands-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.bands-stat-number {
-    font-size: 4rem;
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-/* Outer boxes (left and right): 1.5x bigger numbers */
-.bands-stat-left .bands-stat-number,
-.bands-stat-right .bands-stat-number {
-    font-size: 6rem; /* 4rem * 1.5 = 6rem */
-}
-
-/* Inner box (center): 2x bigger numbers */
-.bands-stat-center .bands-stat-number {
-    font-size: 8rem; /* 4rem * 2 = 8rem */
-}
-
-/* Second row boxes: Match outer boxes font size (1.5x) */
-.bands-stat-shows-per-band .bands-stat-number,
-.bands-stat-countries .bands-stat-number {
-    font-size: 6rem; /* Match left/right boxes */
-}
-
-.bands-stat-label {
-font-size: 1.2rem;
-text-transform: uppercase;
-letter-spacing: 1px;
-font-weight: 500;
-}
-
-/* Responsive Design for Bands Statistics */
-@media (max-width: 1200px) {
-    .bands-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .bands-stat-left .bands-stat-number,
-    .bands-stat-right .bands-stat-number {
-        font-size: 5.25rem; /* 3.5rem * 1.5 */
-    }
-    
-    .bands-stat-center .bands-stat-number {
-        font-size: 7rem; /* 3.5rem * 2 */
-    }
-    
-    .bands-stat-shows-per-band .bands-stat-number,
-    .bands-stat-countries .bands-stat-number {
-        font-size: 5.25rem; /* Match left/right boxes */
-    }
-    
-    .bands-stat-label {
-        font-size: 1.1rem;
-    }
-}
-
+/* Responsive Design for Bands Statistics - Now handled by base classes */
 @media (max-width: 1050px) {
     .bands-stats-grid {
         grid-template-columns: 1fr 1fr; /* 2-column layout */
         grid-template-areas:
-            "center center"
-            "left right"
+            "total total"
+            "avg-per-year twice"
             "shows-per-band countries";
         gap: 1.5rem;
         padding: 0 1rem;
     }
 }
 
-@media (max-width: 900px) {
-    .bands-stat-number {
-        font-size: 3rem;
-    }
-    
-    .bands-stat-left .bands-stat-number,
-    .bands-stat-right .bands-stat-number {
-        font-size: 4.5rem; /* 3rem * 1.5 */
-    }
-    
-    .bands-stat-center .bands-stat-number {
-        font-size: 6rem; /* 3rem * 2 */
-    }
-    
-    .bands-stat-shows-per-band .bands-stat-number,
-    .bands-stat-countries .bands-stat-number {
-        font-size: 4.5rem; /* Match left/right boxes */
-    }
-    
-    .bands-stat-label {
-        font-size: 1rem;
-    }
-    
-    .bands-stats-grid {
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .bands-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .bands-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .bands-stat-number {
-        font-size: 2.5rem;
-    }
-    
-    .bands-stat-left .bands-stat-number,
-    .bands-stat-right .bands-stat-number {
-        font-size: 3.75rem; /* 2.5rem * 1.5 */
-    }
-    
-    .bands-stat-center .bands-stat-number {
-        font-size: 5rem; /* 2.5rem * 2 */
-    }
-    
-    .bands-stat-shows-per-band .bands-stat-number,
-    .bands-stat-countries .bands-stat-number {
-        font-size: 3.75rem; /* Match left/right boxes */
-    }
-    
-    .bands-stat-label {
-        font-size: 0.9rem;
-    }
-}
-
 @media (max-width: 550px) {
-    .bands-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
-    
     .bands-stats-grid {
         grid-template-columns: 1fr; /* Single column */
         grid-template-areas:
-            "center"
-            "left"
-            "right"
+            "total"
+            "avg-per-year"
+            "twice"
             "shows-per-band"
             "countries";
         gap: 1rem;
         padding: 0 1rem;
     }
-    
-    .bands-stats-grid {
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .bands-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .bands-stat-number {
-        font-size: 2rem;
-    }
-    
-    .bands-stat-left .bands-stat-number,
-    .bands-stat-right .bands-stat-number {
-        font-size: 3rem; /* 2rem * 1.5 */
-    }
-    
-    .bands-stat-center .bands-stat-number {
-        font-size: 4rem; /* 2rem * 2 */
-    }
-    
-    .bands-stat-shows-per-band .bands-stat-number,
-    .bands-stat-countries .bands-stat-number {
-        font-size: 3rem; /* Match left/right boxes */
-    }
-    
-    .bands-stat-label {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .bands-stats-grid {
-        grid-template-columns: 1fr; /* Single column */
-        grid-template-areas:
-            "center"
-            "left"
-            "right"
-            "shows-per-band"
-            "countries";
-    }
-    
-    .bands-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .bands-stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .bands-stat-left .bands-stat-number,
-    .bands-stat-right .bands-stat-number {
-        font-size: 2.7rem; /* 1.8rem * 1.5 */
-    }
-    
-    .bands-stat-center .bands-stat-number {
-        font-size: 3.6rem; /* 1.8rem * 2 */
-    }
-    
-    .bands-stat-shows-per-band .bands-stat-number,
-    .bands-stat-countries .bands-stat-number {
-        font-size: 2.7rem; /* Match left/right boxes */
-    }
-    
-    .bands-stat-label {
-        font-size: 0.7rem;
-    }
-}
-
-/* Locations Statistics Section */
-.locations-stats-overview {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 0.6s ease-out;
 }
 
 .locations-stats-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr; /* Two equal width boxes */
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
 }
 
-.locations-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Left box (venues): Light red background with dark red labels */
-.venues-stat-left {
-    background-color: var(--red);
-}
-
-.venues-stat-left .locations-stat-label {
-    color: var(--dark-red);
-}
-
-/* Right box (cities): Dark red background with red labels */
-.cities-stat-right {
-    background-color: var(--dark-red);
-}
-
-.cities-stat-right .locations-stat-label {
-    color: var(--red);
-}
-
-.locations-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.locations-stat-number {
-    font-size: 6rem; /* Larger numbers for two-box layout */
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-.locations-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
-}
-
-/* Chart sections styling for locations */
-.locations-view .chart-section {
-    background: transparent;
-    padding: 2rem 0;
-}
-
-.locations-view .chart-container {
-    position: relative;
-    width: 100%;
-    background: transparent;
-    min-height: 200px; /* Minimum height for safety */
-}
-
-.locations-view .chart-container canvas {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Responsive Design for Locations Statistics */
-@media (max-width: 1200px) {
-    .locations-stat-number {
-        font-size: 5rem;
-    }
-    
-    .locations-stat-label {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 900px) {
-    .locations-stat-number {
-        font-size: 4.5rem;
-    }
-    
-    .locations-stat-label {
-        font-size: 1rem;
-    }
-    
-    .locations-stats-grid {
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .locations-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .locations-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .locations-stat-number {
-        font-size: 4rem;
-    }
-    
-    .locations-stat-label {
-        font-size: 0.9rem;
-    }
-    
-    .locations-view .chart-container {
-        min-height: 180px;
-    }
-}
-
+/* Responsive Design for Locations Statistics - Now handled by base classes */
 @media (max-width: 550px) {
-    .locations-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
-    
     .locations-stats-grid {
         grid-template-columns: 1fr; /* Single column on mobile */
-        gap: 1rem;
-        padding: 0 1rem;
-    }
-    
-    .locations-stats-grid {
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .locations-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .locations-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .locations-stat-label {
-        font-size: 0.8rem;
-    }
-    
-    .locations-view .chart-section {
-        padding: 1.5rem 0;
-    }
-    
-    .locations-view .chart-container {
-        min-height: 160px;
     }
 }
 
@@ -1630,25 +872,6 @@ font-weight: 500;
    pointer-events: none;
 }
 
-@media (max-width: 400px) {
-    .locations-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .locations-stat-number {
-        font-size: 3rem;
-    }
-    
-    .locations-stat-label {
-        font-size: 0.7rem;
-    }
-    
-    .locations-view .chart-container {
-        min-height: 140px;
-    }
-}
-
 /* City Statistics Section */
 .city-stats-overview {
     padding: 2rem 0;
@@ -1657,641 +880,108 @@ font-weight: 500;
 }
 
 .city-stats-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr; /* Two equal width boxes */
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-}
-
-.city-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Left box (total events): Light red background with dark red labels */
-.city-stat-left {
-    background-color: var(--red);
-}
-
-.city-stat-left .city-stat-label {
-    color: var(--dark-red);
-}
-
-/* Right box (venues): Dark red background with red labels */
-.city-stat-right {
-    background-color: var(--dark-red);
-}
-
-.city-stat-right .city-stat-label {
-    color: var(--red);
-}
-
-.city-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.city-stat-number {
-    font-size: 6rem; /* Larger numbers for two-box layout */
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-.city-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
 }
 
 /* Responsive Design for City Statistics */
-@media (max-width: 1200px) {
-    .city-stat-number {
-        font-size: 5rem;
-    }
-    
-    .city-stat-label {
-        font-size: 1.1rem;
-    }
-}
 
-@media (max-width: 900px) {
-    .city-stat-number {
-        font-size: 4.5rem;
-    }
-    
-    .city-stat-label {
-        font-size: 1rem;
-    }
-    
-    .city-stats-grid {
-        gap: 1.5rem;
-    }
-}
 
-@media (max-width: 768px) {
-    .city-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .city-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .city-stat-number {
-        font-size: 4rem;
-    }
-    
-    .city-stat-label {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 550px) {
-    .city-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
-    
+@media (max-width: 550px) {   
     .city-stats-grid {
         grid-template-columns: 1fr; /* Single column on mobile */
-        gap: 1rem;
-        padding: 0 1rem;
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
     }
-    
-    .city-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .city-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .city-stat-label {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .city-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .city-stat-number {
-        font-size: 3rem;
-    }
-    
-    .city-stat-label {
-        font-size: 0.7rem;
-    }
-}
-
-/* City Chart Sections */
-.city-view .chart-section {
-    background: transparent;
-    padding: 2rem 0;
-}
-
-.city-view .chart-container {
-    position: relative;
-    width: 100%;
-    background: transparent;
-    min-height: 200px; /* Minimum height for safety */
-}
-
-.city-view .chart-container canvas {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Responsive Design for City Charts */
-@media (max-width: 768px) {
-    .city-view .chart-container {
-        min-height: 180px;
-    }
-}
-
-@media (max-width: 550px) {
-    .city-view .chart-section {
-        padding: 1.5rem 0;
-    }
-    
-    .city-view .chart-container {
-        min-height: 160px;
-    }
-}
-
-@media (max-width: 400px) {
-    .city-view .chart-container {
-        min-height: 140px;
-    }
-}
-
-/* Costs Statistics Section */
-.costs-stats-overview {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 0.6s ease-out;
 }
 
 .costs-stats-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
     grid-template-rows: auto; /* Single row */
     grid-template-areas:
-        "left center center right";
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-}
-
-.costs-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        "avg-per-event total total avg-per-year";
 }
 
 /* Grid area assignments */
 .costs-stat-left {
-    grid-area: left;
+    grid-area: avg-per-event;
 }
 
-.costs-stat-center {
-    grid-area: center;
+.costs-stat-total {
+    grid-area: total;
 }
 
 .costs-stat-right {
-    grid-area: right;
-}
-
-/* Outer boxes (left and right): Dark red background with light red labels */
-.costs-stat-left,
-.costs-stat-right {
-    background-color: var(--dark-red);
-}
-
-.costs-stat-left .costs-stat-label,
-.costs-stat-right .costs-stat-label {
-    color: var(--red);
-}
-
-/* Inner box (center): Light red background with dark red labels */
-.costs-stat-center {
-    background-color: var(--red);
-}
-
-.costs-stat-center .costs-stat-label {
-    color: var(--dark-red);
-}
-
-.costs-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.costs-stat-number {
-    font-size: 4rem;
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-/* Outer boxes (left and right): 1.5x bigger numbers */
-.costs-stat-left .costs-stat-number,
-.costs-stat-right .costs-stat-number {
-    font-size: 6rem; /* 4rem * 1.5 = 6rem */
-}
-
-/* Inner box (center): 2x bigger numbers */
-.costs-stat-center .costs-stat-number {
-    font-size: 8rem; /* 4rem * 2 = 8rem */
-}
-
-.costs-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
-}
-
-/* Chart sections styling for costs */
-.cost-view .chart-section {
-    background: transparent;
-    padding: 2rem 0;
-}
-
-.cost-view .chart-container {
-    position: relative;
-    width: 100%;
-    background: transparent;
-    min-height: 200px; /* Minimum height for safety */
-}
-
-.cost-view .chart-container canvas {
-    max-width: 100%;
-    height: auto;
+    grid-area: avg-per-year;
 }
 
 /* Responsive Design for Costs Statistics */
-@media (max-width: 1200px) {
-    .costs-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .costs-stat-left .costs-stat-number,
-    .costs-stat-right .costs-stat-number {
-        font-size: 5.25rem; /* 3.5rem * 1.5 */
-    }
-    
-    .costs-stat-center .costs-stat-number {
-        font-size: 7rem; /* 3.5rem * 2 */
-    }
-    
-    .costs-stat-label {
-        font-size: 1.1rem;
-    }
-}
 
 @media (max-width: 1050px) {
     .costs-stats-grid {
         grid-template-columns: 1fr 1fr; /* bb/ac pattern: 2-column layout */
         grid-template-areas:
-            "center center"
-            "left right";
-        gap: 1.5rem;
-        padding: 0 1rem;
-    }
-}
-
-@media (max-width: 900px) {
-    .costs-stat-number {
-        font-size: 3rem;
-    }
-    
-    .costs-stat-left .costs-stat-number,
-    .costs-stat-right .costs-stat-number {
-        font-size: 4.5rem; /* 3rem * 1.5 */
-    }
-    
-    .costs-stat-center .costs-stat-number {
-        font-size: 6rem; /* 3rem * 2 */
-    }
-    
-    .costs-stat-label {
-        font-size: 1rem;
-    }
-    
-    .costs-stats-grid {
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .costs-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .costs-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .costs-stat-number {
-        font-size: 2.5rem;
-    }
-    
-    .costs-stat-left .costs-stat-number,
-    .costs-stat-right .costs-stat-number {
-        font-size: 3.75rem; /* 2.5rem * 1.5 */
-    }
-    
-    .costs-stat-center .costs-stat-number {
-        font-size: 5rem; /* 2.5rem * 2 */
-    }
-    
-    .costs-stat-label {
-        font-size: 0.9rem;
-    }
-    
-    .cost-view .chart-container {
-        min-height: 180px;
+            "total total"
+            "avg-per-event avg-per-year";
     }
 }
 
 @media (max-width: 550px) {
-    .costs-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
     
     .costs-stats-grid {
         grid-template-columns: 1fr; /* Single column */
         grid-template-areas:
-            "center"
-            "left"
-            "right";
-        gap: 1rem;
-        padding: 0 1rem;
-    }
-    
-    .costs-stats-grid {
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .costs-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .costs-stat-number {
-        font-size: 2rem;
-    }
-    
-    .costs-stat-left .costs-stat-number,
-    .costs-stat-right .costs-stat-number {
-        font-size: 3rem; /* 2rem * 1.5 */
-    }
-    
-    .costs-stat-center .costs-stat-number {
-        font-size: 4rem; /* 2rem * 2 */
-    }
-    
-    .costs-stat-label {
-        font-size: 0.8rem;
-    }
-    
-    .cost-view .chart-section {
-        padding: 1.5rem 0;
-    }
-    
-    .cost-view .chart-container {
-        min-height: 160px;
+            "total"
+            "avg-per-event"
+            "avg-per-year";
     }
 }
 
-@media (max-width: 400px) {
-    .costs-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .costs-stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .costs-stat-left .costs-stat-number,
-    .costs-stat-right .costs-stat-number {
-        font-size: 2.7rem; /* 1.8rem * 1.5 */
-    }
-    
-    .costs-stat-center .costs-stat-number {
-        font-size: 3.6rem; /* 1.8rem * 2 */
-    }
-    
-    .costs-stat-label {
-        font-size: 0.7rem;
-    }
-    
-    .cost-view .chart-container {
-        min-height: 140px;
-    }
-}
-
-/* Events Statistics Section */
-.events-stats-overview {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 0.6s ease-out;
-}
-
+/* Events Statistics Section - Now uses base classes */
 .events-stats-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
     grid-template-rows: auto; /* Single row */
     grid-template-areas:
-        "left center center right";
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-}
-
-.events-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        "avg-per-year total total max-per-year";
 }
 
 /* Grid area assignments */
 .events-stat-left {
-    grid-area: left;
+    grid-area: avg-per-year;
 }
 
-.events-stat-center {
-    grid-area: center;
+.events-stat-total {
+    grid-area: total;
 }
 
-.events-stat-right {
-    grid-area: right;
-}
-
-/* Outer boxes (left and right): Dark red background with light red labels */
-.events-stat-left,
-.events-stat-right {
-    background-color: var(--dark-red);
-}
-
-.events-stat-left .events-stat-label,
-.events-stat-right .events-stat-label {
-    color: var(--red);
-}
-
-/* Inner box (center): Light red background with dark red labels */
-.events-stat-center {
-    background-color: var(--red);
-}
-
-.events-stat-center .events-stat-label {
-    color: var(--dark-red);
-}
-
-.events-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.events-stat-number {
-    font-size: 4rem;
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-/* Outer boxes (left and right): 1.5x bigger numbers */
-.events-stat-left .events-stat-number,
-.events-stat-right .events-stat-number {
-    font-size: 6rem; /* 4rem * 1.5 = 6rem */
-}
-
-/* Inner box (center): 2x bigger numbers */
-.events-stat-center .events-stat-number {
-    font-size: 8rem; /* 4rem * 2 = 8rem */
-}
-
-.events-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
-}
-
-/* Event Types Statistics Section */
-.event-types-stats-overview {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 0.6s ease-out;
+.events-stat-max-per-year {
+    grid-area: max-per-year;
 }
 
 .event-types-stats-grid {
-    display: grid;
     grid-template-columns: 2fr 3fr 2fr; /* abbe/ebbc pattern */
     grid-template-rows: auto auto; /* Two rows */
     grid-template-areas:
-        "left center ."
-        ". center right";
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-}
-
-.event-types-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        "concerts pie-chart ."
+        ". pie-chart festivals";
 }
 
 /* Grid area assignments */
-.event-types-stat-left {
-    grid-area: left;
+.event-types-stat-concerts {
+    grid-area: concerts;
 }
 
-.event-types-stat-center {
-    grid-area: center;
+.event-types-stat-pie-chart {
+    grid-area: pie-chart;
 }
 
-.event-types-stat-right {
-    grid-area: right;
-}
-
-/* Left box (concerts): Dark red background with light red labels */
-.event-types-stat-left {
-    background-color: var(--dark-red);
-}
-
-.event-types-stat-left .event-types-stat-label {
-    color: var(--red);
+.event-types-stat-festivals {
+    grid-area: festivals;
 }
 
 /* Center box (pie chart): No background, counter-skew */
-.event-types-stat-center {
+.event-types-stat-pie-chart {
     background: transparent;
     padding: 1rem;
     min-height: 260px; /* Taller to accommodate both rows */
     transform: skewX(15deg); /* Counter-skew to make pie chart straight */
-}
-
-/* Right box (festivals): Bright red background with dark red labels */
-.event-types-stat-right {
-    background-color: var(--red);
-}
-
-.event-types-stat-right .event-types-stat-label {
-    color: var(--dark-red);
-}
-
-.event-types-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.event-types-stat-number {
-    font-size: 6rem; /* Larger numbers for side boxes */
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-.event-types-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
 }
 
 /* Pie chart container styling */
@@ -2311,638 +1001,76 @@ font-weight: 500;
     height: auto;
 }
 
-/* Dark Red Background Transition Point */
-.dark-red-transition {
-    background-color: var(--dark-red);
-    height: 4rem;
-    width: 100%;
-    margin: 3rem 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.dark-red-transition::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -50%;
-    right: -50%;
-    height: 100%;
-    background: linear-gradient(90deg,
-        var(--dark-grey) 0%,
-        var(--dark-red) 25%,
-        var(--dark-red) 75%,
-        var(--dark-grey) 100%);
-    transform: skewX(-15deg);
-}
-
-/* Shows Statistics Section */
-.shows-stats-overview {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 0.6s ease-out;
-    background-color: var(--dark-red);
-    margin-left: -100vw;
-    margin-right: -100vw;
-    padding-left: 100vw;
-    padding-right: 100vw;
-}
-
 .shows-stats-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr; /* abbc pattern: single, double, single */
     grid-template-rows: auto; /* Single row */
     grid-template-areas:
-        "left center center right";
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.shows-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        "avg-per-year total total avg-per-event";
 }
 
 /* Grid area assignments */
-.shows-stat-left {
-    grid-area: left;
+.shows-stat-avg-per-year {
+    grid-area: avg-per-year;
 }
 
-.shows-stat-center {
-    grid-area: center;
+.shows-stat-total {
+    grid-area: total;
 }
 
-.shows-stat-right {
-    grid-area: right;
-}
-
-/* Outer boxes (left and right): Black background with dark red labels */
-.shows-stat-left,
-.shows-stat-right {
-    background-color: var(--black);
-}
-
-.shows-stat-left .shows-stat-label,
-.shows-stat-right .shows-stat-label {
-    color: var(--dark-red);
-}
-
-/* Inner box (center): Black center with dark red outer border effect */
-.shows-stat-center {
-    background-color: var(--black);
-    border: 4px solid var(--dark-red);
-    position: relative;
-}
-
-.shows-stat-center::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    background-color: var(--dark-red);
-    z-index: -1;
-}
-
-.shows-stat-center .shows-stat-label {
-    color: var(--dark-red);
-}
-
-.shows-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.shows-stat-number {
-    font-size: 4rem;
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-/* Outer boxes (left and right): 1.5x bigger numbers */
-.shows-stat-left .shows-stat-number,
-.shows-stat-right .shows-stat-number {
-    font-size: 6rem; /* 4rem * 1.5 = 6rem */
-}
-
-/* Inner box (center): 2x bigger numbers */
-.shows-stat-center .shows-stat-number {
-    font-size: 8rem; /* 4rem * 2 = 8rem */
-}
-
-.shows-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
-}
-
-/* Shows content section styling */
-.shows-content {
-    background-color: var(--dark-red);
-    margin-left: -100vw;
-    margin-right: -100vw;
-    padding-left: 100vw;
-    padding-right: 100vw;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-}
-
-.shows-content .chart-section {
-    max-width: 1400px;
-    margin: 0 auto;
-    background: transparent;
-    padding: 2rem 0;
-    width: 100%; /* Ensure full width */
-}
-
-.shows-content .chart-container {
-    position: relative;
-    width: 100%;
-    background: transparent;
-    min-height: 200px;
-}
-
-.shows-content .chart-container canvas {
-    max-width: 100%;
-    height: auto;
+.shows-stat-avg-per-event {
+    grid-area: avg-per-event;
 }
 
 /* Responsive Design for Events Statistics */
-@media (max-width: 1200px) {
-    .events-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .events-stat-left .events-stat-number,
-    .events-stat-right .events-stat-number {
-        font-size: 5.25rem; /* 3.5rem * 1.5 */
-    }
-    
-    .events-stat-center .events-stat-number {
-        font-size: 7rem; /* 3.5rem * 2 */
-    }
-    
-    .events-stat-label {
-        font-size: 1.1rem;
-    }
-    
-    .event-types-stat-number {
-        font-size: 5rem;
-    }
-    
-    .event-types-stat-label {
-        font-size: 1.1rem;
-    }
-    
-    .shows-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .shows-stat-left .shows-stat-number,
-    .shows-stat-right .shows-stat-number {
-        font-size: 5.25rem; /* 3.5rem * 1.5 */
-    }
-    
-    .shows-stat-center .shows-stat-number {
-        font-size: 7rem; /* 3.5rem * 2 */
-    }
-    
-    .shows-stat-label {
-        font-size: 1.1rem;
-    }
-}
 
 @media (max-width: 1050px) {
     .events-stats-grid {
         grid-template-columns: 1fr 1fr; /* bb/ac pattern: 2-column layout */
         grid-template-areas:
-            "center center"
-            "left right";
-        gap: 1.5rem;
-        padding: 0 1rem;
+            "total total"
+            "avg-per-year max-per-year";
     }
     
     .event-types-stats-grid {
         grid-template-columns: 1fr;
         grid-template-areas:
-            "left"
-            "center"
-            "right";
-        gap: 1.5rem;
-        padding: 0 1rem;
-        transform: skewX(0deg);
+            "concerts"
+            "pie-chart"
+            "festivals";
+        transform: skewX(0deg) !important;
     }
 
-    .event-types-stat-box {
+    .event-types-stats-grid .stat-box-base {
         transform: skewX(-15deg);
     }
 
-    .event-types-stat-box.event-types-stat-center {
+    .event-types-stats-grid .stat-box-base.event-types-stat-pie-chart {
         transform: skewX(0deg);
     }
     
     .shows-stats-grid {
         grid-template-columns: 1fr 1fr; /* bb/ac pattern: 2-column layout */
         grid-template-areas:
-            "center center"
-            "left right";
-        gap: 1.5rem;
-        padding: 0 1rem;
+            "total total"
+            "avg-per-year avg-per-event";
     }
 }
 
-@media (max-width: 900px) {
-    .events-stat-number {
-        font-size: 3rem;
-    }
-    
-    .events-stat-left .events-stat-number,
-    .events-stat-right .events-stat-number {
-        font-size: 4.5rem; /* 3rem * 1.5 */
-    }
-    
-    .events-stat-center .events-stat-number {
-        font-size: 6rem; /* 3rem * 2 */
-    }
-    
-    .events-stat-label {
-        font-size: 1rem;
-    }
-    
-    .events-stats-grid {
-        gap: 1.5rem;
-    }
-    
-    .event-types-stat-number {
-        font-size: 4.5rem;
-    }
-    
-    .event-types-stat-label {
-        font-size: 1rem;
-    }
-    
-    .event-types-stats-grid {
-        gap: 1.5rem;
-    }
-    
-    .shows-stat-number {
-        font-size: 3rem;
-    }
-    
-    .shows-stat-left .shows-stat-number,
-    .shows-stat-right .shows-stat-number {
-        font-size: 4.5rem; /* 3rem * 1.5 */
-    }
-    
-    .shows-stat-center .shows-stat-number {
-        font-size: 6rem; /* 3rem * 2 */
-    }
-    
-    .shows-stat-label {
-        font-size: 1rem;
-    }
-    
-    .shows-stats-grid {
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .events-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .events-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .events-stat-number {
-        font-size: 2.5rem;
-    }
-    
-    .events-stat-left .events-stat-number,
-    .events-stat-right .events-stat-number {
-        font-size: 3.75rem; /* 2.5rem * 1.5 */
-    }
-    
-    .events-stat-center .events-stat-number {
-        font-size: 5rem; /* 2.5rem * 2 */
-    }
-    
-    .events-stat-label {
-        font-size: 0.9rem;
-    }
-
-    .event-types-stat-box {
-        transform: skewX(-10deg);
-    }
-    
-    .event-types-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .event-types-stat-number {
-        font-size: 4rem;
-    }
-    
-    .event-types-stat-label {
-        font-size: 0.9rem;
-    }
-    
-    .shows-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .shows-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .shows-stat-number {
-        font-size: 2.5rem;
-    }
-    
-    .shows-stat-left .shows-stat-number,
-    .shows-stat-right .shows-stat-number {
-        font-size: 3.75rem; /* 2.5rem * 1.5 */
-    }
-    
-    .shows-stat-center .shows-stat-number {
-        font-size: 5rem; /* 2.5rem * 2 */
-    }
-    
-    .shows-stat-label {
-        font-size: 0.9rem;
-    }
-    
-    .shows-content .chart-container {
-        min-height: 180px;
-    }
-}
-
-@media (max-width: 550px) {
-    .events-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
-    
+@media (max-width: 550px) { 
     .events-stats-grid {
         grid-template-columns: 1fr; /* Single column */
         grid-template-areas:
-            "center"
-            "left"
-            "right";
-        gap: 1rem;
-        padding: 0 1rem;
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .events-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .events-stat-number {
-        font-size: 2rem;
-    }
-    
-    .events-stat-left .events-stat-number,
-    .events-stat-right .events-stat-number {
-        font-size: 3rem; /* 2rem * 1.5 */
-    }
-    
-    .events-stat-center .events-stat-number {
-        font-size: 4rem; /* 2rem * 2 */
-    }
-    
-    .events-stat-label {
-        font-size: 0.8rem;
-    }
-    
-    .event-types-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
-    
-    .event-types-stats-grid {
-        grid-template-columns: 1fr; /* Single column */
-        grid-template-areas:
-            "left"
-            "center"
-            "right";
-        gap: 1rem;
-        padding: 0 1rem;
-    }
-    
-    .event-types-stat-center {
-        min-height: 180px; /* Smaller on mobile */
-    }
-    
-    .event-types-chart-container {
-        min-height: 140px; /* Smaller on mobile */
-    }
-    
-    .event-types-stat-box {
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .event-types-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .event-types-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .event-types-stat-label {
-        font-size: 0.8rem;
-    }
-    
-    .shows-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
+            "total"
+            "avg-per-year"
+            "max-per-year";
     }
     
     .shows-stats-grid {
         grid-template-columns: 1fr; /* Single column */
         grid-template-areas:
-            "center"
-            "left"
-            "right";
-        gap: 1rem;
-        padding: 0 1rem;
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .shows-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .shows-stat-number {
-        font-size: 2rem;
-    }
-    
-    .shows-stat-left .shows-stat-number,
-    .shows-stat-right .shows-stat-number {
-        font-size: 3rem; /* 2rem * 1.5 */
-    }
-    
-    .shows-stat-center .shows-stat-number {
-        font-size: 4rem; /* 2rem * 2 */
-    }
-    
-    .shows-stat-label {
-        font-size: 0.8rem;
-    }
-    
-    .shows-content .chart-section {
-        padding: 1.5rem 0;
-    }
-    
-    .shows-content .chart-container {
-        min-height: 160px;
-    }
-    
-    .dark-red-transition {
-        height: 3rem;
-        margin: 2rem 0;
-    }
-}
-
-@media (max-width: 400px) {
-    .events-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .events-stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .events-stat-left .events-stat-number,
-    .events-stat-right .events-stat-number {
-        font-size: 2.7rem; /* 1.8rem * 1.5 */
-    }
-    
-    .events-stat-center .events-stat-number {
-        font-size: 3.6rem; /* 1.8rem * 2 */
-    }
-    
-    .events-stat-label {
-        font-size: 0.7rem;
-    }
-    
-    .event-types-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .event-types-stat-center {
-        transform: skewX(8deg); /* Counter-skew to make pie chart straight */
-    }
-    
-    .event-types-stat-number {
-        font-size: 3rem;
-    }
-    
-    .event-types-stat-label {
-        font-size: 0.7rem;
-    }
-    
-    .shows-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .shows-stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .shows-stat-left .shows-stat-number,
-    .shows-stat-right .shows-stat-number {
-        font-size: 2.7rem; /* 1.8rem * 1.5 */
-    }
-    
-    .shows-stat-center .shows-stat-number {
-        font-size: 3.6rem; /* 1.8rem * 2 */
-    }
-    
-    .shows-stat-label {
-        font-size: 0.7rem;
-    }
-    
-    .shows-content .chart-container {
-        min-height: 140px;
-    }
-    
-    .dark-red-transition {
-        height: 2rem;
-        margin: 1.5rem 0;
-    }
-}
-
-/* Dynamic Page Styles */
-.dynamic-page-section {
-    background: transparent;
-    padding: 2rem 0;
-}
-
-.dynamic-page-content {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 3rem;
-    text-align: center;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.dynamic-page-content p {
-    font-size: 1.1rem;
-    color: var(--light-grey);
-    font-style: italic;
-    margin: 0.5rem 0;
-}
-
-/* Responsive Design for Dynamic Pages */
-@media (max-width: 768px) {
-    .dynamic-page-content {
-        padding: 2rem;
-        min-height: 150px;
-    }
-    
-    .dynamic-page-content p {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 550px) {
-    .dynamic-page-section {
-        padding: 1.5rem 0;
-    }
-    
-    .dynamic-page-content {
-        padding: 1.5rem;
-        min-height: 120px;
+            "total"
+            "avg-per-year"
+            "avg-per-event";
     }
 }
 
@@ -2958,12 +1086,6 @@ font-weight: 500;
     max-width: 600px;
     max-height: 300px;
     object-fit: contain;
-    filter: brightness(0.9);
-    transition: filter 0.2s ease;
-}
-
-.artist-logo-header:hover {
-    filter: brightness(1);
 }
 
 /* When logo is displayed, hide the text title */
@@ -2985,152 +1107,14 @@ font-weight: 500;
     }
 }
 
-/* Artist Statistics Section */
-.artist-stats-overview {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 0.6s ease-out;
-}
-
 .artist-stats-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr; /* Two equal width boxes */
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-}
-
-.artist-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Left box (total shows): Light red background with dark red labels */
-.artist-stat-left {
-    background-color: var(--red);
-}
-
-.artist-stat-left .artist-stat-label {
-    color: var(--dark-red);
-}
-
-/* Right box (headline shows): Dark red background with red labels */
-.artist-stat-right {
-    background-color: var(--dark-red);
-}
-
-.artist-stat-right .artist-stat-label {
-    color: var(--red);
-}
-
-.artist-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.artist-stat-number {
-    font-size: 6rem; /* Larger numbers for two-box layout */
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-.artist-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
 }
 
 /* Responsive Design for Artist Statistics */
-@media (max-width: 1200px) {
-    .artist-stat-number {
-        font-size: 5rem;
-    }
-    
-    .artist-stat-label {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 900px) {
-    .artist-stat-number {
-        font-size: 4.5rem;
-    }
-    
-    .artist-stat-label {
-        font-size: 1rem;
-    }
-    
-    .artist-stats-grid {
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .artist-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .artist-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .artist-stat-number {
-        font-size: 4rem;
-    }
-    
-    .artist-stat-label {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 550px) {
-    .artist-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
-    
+@media (max-width: 550px) {    
     .artist-stats-grid {
         grid-template-columns: 1fr; /* Single column on mobile */
-        gap: 1rem;
-        padding: 0 1rem;
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .artist-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .artist-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .artist-stat-label {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .artist-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .artist-stat-number {
-        font-size: 3rem;
-    }
-    
-    .artist-stat-label {
-        font-size: 0.7rem;
     }
 }
 
@@ -3400,25 +1384,6 @@ font-weight: 500;
     }
 }
 
-/* All Shows Section */
-.artist-all-shows-section {
-    background: transparent;
-    padding: 2rem 0;
-    margin-top: 2rem;
-}
-
-.artist-all-shows-section h2 {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    text-align: left;
-}
-
-.artist-all-shows-container {
-    width: 100%;
-}
-
 .all-shows-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -3454,17 +1419,12 @@ font-weight: 500;
 
 .show-display.compact .show-event-name {
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--white);
     margin-bottom: 0.5rem;
     line-height: 1.2;
 }
 
 .show-display.compact .show-event-logo {
     max-width: 120px;
-    object-fit: contain;
-    filter: brightness(0.9);
-    transition: filter 0.2s ease;
     margin-bottom: 0.15rem;
 }
 
@@ -3474,16 +1434,12 @@ font-weight: 500;
 
 .show-display.compact .show-event-text {
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--white);
     line-height: 1.2;
 }
 
 .show-display.compact .show-date-venue {
     font-size: 0.85rem;
-    color: var(--light-grey);
     margin-bottom: 0.75rem;
-    font-style: italic;
 }
 
 .show-artists.compact {
@@ -3510,28 +1466,13 @@ font-weight: 500;
     width: auto;
     max-width: 80px;
     max-height: 25px;
-    object-fit: contain;
-    filter: brightness(0.9);
     margin-bottom: 0.15rem;
 }
 
 .show-artist.compact .show-artist-text {
     font-size: 0.7rem;
-    color: var(--white);
     line-height: 1.1;
-    text-align: center;
     word-break: break-word;
-}
-
-.show-artist.compact.highlighted .show-artist-logo {
-    /* Convert white logos to red using CSS filters */
-    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-    -webkit-filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-}
-
-.show-artist.compact.highlighted .show-artist-text {
-    color: var(--red);
-    font-weight: 600;
 }
 
 /* Responsive Design for All Shows Grid */
@@ -3571,18 +1512,6 @@ font-weight: 500;
     
     .show-artist.compact .show-artist-text {
         font-size: 0.65rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .artist-all-shows-section {
-        padding: 1.5rem 0;
-        margin-top: 1.5rem;
-    }
-    
-    .artist-all-shows-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
     }
 }
 
@@ -3627,15 +1556,6 @@ font-weight: 500;
 }
 
 @media (max-width: 400px) {
-    .artist-all-shows-section {
-        padding: 1rem 0;
-        margin-top: 1rem;
-    }
-    
-    .artist-all-shows-section h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
     
     .show-display.compact {
         min-height: 120px;
@@ -3665,34 +1585,14 @@ font-weight: 500;
     }
 }
 
-/* Year Statistics Section */
-.year-stats-overview {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 0.6s ease-out;
-}
-
+/* Year Statistics Section - Now uses base classes */
 .year-stats-grid {
-    display: grid;
     /* 12-column grid layout: first row has 1/4 + 1/2 + 1/4, second row has 1/3 + 1/3 + 1/3 */
     grid-template-columns: repeat(12, 1fr); /* 12 equal columns */
     grid-template-rows: auto auto; /* Two rows */
     grid-template-areas:
         "concerts concerts concerts events events events events events events festivals festivals festivals"
         "shows shows shows shows bands bands bands bands total-cost total-cost total-cost total-cost";
-    gap: 2rem;
-    padding: 0 2rem;
-    transform: skewX(-15deg); /* Apply skew to entire grid */
-}
-
-.year-stat-box {
-    position: relative;
-    padding: 2rem;
-    overflow: hidden;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Grid area assignments */
@@ -3720,163 +1620,7 @@ font-weight: 500;
     grid-area: total-cost;
 }
 
-/* Color assignments */
-/* concerts: dark red */
-.year-stat-concerts {
-    background-color: var(--dark-red);
-}
-
-.year-stat-concerts .year-stat-label {
-    color: var(--red);
-}
-
-/* events: red */
-.year-stat-events {
-    background-color: var(--red);
-}
-
-.year-stat-events .year-stat-label {
-    color: var(--dark-red);
-}
-
-/* festivals: dark red */
-.year-stat-festivals {
-    background-color: var(--dark-red);
-}
-
-.year-stat-festivals .year-stat-label {
-    color: var(--red);
-}
-
-/* shows: black */
-.year-stat-shows {
-    background-color: var(--black);
-}
-
-.year-stat-shows .year-stat-label {
-    color: var(--dark-red);
-}
-
-/* bands: black */
-.year-stat-bands {
-    background-color: var(--black);
-}
-
-.year-stat-bands .year-stat-label {
-    color: var(--dark-red);
-}
-
-/* total cost: black */
-.year-stat-total-cost {
-    background-color: var(--black);
-}
-
-.year-stat-total-cost .year-stat-label {
-    color: var(--dark-red);
-}
-
-/* Adjust total cost content to align with other boxes that have labels */
-.year-stat-total-cost .year-stat-content {
-    padding-bottom: 2rem; /* Add space equivalent to label height */
-}
-
-.year-stat-content {
-    text-align: center;
-    width: 100%;
-}
-
-.year-stat-number {
-    font-size: 4rem;
-    font-weight: bold;
-    line-height: 0.9;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-/* Large number class for events */
-.year-stat-number.large-number {
-    font-size: 8rem; /* 2x bigger for events */
-}
-
-/* Standard size for other boxes */
-.year-stat-concerts .year-stat-number,
-.year-stat-festivals .year-stat-number,
-.year-stat-shows .year-stat-number,
-.year-stat-bands .year-stat-number,
-.year-stat-total-cost .year-stat-number {
-    font-size: 6rem; /* 1.5x bigger */
-}
-
-.year-stat-label {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
-}
-
-/* Year All Events Section */
-.year-all-events-section {
-    background: transparent;
-    padding: 2rem 0;
-    margin-top: 2rem;
-}
-
-.year-all-events-section h2 {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    text-align: left;
-}
-
-.year-all-events-container {
-    width: 100%;
-}
-
-.year-events-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    padding: 0 2rem;
-}
-
-.no-events-grid {
-    color: var(--light-grey);
-    font-style: italic;
-    font-size: 1rem;
-    text-align: center;
-    padding: 2rem;
-    grid-column: 1 / -1;
-}
-
 /* Responsive Design for Year Statistics */
-@media (max-width: 1200px) {
-    .year-stat-number {
-        font-size: 3.5rem;
-    }
-    
-    .year-stat-number.large-number {
-        font-size: 7rem; /* 2x bigger for events */
-    }
-    
-    .year-stat-concerts .year-stat-number,
-    .year-stat-festivals .year-stat-number,
-    .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number,
-    .year-stat-total-cost .year-stat-number {
-        font-size: 5.25rem; /* 1.5x bigger */
-    }
-    
-    .year-stat-label {
-        font-size: 1.1rem;
-    }
-    
-    /* Adjust total cost padding for smaller label size */
-    .year-stat-total-cost .year-stat-content {
-        padding-top: 0.9rem;
-        padding-bottom: 0.9rem;
-    }
-}
 
 @media (max-width: 1050px) {
     .year-stats-grid {
@@ -3892,103 +1636,7 @@ font-weight: 500;
     }
 }
 
-@media (max-width: 900px) {
-    .year-stat-number {
-        font-size: 3rem;
-    }
-    
-    .year-stat-number.large-number {
-        font-size: 6rem; /* 2x bigger for events */
-    }
-    
-    .year-stat-concerts .year-stat-number,
-    .year-stat-festivals .year-stat-number,
-    .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number,
-    .year-stat-total-cost .year-stat-number {
-        font-size: 4.5rem; /* 1.5x bigger */
-    }
-    
-    .year-stat-label {
-        font-size: 1rem;
-    }
-    
-    /* Adjust total cost padding for smaller label size */
-    .year-stat-total-cost .year-stat-content {
-        padding-top: 0.8rem;
-        padding-bottom: 0.8rem;
-    }
-    
-    .year-stats-grid {
-        gap: 1.5rem;
-    }
-    
-    .year-events-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.25rem;
-        padding: 0 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .year-stats-grid {
-        transform: skewX(-10deg); /* Reduce skew on smaller screens */
-    }
-    
-    .year-stat-box {
-        padding: 1.5rem;
-        min-height: 100px;
-    }
-    
-    .year-stat-number {
-        font-size: 2.5rem;
-    }
-    
-    .year-stat-number.large-number {
-        font-size: 5rem; /* 2x bigger for events */
-    }
-    
-    .year-stat-concerts .year-stat-number,
-    .year-stat-festivals .year-stat-number,
-    .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number,
-    .year-stat-total-cost .year-stat-number {
-        font-size: 3.75rem; /* 1.5x bigger */
-    }
-    
-    .year-stat-label {
-        font-size: 0.9rem;
-    }
-    
-    /* Adjust total cost padding for smaller label size - symmetric for smaller screens */
-    .year-stat-total-cost .year-stat-content {
-        padding-top: 0.7rem;
-        padding-bottom: 0.7rem;
-    }
-    
-    .year-events-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        padding: 0 1rem;
-    }
-    
-    .year-all-events-section {
-        padding: 1.5rem 0;
-        margin-top: 1.5rem;
-    }
-    
-    .year-all-events-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
-    }
-}
-
-@media (max-width: 550px) {
-    .year-stats-overview {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
-    
+@media (max-width: 550px) { 
     .year-stats-grid {
         grid-template-columns: 1fr; /* Single column */
         grid-template-areas:
@@ -3998,227 +1646,6 @@ font-weight: 500;
             "shows"
             "bands"
             "total-cost";
-        gap: 1rem;
-        padding: 0 1rem;
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
-    }
-    
-    .year-stat-box {
-        padding: 1rem;
-        min-height: 80px;
-    }
-    
-    .year-stat-number {
-        font-size: 2rem;
-    }
-    
-    .year-stat-number.large-number {
-        font-size: 4rem; /* 2x bigger for events */
-    }
-    
-    .year-stat-concerts .year-stat-number,
-    .year-stat-festivals .year-stat-number,
-    .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number,
-    .year-stat-total-cost .year-stat-number {
-        font-size: 3rem; /* 1.5x bigger */
-    }
-    
-    .year-stat-label {
-        font-size: 0.8rem;
-    }
-    
-    /* Adjust total cost padding for smaller label size - symmetric for mobile */
-    .year-stat-total-cost .year-stat-content {
-        padding-top: 0.6rem;
-        padding-bottom: 0.6rem;
-    }
-    
-    .year-events-grid {
-        grid-template-columns: 1fr;
-        gap: 0.875rem;
-        padding: 0 0.5rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .year-stat-box {
-        padding: 0.75rem;
-        min-height: 70px;
-    }
-    
-    .year-stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .year-stat-number.large-number {
-        font-size: 3.6rem; /* 2x bigger for events */
-    }
-    
-    .year-stat-concerts .year-stat-number,
-    .year-stat-festivals .year-stat-number,
-    .year-stat-shows .year-stat-number,
-    .year-stat-bands .year-stat-number,
-    .year-stat-total-cost .year-stat-number {
-        font-size: 2.7rem; /* 1.5x bigger */
-    }
-    
-    .year-stat-label {
-        font-size: 0.7rem;
-    }
-    
-    /* Adjust total cost padding for smallest label size - symmetric for smallest screens */
-    .year-stat-total-cost .year-stat-content {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-    
-    .year-all-events-section {
-        padding: 1rem 0;
-        margin-top: 1rem;
-    }
-    
-    .year-all-events-section h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
-    
-    .no-events-grid {
-        font-size: 0.9rem;
-        padding: 1.5rem;
-    }
-}
-
-/* City All Events Section */
-.city-all-events-section {
-    background: transparent;
-    padding: 2rem 0;
-    margin-top: 2rem;
-}
-
-.city-all-events-section h2 {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    text-align: left;
-}
-
-.city-all-events-container {
-    width: 100%;
-}
-
-.city-events-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    padding: 0 2rem;
-}
-
-.no-city-events-grid {
-    color: var(--light-grey);
-    font-style: italic;
-    font-size: 1rem;
-    text-align: center;
-    padding: 2rem;
-    grid-column: 1 / -1;
-}
-
-/* Responsive Design for City All Events */
-@media (max-width: 1200px) {
-    .city-events-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.25rem;
-        padding: 0 1.5rem;
-    }
-}
-
-@media (max-width: 900px) {
-    .city-events-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        padding: 0 1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .city-all-events-section {
-        padding: 1.5rem 0;
-        margin-top: 1.5rem;
-    }
-    
-    .city-all-events-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
-    }
-}
-
-@media (max-width: 600px) {
-    .city-events-grid {
-        grid-template-columns: 1fr;
-        gap: 0.875rem;
-        padding: 0 0.5rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .city-all-events-section {
-        padding: 1rem 0;
-        margin-top: 1rem;
-    }
-    
-    .city-all-events-section h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
-    
-    .no-city-events-grid {
-        font-size: 0.9rem;
-        padding: 1.5rem;
-    }
-}
-
-/* All Events Section */
-.all-events-section {
-    background: transparent;
-    padding: 2rem 0;
-    margin-top: 2rem;
-}
-
-.all-events-section h2 {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    text-align: left;
-}
-
-.all-events-container {
-    width: 100%;
-}
-
-/* Responsive Design for All Events Section */
-@media (max-width: 768px) {
-    .all-events-section {
-        padding: 1.5rem 0;
-        margin-top: 1.5rem;
-    }
-    
-    .all-events-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .all-events-section {
-        padding: 1rem 0;
-        margin-top: 1rem;
-    }
-    
-    .all-events-section h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
     }
 }
 
@@ -4227,25 +1654,6 @@ font-weight: 500;
     max-width: 600px;
     max-height: 300px;
     object-fit: contain;
-    filter: brightness(0.9);
-    transition: filter 0.2s ease;
-}
-
-.event-logo-header:hover {
-    filter: brightness(1);
-}
-
-.event-artists-section {
-    background: transparent;
-    padding: 2rem 0;
-}
-
-.event-artists-section h2 {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    text-align: left;
 }
 
 .event-artists-section .show-artists {
@@ -4288,17 +1696,6 @@ font-weight: 500;
     font-weight: 500;
 }
 
-.event-artists-section .show-artist.highlighted .show-artist-logo {
-    /* Convert white logos to red using CSS filters */
-    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-    -webkit-filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-}
-
-.event-artists-section .show-artist.highlighted .show-artist-text {
-    color: var(--red);
-    font-weight: 600;
-}
-
 .no-artists {
     color: var(--light-grey);
     font-style: italic;
@@ -4312,15 +1709,6 @@ font-weight: 500;
     .event-logo-header {
         max-width: 90%;
         max-height: 200px;
-    }
-    
-    .event-artists-section {
-        padding: 1.5rem 0;
-    }
-    
-    .event-artists-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
     }
     
     .event-artists-section .show-artists {
@@ -4365,10 +1753,6 @@ font-weight: 500;
 }
 
 @media (max-width: 400px) {
-    .event-artists-section h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
     
     .event-artists-section .show-artist {
         max-width: 250px;
@@ -4540,5 +1924,238 @@ font-weight: 500;
     .nav-link {
         padding: 0.75rem 1rem;
         font-size: 0.85rem;
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .stat-number-large {
+        font-size: 7rem;
+    }
+    
+    .stat-label {
+        font-size: 1.5rem;
+    }
+    
+    .connector-label {
+        font-size: 1.3rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 100px;
+    }
+    
+    .stat-number-small {
+        font-size: 5.25rem; /* 3.5rem * 1.5 */
+    }
+    
+    .stat-label-base {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .stat-number-large {
+        font-size: 6rem;
+    }
+    
+    .stat-label {
+        font-size: 1.3rem;
+    }
+    
+    .connector-label {
+        font-size: 1.2rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 80px;
+    }
+    
+    .stat-number-small {
+        font-size: 4.5rem; /* 3rem * 1.5 */
+    }
+    
+    .stat-label-base {
+        font-size: 1rem;
+    }
+    
+    .stats-grid-base {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .other-artists-grid {
+        gap: 1.5rem;
+    }
+    
+    .artist-logo {
+        max-width: 70px;
+        max-height: 55px;
+    }
+    
+    .artist-name {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .stat-number-large {
+        font-size: 5.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1.2rem;
+    }
+    
+    .sub-stat {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 550px) {
+    #main-content {
+        padding: 1rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .paired-stats-list {
+        gap: 1rem;
+    }
+    
+    .paired-stat-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding: 2rem 1rem;
+        transform: skewX(-10deg);
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 60px;
+    }
+    
+    .connector-label {
+        font-size: 1rem;
+        padding: 0.2rem 0.5rem;
+        transform: rotate(0deg);
+    }
+    
+    .stat-number-large {
+        font-size: 5rem;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+    }
+    
+    .chart-section {
+        padding: 1.5rem 0;
+    }
+    
+    .chart-container {
+        min-height: 180px;
+    }
+    
+    /* Base class responsive adjustments */
+    .stats-overview-base {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stats-grid-base {
+        gap: 1rem;
+        padding: 0 1rem;
+        transform: skewX(-8deg); /* Further reduce skew on mobile */
+    }
+    
+    .stat-box-base {
+        padding: 1rem;
+        min-height: 80px;
+    }
+    
+    .stat-number-small {
+        font-size: 3rem; /* 2rem * 1.5 */
+    }
+    
+    .stat-label-base {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .other-artists-grid {
+        gap: 1rem;
+    }
+    
+    .artist-logo {
+        max-width: 60px;
+        max-height: 45px;
+    }
+    
+    .artist-name {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .paired-stat-row {
+        padding: 1.5rem 0.5rem;
+        transform: skewX(-8deg);
+    }
+    
+    .paired-stat-link:nth-child(odd) .paired-stat-row {
+        padding-left: 3rem;
+    }
+    
+    .paired-stat-link:nth-child(even) .paired-stat-row {
+        padding-right: 3rem;
+    }
+    
+    .paired-stat-connector {
+        flex: 0 0 50px;
+    }
+    
+    .connector-label {
+        font-size: 0.9rem;
+        padding: 0.1rem 0.3rem;
+    }
+    
+    .stat-number-large {
+        font-size: 3.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .chart-container {
+        min-height: 160px;
+    }
+    
+    /* Base class responsive adjustments */
+    .stat-box-base {
+        padding: 0.75rem;
+        min-height: 70px;
+    }
+    
+    .stat-number-small {
+        font-size: 2.7rem; /* 1.8rem * 1.5 */
+    }
+    
+    .stat-label-base {
+        font-size: 0.7rem;
     }
 }
