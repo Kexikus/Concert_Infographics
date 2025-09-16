@@ -349,26 +349,34 @@ class ChartsManager {
         });
     }
 
-    // Create Band Frequency Horizontal Bar Chart
-    createBandFrequencyChart() {
-        const ctx = document.getElementById('band-frequency-chart');
+    // Generic function to create horizontal bar charts with artist logos/names
+    createHorizontalArtistBarChart(config) {
+        const {
+            canvasId,
+            chartKey,
+            artistData,
+            label = 'Count',
+            clickHandler = null,
+            showHeadlinerColors = true
+        } = config;
+
+        const ctx = document.getElementById(canvasId);
         if (!ctx) return;
 
-        const frequentArtists = dataManager.getFrequentArtists(2); // Artists seen at least twice
-        const labels = frequentArtists.map(artist => artist.name);
-        const data = frequentArtists.map(artist => artist.count);
-        const logos = frequentArtists.map(artist => artist.logo);
+        const labels = artistData.map(artist => artist.name);
+        const data = artistData.map(artist => artist.count);
+        const logos = artistData.map(artist => artist.logo);
 
         // Destroy existing chart if it exists first
-        if (this.charts.bandFrequency) {
-            this.charts.bandFrequency.destroy();
+        if (this.charts[chartKey]) {
+            this.charts[chartKey].destroy();
         }
 
         // Calculate and set dynamic container height with consistent 40px bar height
         const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
-        this.setChartContainerHeight('band-frequency-chart', chartHeight);
+        this.setChartContainerHeight(canvasId, chartHeight);
 
-        this.charts.bandFrequency = new Chart(ctx, {
+        this.charts[chartKey] = new Chart(ctx, {
             type: 'bar',
             plugins: [{
                 afterDraw: function(chart) {
@@ -387,8 +395,8 @@ class ChartsManager {
                     
                     // Draw logos and artist names (moved from animation callback to prevent disappearing)
                     meta.data.forEach((bar, index) => {
-                        const artistData = frequentArtists[index];
-                        if (artistData && artistData.logo) {
+                        const artist = artistData[index];
+                        if (artist && artist.logo) {
                             const img = new Image();
                             img.onload = function() {
                                 // Calculate original image dimensions
@@ -426,7 +434,7 @@ class ChartsManager {
                                 const y = bar.y - scaledHeight / 2;
                                 
                                 // Check if this artist is a headliner and apply red tint if so
-                                if (dataManager.isHeadliner(artistData.id)) {
+                                if (showHeadlinerColors && dataManager.isHeadliner(artist.id)) {
                                     // Create an off-screen canvas to process the image
                                     const tempCanvas = document.createElement('canvas');
                                     const tempCtx = tempCanvas.getContext('2d');
@@ -470,22 +478,22 @@ class ChartsManager {
                             img.onerror = function() {
                                 // Fallback to text if image fails to load
                                 // Color text red if artist is a headliner, white otherwise
-                                ctx.fillStyle = dataManager.isHeadliner(artistData.id) ? '#dc3545' : '#ffffff';
+                                ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
                                 ctx.font = '16px Arial';
                                 ctx.textAlign = 'left';
                                 ctx.textBaseline = 'middle';
-                                const label = artistData.name.length > 20 ? artistData.name.substring(0, 20) + '...' : artistData.name;
+                                const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
                                 ctx.fillText(label, 10, bar.y);
                             };
-                            img.src = artistData.logo;
-                        } else if (artistData) {
+                            img.src = artist.logo;
+                        } else if (artist) {
                             // Draw text for artists without logos
                             // Color text red if artist is a headliner, white otherwise
-                            ctx.fillStyle = dataManager.isHeadliner(artistData.id) ? '#dc3545' : '#ffffff';
+                            ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
                             ctx.font = '16px Arial';
                             ctx.textAlign = 'left';
                             ctx.textBaseline = 'middle';
-                            const label = artistData.name.length > 20 ? artistData.name.substring(0, 20) + '...' : artistData.name;
+                            const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
                             ctx.fillText(label, 10, bar.y);
                         }
                     });
@@ -494,7 +502,7 @@ class ChartsManager {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Number of Concerts',
+                    label: label,
                     data: data,
                     backgroundColor: this.defaultColors.black,
                     borderColor: this.defaultColors.darkGrey,
@@ -548,8 +556,8 @@ class ChartsManager {
                                 size: 16
                             },
                             callback: function(value, index, values) {
-                                const artistData = frequentArtists[index];
-                                if (artistData && artistData.logo) {
+                                const artist = artistData[index];
+                                if (artist && artist.logo) {
                                     // Return empty string for logo artists, we'll draw images separately
                                     return '';
                                 } else {
@@ -574,62 +582,107 @@ class ChartsManager {
             }
         });
 
-        // Add custom click handler to canvas element
-        ctx.addEventListener('click', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.bandFrequency;
-            const meta = chart.getDatasetMeta(0);
-            
-            // Check if click is within any bar area (including logo area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from logo area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    const artistData = frequentArtists[index];
-                    if (artistData && artistData.id) {
-                        console.log('Custom click handler - navigating to:', `artist/${artistData.id}`);
-                        router.navigateTo(`artist/${artistData.id}`);
-                    }
-                }
-            });
-        });
+        // Store event handlers for cleanup
+        if (!ctx._chartEventHandlers) {
+            ctx._chartEventHandlers = {};
+        }
 
-        // Add mousemove handler for pointer cursor
-        ctx.addEventListener('mousemove', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.bandFrequency;
-            const meta = chart.getDatasetMeta(0);
-            
-            let isOverClickableArea = false;
-            
-            // Check if mouse is over any bar area (including logo area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from logo area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    const artistData = frequentArtists[index];
-                    if (artistData && artistData.id) {
-                        isOverClickableArea = true;
-                    }
-                }
+        // Remove existing event handlers for this chart key
+        if (ctx._chartEventHandlers[chartKey]) {
+            ctx._chartEventHandlers[chartKey].forEach(({ type, handler }) => {
+                ctx.removeEventListener(type, handler);
             });
-            
-            // Set cursor style
-            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
+            delete ctx._chartEventHandlers[chartKey];
+        }
+
+        // Add custom click handler to canvas element if provided
+        if (clickHandler) {
+            const clickHandlerFn = (event) => {
+                const rect = ctx.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                
+                // Get chart area bounds
+                const chart = this.charts[chartKey];
+                if (!chart) return; // Chart might be destroyed
+                
+                const meta = chart.getDatasetMeta(0);
+                
+                // Check if click is within any bar area (including logo area on the left)
+                meta.data.forEach((bar, index) => {
+                    const barTop = bar.y - 20; // Bar height/2
+                    const barBottom = bar.y + 20; // Bar height/2
+                    const barLeft = 10; // Start from logo area (left padding)
+                    const barRight = bar.x;
+                    
+                    if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                        const artist = artistData[index];
+                        if (artist && artist.id) {
+                            clickHandler(artist);
+                        }
+                    }
+                });
+            };
+
+            // Add mousemove handler for pointer cursor
+            const mouseMoveHandlerFn = (event) => {
+                const rect = ctx.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                
+                // Get chart area bounds
+                const chart = this.charts[chartKey];
+                if (!chart) return; // Chart might be destroyed
+                
+                const meta = chart.getDatasetMeta(0);
+                
+                let isOverClickableArea = false;
+                
+                // Check if mouse is over any bar area (including logo area on the left)
+                meta.data.forEach((bar, index) => {
+                    const barTop = bar.y - 20; // Bar height/2
+                    const barBottom = bar.y + 20; // Bar height/2
+                    const barLeft = 10; // Start from logo area (left padding)
+                    const barRight = bar.x;
+                    
+                    if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
+                        const artist = artistData[index];
+                        if (artist && artist.id) {
+                            isOverClickableArea = true;
+                        }
+                    }
+                });
+                
+                // Set cursor style
+                ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
+            };
+
+            // Add event listeners
+            ctx.addEventListener('click', clickHandlerFn);
+            ctx.addEventListener('mousemove', mouseMoveHandlerFn);
+
+            // Store handlers for cleanup
+            ctx._chartEventHandlers[chartKey] = [
+                { type: 'click', handler: clickHandlerFn },
+                { type: 'mousemove', handler: mouseMoveHandlerFn }
+            ];
+        }
+    }
+
+    // Create Band Frequency Horizontal Bar Chart
+    createBandFrequencyChart() {
+        const frequentArtists = dataManager.getFrequentArtists(2); // Artists seen at least twice
+        
+        this.createHorizontalArtistBarChart({
+            canvasId: 'band-frequency-chart',
+            chartKey: 'bandFrequency',
+            artistData: frequentArtists,
+            label: 'Number of Concerts',
+            clickHandler: (artist) => {
+                console.log('Custom click handler - navigating to:', `artist/${artist.id}`);
+                router.navigateTo(`artist/${artist.id}`);
+            },
+            showHeadlinerColors: true
         });
     }
 
@@ -2339,11 +2392,8 @@ class ChartsManager {
         });
     }
 
-    // Create Year Top Bands Horizontal Bar Chart
-    createYearTopBandsChart(year) {
-        const ctx = document.getElementById('year-top-bands-chart');
-        if (!ctx) return;
-
+    // Helper function to get top bands data for a specific year
+    getYearTopBandsData(year) {
         // Filter concerts for the specific year
         const yearConcerts = dataManager.getConcertsByYear(year);
         
@@ -2359,7 +2409,7 @@ class ChartsManager {
         });
 
         // Convert to array and sort by frequency, then limit to top 10
-        const topBands = Object.entries(bandFrequency)
+        return Object.entries(bandFrequency)
             .sort(([,a], [,b]) => b - a)
             .slice(0, 10)
             .map(([name, count]) => {
@@ -2372,242 +2422,22 @@ class ChartsManager {
                     logo: artist ? dataManager.getArtistLogo(artist.id) : null
                 };
             });
+    }
 
-        const labels = topBands.map(band => band.name);
-        const data = topBands.map(band => band.count);
-        const logos = topBands.map(band => band.logo);
-
-        // Destroy existing chart if it exists first
-        if (this.charts.yearTopBands) {
-            this.charts.yearTopBands.destroy();
-        }
-
-        // Calculate and set dynamic container height with consistent 40px bar height
-        // This must be done after destroying the chart to ensure proper resizing
-        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
-        this.setChartContainerHeight('year-top-bands-chart', chartHeight);
-
-        this.charts.yearTopBands = new Chart(ctx, {
-            type: 'bar',
-            plugins: [{
-                afterDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    const meta = chart.getDatasetMeta(0);
-                    
-                    // Draw values in front of each bar (on top of the bar)
-                    meta.data.forEach((bar, index) => {
-                        const value = data[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = 'bold 20px Arial';
-                        ctx.textAlign = 'right';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(value, bar.x - 10, bar.y);
-                    });
-                    
-                    // Draw logos and artist names (moved from animation callback to prevent disappearing)
-                    meta.data.forEach((bar, index) => {
-                        const bandData = topBands[index];
-                        if (bandData && bandData.logo) {
-                            const img = new Image();
-                            img.onload = function() {
-                                // Calculate original image dimensions
-                                const originalWidth = img.naturalWidth;
-                                const originalHeight = img.naturalHeight;
-                                
-                                // Define constraints
-                                const maxHeight = 28; // Slightly smaller than bar height for padding
-                                const maxWidth = 150; // Reasonable width limit for logos
-                                
-                                // Calculate aspect ratio
-                                const aspectRatio = originalWidth / originalHeight;
-                                
-                                // Calculate scaled dimensions preserving aspect ratio
-                                let scaledWidth, scaledHeight;
-                                
-                                if (originalHeight > maxHeight) {
-                                    // Height is the limiting factor
-                                    scaledHeight = maxHeight;
-                                    scaledWidth = scaledHeight * aspectRatio;
-                                } else {
-                                    // Use original height if it fits
-                                    scaledHeight = originalHeight;
-                                    scaledWidth = originalWidth;
-                                }
-                                
-                                // Check if width exceeds maximum and adjust if needed
-                                if (scaledWidth > maxWidth) {
-                                    scaledWidth = maxWidth;
-                                    scaledHeight = scaledWidth / aspectRatio;
-                                }
-                                
-                                // Position the logo (centered vertically)
-                                const x = 10;
-                                const y = bar.y - scaledHeight / 2;
-                                
-                                // Draw the image with calculated dimensions
-                                ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
-                            };
-                            img.onerror = function() {
-                                // Fallback to text if image fails to load
-                                ctx.fillStyle = '#ffffff';
-                                ctx.font = '16px Arial';
-                                ctx.textAlign = 'left';
-                                ctx.textBaseline = 'middle';
-                                const label = bandData.name.length > 20 ? bandData.name.substring(0, 20) + '...' : bandData.name;
-                                ctx.fillText(label, 10, bar.y);
-                            };
-                            img.src = bandData.logo;
-                        } else if (bandData) {
-                            // Draw text for artists without logos
-                            ctx.fillStyle = '#ffffff';
-                            ctx.font = '16px Arial';
-                            ctx.textAlign = 'left';
-                            ctx.textBaseline = 'middle';
-                            const label = bandData.name.length > 20 ? bandData.name.substring(0, 20) + '...' : bandData.name;
-                            ctx.fillText(label, 10, bar.y);
-                        }
-                    });
-                }
-            }],
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Number of Shows',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                }]
+    // Create Year Top Bands Horizontal Bar Chart
+    createYearTopBandsChart(year) {
+        const topBands = this.getYearTopBandsData(year);
+        
+        this.createHorizontalArtistBarChart({
+            canvasId: 'year-top-bands-chart',
+            chartKey: 'yearTopBands',
+            artistData: topBands,
+            label: 'Number of Shows',
+            clickHandler: (artist) => {
+                console.log('Custom click handler - navigating to:', `artist/${artist.id}`);
+                router.navigateTo(`artist/${artist.id}`);
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y', // This makes it horizontal
-                interaction: {
-                    intersect: false,
-                    mode: 'none' // Disable all interactions to prevent logo disappearing
-                },
-                hover: {
-                    mode: null // Disable hover to prevent logo disappearing
-                },
-                onHover: null, // Completely disable hover
-                layout: {
-                    padding: {
-                        left: 10 // Add small padding for value labels in front of bars
-                    }
-                },
-                elements: {
-                    bar: {
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: false // Disable tooltips
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        display: false, // Hide x-axis ticks
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 16
-                            },
-                            callback: function(value, index, values) {
-                                const bandData = topBands[index];
-                                if (bandData && bandData.logo) {
-                                    // Return empty string for logo artists, we'll draw images separately
-                                    return '';
-                                } else {
-                                    // Return text for artists without logos
-                                    const label = this.getLabelForValue(value);
-                                    return label.length > 20 ? label.substring(0, 20) + '...' : label;
-                                }
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        afterFit: function(scale) {
-                            scale.width = 200; // Increase width for logos/text
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-            }
-        });
-
-        // Add custom click handler to canvas element
-        ctx.addEventListener('click', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.yearTopBands;
-            const meta = chart.getDatasetMeta(0);
-            
-            // Check if click is within any bar area (including logo area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from logo area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    const bandData = topBands[index];
-                    if (bandData && bandData.id) {
-                        console.log('Custom click handler - navigating to:', `artist/${bandData.id}`);
-                        router.navigateTo(`artist/${bandData.id}`);
-                    }
-                }
-            });
-        });
-
-        // Add mousemove handler for pointer cursor
-        ctx.addEventListener('mousemove', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.yearTopBands;
-            const meta = chart.getDatasetMeta(0);
-            
-            let isOverClickableArea = false;
-            
-            // Check if mouse is over any bar area (including logo area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from logo area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    const bandData = topBands[index];
-                    if (bandData && bandData.id) {
-                        isOverClickableArea = true;
-                    }
-                }
-            });
-            
-            // Set cursor style
-            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
+            showHeadlinerColors: false // Year view doesn't show headliner colors
         });
     }
 
