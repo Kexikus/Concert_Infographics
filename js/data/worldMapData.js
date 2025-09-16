@@ -60,16 +60,6 @@ const worldMapData = {
     // Get country name from ISO code
     getCountryNameFromId(isoCode) {
         return this.isoToCountryMap[isoCode] || isoCode;
-    },
-
-    // Get all supported country names
-    getSupportedCountries() {
-        return Object.values(this.isoToCountryMap);
-    },
-
-    // Check if country is supported
-    isCountrySupported(countryName) {
-        return Object.values(this.isoToCountryMap).includes(countryName);
     }
 };
 
