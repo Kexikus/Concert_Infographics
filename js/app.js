@@ -31,9 +31,6 @@ class ConcertInfographicsApp {
             // Set up global error handling
             this.setupErrorHandling();
             
-            // Set up performance monitoring
-            this.setupPerformanceMonitoring();
-            
             // Mark as initialized
             this.isInitialized = true;
             
@@ -80,29 +77,6 @@ class ConcertInfographicsApp {
             console.error('Unhandled promise rejection:', event.reason);
             this.handleError(event.reason, 'Unhandled Promise Rejection');
         });
-    }
-
-    // Set up performance monitoring
-    setupPerformanceMonitoring() {
-        // Monitor page load performance
-        window.addEventListener('load', () => {
-            if (performance.timing) {
-                const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-                console.log(`Page load time: ${loadTime}ms`);
-            }
-        });
-
-        // Monitor chart rendering performance
-        if (this.components.chartsManager) {
-            const originalInitialize = this.components.chartsManager.initializeCharts;
-            this.components.chartsManager.initializeCharts = function() {
-                const startTime = performance.now();
-                const result = originalInitialize.call(this);
-                const endTime = performance.now();
-                console.log(`Charts initialization time: ${(endTime - startTime).toFixed(2)}ms`);
-                return result;
-            };
-        }
     }
 
     // Handle initialization errors
@@ -181,10 +155,6 @@ class ConcertInfographicsApp {
             
             if (this.components.statisticsManager) {
                 this.components.statisticsManager.refresh();
-            }
-            
-            if (this.components.chartsManager) {
-                this.components.chartsManager.updateCharts();
             }
             
             if (this.components.worldMapManager) {

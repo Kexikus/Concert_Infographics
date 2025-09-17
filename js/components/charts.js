@@ -25,20 +25,6 @@ class ChartsManager {
         }
     }
 
-    // Legacy method for backward compatibility - redirects to new method
-    calculateChartHeight(dataCount, barHeight = 40, padding = 80) {
-        return this.calculateHorizontalBarChartHeight(dataCount, barHeight, padding);
-    }
-
-    // Initialize all charts (removed Events per Year chart from main dashboard)
-    initializeCharts() {
-        // Note: createEventsPerYearChart() removed from main dashboard initialization
-        // The Events per Year chart is now only available in the #events section
-        this.createBandsPerYearChart();
-        this.createBandFrequencyChart();
-        this.renderOtherArtists();
-    }
-
     // Base method for creating vertical bar charts with common configuration
     createVerticalBarChart(config) {
         const {
@@ -1088,15 +1074,6 @@ class ChartsManager {
                 return value + '€';
             }
         });
-    }
-
-    // Update all charts with new data (removed Events per Year chart from main dashboard)
-    updateCharts() {
-        // Note: createEventsPerYearChart() removed from main dashboard updates
-        // The Events per Year chart is now only available in the #events section
-        this.createBandsPerYearChart();
-        this.createBandFrequencyChart();
-        this.renderOtherArtists();
     }
 
     // Destroy all charts

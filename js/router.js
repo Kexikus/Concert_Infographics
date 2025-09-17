@@ -113,13 +113,11 @@ class Router {
             // Small delay to ensure DOM is ready
             setTimeout(() => {
                 statisticsManager.initializeStatistics();
-                chartsManager.initializeCharts();
                 statisticsManager.addInteractivity();
             }, 100);
         } else {
             // Refresh existing charts and statistics
             statisticsManager.refresh();
-            chartsManager.updateCharts();
         }
     }
     
