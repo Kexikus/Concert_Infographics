@@ -322,23 +322,25 @@ class ChartsManager {
         });
     }
 
-    // Generic function to create horizontal bar charts with artist logos/names
-    createHorizontalArtistBarChart(config) {
+    // Base function for creating horizontal bar charts with common configuration
+    createHorizontalBarChart(config) {
         const {
             canvasId,
             chartKey,
-            artistData,
-            label = 'Count',
+            labels,
+            data,
+            datasetLabel = 'Count',
             clickHandler = null,
-            showHeadlinerColors = true
+            valueFormatter = (value) => value.toString(),
+            labelTruncateLength = 20,
+            yAxisWidth = 200,
+            customEventHandlers = null,
+            customDrawFunction = null,
+            clickData = null // Array of data objects for click handling
         } = config;
 
         const ctx = document.getElementById(canvasId);
         if (!ctx) return;
-
-        const labels = artistData.map(artist => artist.name);
-        const data = artistData.map(artist => artist.count);
-        const logos = artistData.map(artist => artist.logo);
 
         // Destroy existing chart if it exists first
         if (this.charts[chartKey]) {
@@ -349,133 +351,62 @@ class ChartsManager {
         const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
         this.setChartContainerHeight(canvasId, chartHeight);
 
+        // Base afterDraw function that always handles value positioning
+        const baseAfterDraw = (chart) => {
+            const ctx = chart.ctx;
+            const meta = chart.getDatasetMeta(0);
+            
+            // Always draw values with smart positioning - inside bar if it fits, otherwise to the right
+            meta.data.forEach((bar, index) => {
+                const value = data[index];
+                const displayValue = valueFormatter(value);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 20px Arial';
+                ctx.textBaseline = 'middle';
+                
+                // Measure text width to determine if it fits in the bar
+                const textWidth = ctx.measureText(displayValue).width;
+                const barWidth = bar.x - chart.chartArea.left;
+                
+                if (textWidth + 20 <= barWidth) {
+                    // Text fits inside the bar
+                    ctx.textAlign = 'right';
+                    ctx.fillText(displayValue, bar.x - 10, bar.y);
+                } else {
+                    // Text doesn't fit, place it to the right of the bar
+                    ctx.textAlign = 'left';
+                    ctx.fillText(displayValue, bar.x + 10, bar.y);
+                }
+            });
+            
+            // If custom draw function is provided, call it for additional drawing
+            if (customDrawFunction) {
+                customDrawFunction(chart);
+            } else {
+                // Default: draw labels on the left
+                meta.data.forEach((bar, index) => {
+                    const label = labels[index];
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '16px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    const truncatedLabel = label.length > labelTruncateLength ?
+                        label.substring(0, labelTruncateLength) + '...' : label;
+                    ctx.fillText(truncatedLabel, 10, bar.y);
+                });
+            }
+        };
+
         this.charts[chartKey] = new Chart(ctx, {
             type: 'bar',
             plugins: [{
-                afterDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    const meta = chart.getDatasetMeta(0);
-                    
-                    // Draw values in front of each bar (on top of the bar)
-                    meta.data.forEach((bar, index) => {
-                        const value = data[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = 'bold 20px Arial';
-                        ctx.textAlign = 'right';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(value, bar.x - 10, bar.y);
-                    });
-                    
-                    // Draw logos and artist names (moved from animation callback to prevent disappearing)
-                    meta.data.forEach((bar, index) => {
-                        const artist = artistData[index];
-                        if (artist && artist.logo) {
-                            const img = new Image();
-                            img.onload = function() {
-                                // Calculate original image dimensions
-                                const originalWidth = img.naturalWidth;
-                                const originalHeight = img.naturalHeight;
-                                
-                                // Define constraints
-                                const maxHeight = 28; // Slightly smaller than bar height for padding
-                                const maxWidth = 150; // Reasonable width limit for logos
-                                
-                                // Calculate aspect ratio
-                                const aspectRatio = originalWidth / originalHeight;
-                                
-                                // Calculate scaled dimensions preserving aspect ratio
-                                let scaledWidth, scaledHeight;
-                                
-                                if (originalHeight > maxHeight) {
-                                    // Height is the limiting factor
-                                    scaledHeight = maxHeight;
-                                    scaledWidth = scaledHeight * aspectRatio;
-                                } else {
-                                    // Use original height if it fits
-                                    scaledHeight = originalHeight;
-                                    scaledWidth = originalWidth;
-                                }
-                                
-                                // Check if width exceeds maximum and adjust if needed
-                                if (scaledWidth > maxWidth) {
-                                    scaledWidth = maxWidth;
-                                    scaledHeight = scaledWidth / aspectRatio;
-                                }
-                                
-                                // Position the logo (centered vertically)
-                                const x = 10;
-                                const y = bar.y - scaledHeight / 2;
-                                
-                                // Check if this artist is a headliner and apply red tint if so
-                                if (showHeadlinerColors && dataManager.isHeadliner(artist.id)) {
-                                    // Create an off-screen canvas to process the image
-                                    const tempCanvas = document.createElement('canvas');
-                                    const tempCtx = tempCanvas.getContext('2d');
-                                    tempCanvas.width = scaledWidth;
-                                    tempCanvas.height = scaledHeight;
-                                    
-                                    // Draw the original image to the temp canvas
-                                    tempCtx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
-                                    
-                                    // Get the image data
-                                    const imageData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
-                                    const data = imageData.data;
-                                    
-                                    // Process each pixel to convert white to red
-                                    for (let i = 0; i < data.length; i += 4) {
-                                        const r = data[i];
-                                        const g = data[i + 1];
-                                        const b = data[i + 2];
-                                        const a = data[i + 3];
-                                        
-                                        // If pixel is white or light (assuming logo is white)
-                                        if (r > 200 && g > 200 && b > 200 && a > 0) {
-                                            // Convert to red (#dc3545)
-                                            data[i] = 220;     // Red component
-                                            data[i + 1] = 53;  // Green component
-                                            data[i + 2] = 69;  // Blue component
-                                            // Keep original alpha
-                                        }
-                                    }
-                                    
-                                    // Put the modified image data back
-                                    tempCtx.putImageData(imageData, 0, 0);
-                                    
-                                    // Draw the processed image to the main canvas
-                                    ctx.drawImage(tempCanvas, x, y);
-                                } else {
-                                    // Draw the image normally for non-headliners
-                                    ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
-                                }
-                            };
-                            img.onerror = function() {
-                                // Fallback to text if image fails to load
-                                // Color text red if artist is a headliner, white otherwise
-                                ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
-                                ctx.font = '16px Arial';
-                                ctx.textAlign = 'left';
-                                ctx.textBaseline = 'middle';
-                                const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
-                                ctx.fillText(label, 10, bar.y);
-                            };
-                            img.src = artist.logo;
-                        } else if (artist) {
-                            // Draw text for artists without logos
-                            // Color text red if artist is a headliner, white otherwise
-                            ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
-                            ctx.font = '16px Arial';
-                            ctx.textAlign = 'left';
-                            ctx.textBaseline = 'middle';
-                            const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
-                            ctx.fillText(label, 10, bar.y);
-                        }
-                    });
-                }
+                afterDraw: baseAfterDraw
             }],
             data: {
                 labels: labels,
                 datasets: [{
-                    label: label,
+                    label: datasetLabel,
                     data: data,
                     backgroundColor: this.defaultColors.black,
                     borderColor: this.defaultColors.darkGrey,
@@ -489,10 +420,10 @@ class ChartsManager {
                 indexAxis: 'y', // This makes it horizontal
                 interaction: {
                     intersect: false,
-                    mode: 'none' // Disable all interactions to prevent logo disappearing
+                    mode: 'none' // Disable all hover interactions
                 },
                 hover: {
-                    mode: null // Disable hover to prevent logo disappearing
+                    mode: null // Disable hover mode
                 },
                 onHover: null, // Completely disable hover
                 layout: {
@@ -529,22 +460,15 @@ class ChartsManager {
                                 size: 16
                             },
                             callback: function(value, index, values) {
-                                const artist = artistData[index];
-                                if (artist && artist.logo) {
-                                    // Return empty string for logo artists, we'll draw images separately
-                                    return '';
-                                } else {
-                                    // Return text for artists without logos
-                                    const label = this.getLabelForValue(value);
-                                    return label.length > 20 ? label.substring(0, 20) + '...' : label;
-                                }
+                                // Return empty string, we'll draw labels separately
+                                return '';
                             }
                         },
                         grid: {
                             display: false
                         },
                         afterFit: function(scale) {
-                            scale.width = 200; // Increase width for logos/text
+                            scale.width = yAxisWidth; // Configurable width for labels
                         }
                     }
                 },
@@ -555,21 +479,22 @@ class ChartsManager {
             }
         });
 
-        // Store event handlers for cleanup
-        if (!ctx._chartEventHandlers) {
-            ctx._chartEventHandlers = {};
-        }
+        // Handle unified click handling system
+        if (clickHandler && clickData) {
+            // Store event handlers for cleanup
+            if (!ctx._chartEventHandlers) {
+                ctx._chartEventHandlers = {};
+            }
 
-        // Remove existing event handlers for this chart key
-        if (ctx._chartEventHandlers[chartKey]) {
-            ctx._chartEventHandlers[chartKey].forEach(({ type, handler }) => {
-                ctx.removeEventListener(type, handler);
-            });
-            delete ctx._chartEventHandlers[chartKey];
-        }
+            // Remove existing event handlers for this chart key
+            if (ctx._chartEventHandlers[chartKey]) {
+                ctx._chartEventHandlers[chartKey].forEach(({ type, handler }) => {
+                    ctx.removeEventListener(type, handler);
+                });
+                delete ctx._chartEventHandlers[chartKey];
+            }
 
-        // Add custom click handler to canvas element if provided
-        if (clickHandler) {
+            // Unified click handler
             const clickHandlerFn = (event) => {
                 const rect = ctx.getBoundingClientRect();
                 const x = event.clientX - rect.left;
@@ -581,23 +506,23 @@ class ChartsManager {
                 
                 const meta = chart.getDatasetMeta(0);
                 
-                // Check if click is within any bar area (including logo area on the left)
+                // Check if click is within any bar area (including label area on the left)
                 meta.data.forEach((bar, index) => {
                     const barTop = bar.y - 20; // Bar height/2
                     const barBottom = bar.y + 20; // Bar height/2
-                    const barLeft = 10; // Start from logo area (left padding)
+                    const barLeft = 10; // Start from label area (left padding)
                     const barRight = bar.x;
                     
                     if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                        const artist = artistData[index];
-                        if (artist && artist.id) {
-                            clickHandler(artist);
+                        const dataItem = clickData[index];
+                        if (dataItem) {
+                            clickHandler(dataItem, index);
                         }
                     }
                 });
             };
 
-            // Add mousemove handler for pointer cursor
+            // Unified mousemove handler for pointer cursor
             const mouseMoveHandlerFn = (event) => {
                 const rect = ctx.getBoundingClientRect();
                 const x = event.clientX - rect.left;
@@ -611,16 +536,16 @@ class ChartsManager {
                 
                 let isOverClickableArea = false;
                 
-                // Check if mouse is over any bar area (including logo area on the left)
+                // Check if mouse is over any bar area (including label area on the left)
                 meta.data.forEach((bar, index) => {
                     const barTop = bar.y - 20; // Bar height/2
                     const barBottom = bar.y + 20; // Bar height/2
-                    const barLeft = 10; // Start from logo area (left padding)
+                    const barLeft = 10; // Start from label area (left padding)
                     const barRight = bar.x;
                     
                     if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                        const artist = artistData[index];
-                        if (artist && artist.id) {
+                        const dataItem = clickData[index];
+                        if (dataItem) {
                             isOverClickableArea = true;
                         }
                     }
@@ -640,6 +565,174 @@ class ChartsManager {
                 { type: 'mousemove', handler: mouseMoveHandlerFn }
             ];
         }
+
+        // Handle custom event handlers (click, mousemove, etc.) - for backward compatibility
+        if (customEventHandlers) {
+            // Store event handlers for cleanup
+            if (!ctx._chartEventHandlers) {
+                ctx._chartEventHandlers = {};
+            }
+
+            // Remove existing event handlers for this chart key (if not already handled above)
+            if (!clickHandler && ctx._chartEventHandlers[chartKey]) {
+                ctx._chartEventHandlers[chartKey].forEach(({ type, handler }) => {
+                    ctx.removeEventListener(type, handler);
+                });
+                delete ctx._chartEventHandlers[chartKey];
+            }
+
+            // Add new event handlers
+            const handlers = ctx._chartEventHandlers[chartKey] || [];
+            customEventHandlers.forEach(({ type, handler }) => {
+                ctx.addEventListener(type, handler);
+                handlers.push({ type, handler });
+            });
+
+            // Store handlers for cleanup
+            ctx._chartEventHandlers[chartKey] = handlers;
+        }
+    }
+
+    // Generic function to create horizontal bar charts with artist logos/names
+    createHorizontalArtistBarChart(config) {
+        const {
+            canvasId,
+            chartKey,
+            artistData,
+            label = 'Count',
+            clickHandler = null,
+            showHeadlinerColors = true
+        } = config;
+
+        const labels = artistData.map(artist => artist.name);
+        const data = artistData.map(artist => artist.count);
+
+        // Custom draw function for artist logos and names (values are handled by base function)
+        const artistDrawFunction = (chart) => {
+            const ctx = chart.ctx;
+            const meta = chart.getDatasetMeta(0);
+            
+            // Draw logos and artist names
+            meta.data.forEach((bar, index) => {
+                const artist = artistData[index];
+                if (artist && artist.logo) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Calculate original image dimensions
+                        const originalWidth = img.naturalWidth;
+                        const originalHeight = img.naturalHeight;
+                        
+                        // Define constraints
+                        const maxHeight = 28; // Slightly smaller than bar height for padding
+                        const maxWidth = 150; // Reasonable width limit for logos
+                        
+                        // Calculate aspect ratio
+                        const aspectRatio = originalWidth / originalHeight;
+                        
+                        // Calculate scaled dimensions preserving aspect ratio
+                        let scaledWidth, scaledHeight;
+                        
+                        if (originalHeight > maxHeight) {
+                            // Height is the limiting factor
+                            scaledHeight = maxHeight;
+                            scaledWidth = scaledHeight * aspectRatio;
+                        } else {
+                            // Use original height if it fits
+                            scaledHeight = originalHeight;
+                            scaledWidth = originalWidth;
+                        }
+                        
+                        // Check if width exceeds maximum and adjust if needed
+                        if (scaledWidth > maxWidth) {
+                            scaledWidth = maxWidth;
+                            scaledHeight = scaledWidth / aspectRatio;
+                        }
+                        
+                        // Position the logo (centered vertically)
+                        const x = 10;
+                        const y = bar.y - scaledHeight / 2;
+                        
+                        // Check if this artist is a headliner and apply red tint if so
+                        if (showHeadlinerColors && dataManager.isHeadliner(artist.id)) {
+                            // Create an off-screen canvas to process the image
+                            const tempCanvas = document.createElement('canvas');
+                            const tempCtx = tempCanvas.getContext('2d');
+                            tempCanvas.width = scaledWidth;
+                            tempCanvas.height = scaledHeight;
+                            
+                            // Draw the original image to the temp canvas
+                            tempCtx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+                            
+                            // Get the image data
+                            const imageData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
+                            const data = imageData.data;
+                            
+                            // Process each pixel to convert white to red
+                            for (let i = 0; i < data.length; i += 4) {
+                                const r = data[i];
+                                const g = data[i + 1];
+                                const b = data[i + 2];
+                                const a = data[i + 3];
+                                
+                                // If pixel is white or light (assuming logo is white)
+                                if (r > 200 && g > 200 && b > 200 && a > 0) {
+                                    // Convert to red (#dc3545)
+                                    data[i] = 220;     // Red component
+                                    data[i + 1] = 53;  // Green component
+                                    data[i + 2] = 69;  // Blue component
+                                    // Keep original alpha
+                                }
+                            }
+                            
+                            // Put the modified image data back
+                            tempCtx.putImageData(imageData, 0, 0);
+                            
+                            // Draw the processed image to the main canvas
+                            ctx.drawImage(tempCanvas, x, y);
+                        } else {
+                            // Draw the image normally for non-headliners
+                            ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                        }
+                    };
+                    img.onerror = function() {
+                        // Fallback to text if image fails to load
+                        // Color text red if artist is a headliner, white otherwise
+                        ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+                        const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
+                        ctx.fillText(label, 10, bar.y);
+                    };
+                    img.src = artist.logo;
+                } else if (artist) {
+                    // Draw text for artists without logos
+                    // Color text red if artist is a headliner, white otherwise
+                    ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
+                    ctx.font = '16px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
+                    ctx.fillText(label, 10, bar.y);
+                }
+            });
+        };
+
+        // Use the base horizontal bar chart function with unified click handling
+        this.createHorizontalBarChart({
+            canvasId,
+            chartKey,
+            labels,
+            data,
+            datasetLabel: label,
+            customDrawFunction: artistDrawFunction,
+            clickHandler: clickHandler ? (artist, index) => {
+                if (artist && artist.id) {
+                    clickHandler(artist);
+                }
+            } : null,
+            clickData: artistData
+        });
     }
 
     // Create Band Frequency Horizontal Bar Chart
@@ -661,363 +754,53 @@ class ChartsManager {
 
     // Create Top Venues Horizontal Bar Chart
     createTopVenuesChart() {
-        const ctx = document.getElementById('top-venues-chart');
-        if (!ctx) return;
-
         const locationStats = dataManager.getLocationStatistics();
         const topVenues = locationStats.topVenues;
         const labels = topVenues.map(venue => venue.name);
         const data = topVenues.map(venue => venue.count);
 
-        // Destroy existing chart if it exists first
-        if (this.charts.topVenues) {
-            this.charts.topVenues.destroy();
-        }
-
-        // Calculate and set dynamic container height with consistent 40px bar height
-        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
-        this.setChartContainerHeight('top-venues-chart', chartHeight);
-
-        this.charts.topVenues = new Chart(ctx, {
-            type: 'bar',
-            plugins: [{
-                afterDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    const meta = chart.getDatasetMeta(0);
-                    
-                    // Draw values in front of each bar (on top of the bar)
-                    meta.data.forEach((bar, index) => {
-                        const value = data[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = 'bold 20px Arial';
-                        ctx.textAlign = 'right';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(value, bar.x - 10, bar.y);
-                    });
-                    
-                    // Draw venue names on the left
-                    meta.data.forEach((bar, index) => {
-                        const venueName = labels[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = '16px Arial';
-                        ctx.textAlign = 'left';
-                        ctx.textBaseline = 'middle';
-                        const label = venueName.length > 20 ? venueName.substring(0, 20) + '...' : venueName;
-                        ctx.fillText(label, 10, bar.y);
-                    });
+        // Use the base horizontal bar chart function with unified click handling
+        this.createHorizontalBarChart({
+            canvasId: 'top-venues-chart',
+            chartKey: 'topVenues',
+            labels,
+            data,
+            datasetLabel: 'Number of Events',
+            clickHandler: (venue, index) => {
+                if (venue && venue.name) {
+                    // Find the city for this venue
+                    const venueData = dataManager.getVenues().find(v => v.name === venue.name);
+                    if (venueData && venueData.city) {
+                        console.log('Top venues chart clicked - navigating to city:', venueData.city);
+                        router.navigateTo(`city/${normalizeStringForId(venueData.city)}`);
+                    }
                 }
-            }],
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Number of Events',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y', // This makes it horizontal
-                interaction: {
-                    intersect: false,
-                    mode: 'none' // Disable all hover interactions
-                },
-                hover: {
-                    mode: null // Disable hover mode
-                },
-                layout: {
-                    padding: {
-                        left: 10 // Add small padding for value labels in front of bars
-                    }
-                },
-                elements: {
-                    bar: {
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: false // Disable tooltips
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        display: false, // Hide x-axis ticks
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 16
-                            },
-                            callback: function(value, index, values) {
-                                // Return empty string, we'll draw venue names separately
-                                return '';
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        afterFit: function(scale) {
-                            scale.width = 200; // Increase width for venue names
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
-            }
-        });
-
-        // Add custom click handler to canvas element
-        ctx.addEventListener('click', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.topVenues;
-            const meta = chart.getDatasetMeta(0);
-            
-            // Check if click is within any bar area (including venue name area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from venue name area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    const venueName = topVenues[index].name;
-                    if (venueName) {
-                        // Find the city for this venue
-                        const venue = dataManager.getVenues().find(v => v.name === venueName);
-                        if (venue && venue.city) {
-                            console.log('Top venues chart clicked - navigating to city:', venue.city);
-                            router.navigateTo(`city/${normalizeStringForId(venue.city)}`);
-                        }
-                    }
-                }
-            });
-        });
-
-        // Add mousemove handler for pointer cursor
-        ctx.addEventListener('mousemove', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.topVenues;
-            const meta = chart.getDatasetMeta(0);
-            
-            let isOverClickableArea = false;
-            
-            // Check if mouse is over any bar area (including venue name area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from venue name area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    isOverClickableArea = true;
-                }
-            });
-            
-            // Set cursor style
-            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
+            clickData: topVenues
         });
     }
 
     // Create Top Cities Horizontal Bar Chart
     createTopCitiesChart() {
-        const ctx = document.getElementById('top-cities-chart');
-        if (!ctx) return;
-
         const locationStats = dataManager.getLocationStatistics();
         const topCities = locationStats.topCities;
         const labels = topCities.map(city => city.name);
         const data = topCities.map(city => city.count);
 
-        // Destroy existing chart if it exists first
-        if (this.charts.topCities) {
-            this.charts.topCities.destroy();
-        }
-
-        // Calculate and set dynamic container height with consistent 40px bar height
-        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
-        this.setChartContainerHeight('top-cities-chart', chartHeight);
-
-        this.charts.topCities = new Chart(ctx, {
-            type: 'bar',
-            plugins: [{
-                afterDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    const meta = chart.getDatasetMeta(0);
-                    
-                    // Draw values in front of each bar (on top of the bar)
-                    meta.data.forEach((bar, index) => {
-                        const value = data[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = 'bold 20px Arial';
-                        ctx.textAlign = 'right';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(value, bar.x - 10, bar.y);
-                    });
-                    
-                    // Draw city names on the left
-                    meta.data.forEach((bar, index) => {
-                        const cityName = labels[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = '16px Arial';
-                        ctx.textAlign = 'left';
-                        ctx.textBaseline = 'middle';
-                        const label = cityName.length > 20 ? cityName.substring(0, 20) + '...' : cityName;
-                        ctx.fillText(label, 10, bar.y);
-                    });
+        // Use the base horizontal bar chart function with unified click handling
+        this.createHorizontalBarChart({
+            canvasId: 'top-cities-chart',
+            chartKey: 'topCities',
+            labels,
+            data,
+            datasetLabel: 'Number of Events',
+            clickHandler: (city, index) => {
+                if (city && city.name) {
+                    console.log('Top cities chart clicked - navigating to city:', city.name);
+                    router.navigateTo(`city/${normalizeStringForId(city.name)}`);
                 }
-            }],
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Number of Events',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y', // This makes it horizontal
-                interaction: {
-                    intersect: false,
-                    mode: 'none' // Disable all hover interactions
-                },
-                hover: {
-                    mode: null // Disable hover mode
-                },
-                layout: {
-                    padding: {
-                        left: 10 // Add small padding for value labels in front of bars
-                    }
-                },
-                elements: {
-                    bar: {
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: false // Disable tooltips
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        display: false, // Hide x-axis ticks
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 16
-                            },
-                            callback: function(value, index, values) {
-                                // Return empty string, we'll draw city names separately
-                                return '';
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        afterFit: function(scale) {
-                            scale.width = 200; // Increase width for city names
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
-            }
-        });
-
-        // Add custom click handler to canvas element
-        ctx.addEventListener('click', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.topCities;
-            const meta = chart.getDatasetMeta(0);
-            
-            // Check if click is within any bar area (including city name area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from city name area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    const cityName = topCities[index].name;
-                    if (cityName) {
-                        console.log('Top cities chart clicked - navigating to city:', cityName);
-                        router.navigateTo(`city/${normalizeStringForId(cityName)}`);
-                    }
-                }
-            });
-        });
-
-        // Add mousemove handler for pointer cursor
-        ctx.addEventListener('mousemove', (event) => {
-            const rect = ctx.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            // Get chart area bounds
-            const chart = this.charts.topCities;
-            const meta = chart.getDatasetMeta(0);
-            
-            let isOverClickableArea = false;
-            
-            // Check if mouse is over any bar area (including city name area on the left)
-            meta.data.forEach((bar, index) => {
-                const barTop = bar.y - 20; // Bar height/2
-                const barBottom = bar.y + 20; // Bar height/2
-                const barLeft = 10; // Start from city name area (left padding)
-                const barRight = bar.x;
-                
-                if (x >= barLeft && x <= barRight && y >= barTop && y <= barBottom) {
-                    isOverClickableArea = true;
-                }
-            });
-            
-            // Set cursor style
-            ctx.style.cursor = isOverClickableArea ? 'pointer' : 'default';
+            clickData: topCities
         });
     }
 
@@ -2122,9 +1905,6 @@ class ChartsManager {
 
     // Create City Visits Per Venue Horizontal Bar Chart
     createCityVisitsPerVenueChart(cityName) {
-        const ctx = document.getElementById('city-visits-per-venue-chart');
-        if (!ctx) return;
-
         // Get all concerts for venues in this city
         const cityVenues = venuesData.filter(v =>
             normalizeStringForId(v.city) === normalizeStringForId(cityName)
@@ -2159,125 +1939,18 @@ class ChartsManager {
         const labels = sortedVenues.map(venue => venue.name);
         const data = sortedVenues.map(venue => venue.count);
 
-        // Destroy existing chart if it exists first
-        if (this.charts.cityVisitsPerVenue) {
-            this.charts.cityVisitsPerVenue.destroy();
-        }
-
-        // Calculate and set dynamic container height with consistent 40px bar height
-        const chartHeight = this.calculateHorizontalBarChartHeight(data.length, 40, 80);
-        this.setChartContainerHeight('city-visits-per-venue-chart', chartHeight);
-
-        this.charts.cityVisitsPerVenue = new Chart(ctx, {
-            type: 'bar',
-            plugins: [{
-                afterDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    const meta = chart.getDatasetMeta(0);
-                    
-                    // Draw values in front of each bar (on top of the bar)
-                    meta.data.forEach((bar, index) => {
-                        const value = data[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = 'bold 20px Arial';
-                        ctx.textAlign = 'right';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(value, bar.x - 10, bar.y);
-                    });
-                    
-                    // Draw venue names on the left
-                    meta.data.forEach((bar, index) => {
-                        const venueName = labels[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = '16px Arial';
-                        ctx.textAlign = 'left';
-                        ctx.textBaseline = 'middle';
-                        const label = venueName.length > 20 ? venueName.substring(0, 20) + '...' : venueName;
-                        ctx.fillText(label, 10, bar.y);
-                    });
-                }
-            }],
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Number of Visits',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y', // This makes it horizontal
-                interaction: {
-                    intersect: false,
-                    mode: 'none' // Disable all hover interactions
-                },
-                hover: {
-                    mode: null // Disable hover mode
-                },
-                layout: {
-                    padding: {
-                        left: 10 // Add small padding for value labels in front of bars
-                    }
-                },
-                elements: {
-                    bar: {
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: false // Disable tooltips
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        display: false, // Hide x-axis ticks
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 16
-                            },
-                            callback: function(value, index, values) {
-                                // Return empty string, we'll draw venue names separately
-                                return '';
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        afterFit: function(scale) {
-                            scale.width = 200; // Increase width for venue names
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
-            }
+        // Use the base horizontal bar chart function
+        this.createHorizontalBarChart({
+            canvasId: 'city-visits-per-venue-chart',
+            chartKey: 'cityVisitsPerVenue',
+            labels,
+            data,
+            datasetLabel: 'Number of Visits'
         });
     }
 
     // Create City Capacity Per Venue Horizontal Bar Chart
     createCityCapacityPerVenueChart(cityName) {
-        const ctx = document.getElementById('city-capacity-per-venue-chart');
-        if (!ctx) return;
-
         // Get all venues in this city
         const cityVenues = venuesData.filter(v =>
             normalizeStringForId(v.city) === normalizeStringForId(cityName)
@@ -2302,132 +1975,14 @@ class ChartsManager {
         const labels = venueCapacities.map(venue => venue.name);
         const data = venueCapacities.map(venue => venue.capacity);
 
-        // Destroy existing chart if it exists first
-        if (this.charts.cityCapacityPerVenue) {
-            this.charts.cityCapacityPerVenue.destroy();
-        }
-
-        // Calculate and set dynamic container height with consistent 40px bar height
-        // Use the filtered venue count (venueCapacities.length) instead of original count
-        const chartHeight = this.calculateHorizontalBarChartHeight(venueCapacities.length, 40, 80);
-        this.setChartContainerHeight('city-capacity-per-venue-chart', chartHeight);
-
-        this.charts.cityCapacityPerVenue = new Chart(ctx, {
-            type: 'bar',
-            plugins: [{
-                afterDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    const meta = chart.getDatasetMeta(0);
-                    
-                    // Draw capacity values - inside bar if it fits, otherwise to the right
-                    meta.data.forEach((bar, index) => {
-                        const value = data[index];
-                        const displayValue = value.toLocaleString();
-                        
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = 'bold 20px Arial';
-                        ctx.textBaseline = 'middle';
-                        
-                        // Measure text width to determine if it fits in the bar
-                        const textWidth = ctx.measureText(displayValue).width;
-                        const barWidth = bar.x - chart.chartArea.left;
-                        
-                        if (textWidth + 20 <= barWidth) {
-                            // Text fits inside the bar
-                            ctx.textAlign = 'right';
-                            ctx.fillText(displayValue, bar.x - 10, bar.y);
-                        } else {
-                            // Text doesn't fit, place it to the right of the bar
-                            ctx.textAlign = 'left';
-                            ctx.fillText(displayValue, bar.x + 10, bar.y);
-                        }
-                    });
-                    
-                    // Draw venue names on the left
-                    meta.data.forEach((bar, index) => {
-                        const venueName = labels[index];
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = '16px Arial';
-                        ctx.textAlign = 'left';
-                        ctx.textBaseline = 'middle';
-                        const label = venueName.length > 20 ? venueName.substring(0, 20) + '...' : venueName;
-                        ctx.fillText(label, 10, bar.y);
-                    });
-                }
-            }],
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Venue Capacity',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y', // This makes it horizontal
-                interaction: {
-                    intersect: false,
-                    mode: 'none' // Disable all hover interactions
-                },
-                hover: {
-                    mode: null // Disable hover mode
-                },
-                layout: {
-                    padding: {
-                        left: 10 // Add small padding for value labels in front of bars
-                    }
-                },
-                elements: {
-                    bar: {
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: false // Disable tooltips
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        display: false, // Hide x-axis ticks
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 16
-                            },
-                            callback: function(value, index, values) {
-                                // Return empty string, we'll draw venue names separately
-                                return '';
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        afterFit: function(scale) {
-                            scale.width = 200; // Increase width for venue names
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
-            }
+        // Use the base horizontal bar chart function with smart positioning
+        this.createHorizontalBarChart({
+            canvasId: 'city-capacity-per-venue-chart',
+            chartKey: 'cityCapacityPerVenue',
+            labels,
+            data,
+            datasetLabel: 'Venue Capacity',
+            valueFormatter: (value) => value.toLocaleString()
         });
     }
 }
