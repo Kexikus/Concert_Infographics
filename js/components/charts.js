@@ -10,10 +10,6 @@ class ChartsManager {
             red: '#dc3545',
             darkRed: '#a71e2a'
         };
-        this.chartColors = [
-            '#dc3545', '#a71e2a', '#ffffff', '#cccccc',
-            '#000000', '#2a2a2a'
-        ];
     }
 
     // Helper function to calculate dynamic chart container height for horizontal bar charts
@@ -43,70 +39,49 @@ class ChartsManager {
         this.renderOtherArtists();
     }
 
-    // Create Events Per Year Stacked Bar Chart with Shows Behind
-    createEventsPerYearChart() {
-        const ctx = document.getElementById('events-per-year-chart');
+    // Base method for creating vertical bar charts with common configuration
+    createVerticalBarChart(config) {
+        const {
+            canvasId,
+            chartKey,
+            datasets,
+            labels,
+            title = null,
+            showLegend = true,
+            legendPosition = 'top',
+            stacked = false,
+            clickHandler = null,
+            tooltipCallbacks = {},
+            yAxisCallback = null,
+            yAxisLabel = null,
+            customOptions = {},
+            stackName = 'default'
+        } = config;
+
+        const ctx = document.getElementById(canvasId);
         if (!ctx) return;
 
-        const eventsData = dataManager.getEventsPerYearByType();
-        const showsData = dataManager.getShowsPerYearStats();
-        const years = Object.keys(eventsData).sort();
-
-        // Prepare data arrays
-        const concertData = years.map(year => eventsData[year]?.concert || 0);
-        const festivalData = years.map(year => eventsData[year]?.festival || 0);
-        const showsDataArray = years.map(year => -showsData[year] || 0);
-
         // Destroy existing chart if it exists
-        if (this.charts.eventsPerYear) {
-            this.charts.eventsPerYear.destroy();
+        if (this.charts[chartKey]) {
+            this.charts[chartKey].destroy();
         }
 
-        this.charts.eventsPerYear = new Chart(ctx, {
+        // Apply common defaults to all datasets
+        const processedDatasets = datasets.map(dataset => ({
+            borderWidth: 1,
+            borderSkipped: false,
+            barPercentage: 0.8,
+            categoryPercentage: 0.9,
+            stack: stackName,
+            ...dataset // User-provided properties override defaults
+        }));
+
+        // Base chart configuration
+        const chartConfig = {
             type: 'bar',
             data: {
-                labels: years,
-                datasets: [
-                    // Shows dataset (behind, wider bars, offset)
-                    {
-                        label: 'Shows',
-                        data: showsDataArray,
-                        backgroundColor: this.defaultColors.black,
-                        borderColor: this.defaultColors.darkGrey,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        stack: 'events',
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        order: 2
-                    },
-                    // Concerts dataset (stacked, narrower bars, in front)
-                    {
-                        label: 'Concerts',
-                        data: concertData,
-                        backgroundColor: this.defaultColors.darkRed,
-                        borderColor: this.defaultColors.darkRed,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        stack: 'events',
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        order: 0
-                    },
-                    // Festivals dataset (stacked on top of concerts, narrower bars, in front)
-                    {
-                        label: 'Festivals',
-                        data: festivalData,
-                        backgroundColor: this.defaultColors.red,
-                        borderColor: this.defaultColors.red,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        stack: 'events',
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        order: 1
-                    }
-                ]
+                labels: labels,
+                datasets: processedDatasets
             },
             options: {
                 responsive: true,
@@ -117,8 +92,8 @@ class ChartsManager {
                 },
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'top',
+                        display: showLegend,
+                        position: legendPosition,
                         labels: {
                             padding: 20,
                             usePointStyle: true,
@@ -136,19 +111,23 @@ class ChartsManager {
                         borderWidth: 1,
                         callbacks: {
                             title: function(context) {
-                                return `Year ${context[0].label}`;
+                                return tooltipCallbacks.title ?
+                                    tooltipCallbacks.title(context) :
+                                    context[0].label;
                             },
+                            beforeBody: tooltipCallbacks.beforeBody || null,
                             label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const value = Math.abs(context.parsed.y);
-                                return `${datasetLabel}: ${value}`;
-                            }
+                                return tooltipCallbacks.label ?
+                                    tooltipCallbacks.label(context) :
+                                    `${context.dataset.label}: ${context.parsed.y}`;
+                            },
+                            filter: tooltipCallbacks.filter || null
                         }
                     }
                 },
                 scales: {
                     x: {
-                        stacked: true,
+                        stacked: stacked,
                         offset: true,
                         ticks: {
                             color: this.defaultColors.white,
@@ -159,18 +138,18 @@ class ChartsManager {
                         grid: {
                             display: false
                         }
-                },
+                    },
                     y: {
                         beginAtZero: true,
-                        stacked: true,
+                        stacked: stacked,
                         ticks: {
                             stepSize: 1,
                             color: this.defaultColors.white,
                             font: {
                                 size: 14
                             },
-                            callback: function(value) {
-                                return Math.abs(value);
+                            callback: yAxisCallback || function(value) {
+                                return value;
                             }
                         },
                         grid: {
@@ -182,28 +161,101 @@ class ChartsManager {
                     duration: 1000,
                     easing: 'easeOutQuart'
                 },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const dataIndex = elements[0].index;
-                        const year = years[dataIndex];
-                        console.log('Events per year chart clicked - navigating to year:', year);
-                        router.navigateTo(`year/${year}`);
-                    }
-                },
+                onClick: clickHandler || null,
                 onHover: (event, elements) => {
                     // Only show pointer cursor when hovering over actual bar elements (not axis labels)
                     const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
-                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
+                    event.native.target.style.cursor = (isOverBar && clickHandler) ? 'pointer' : 'default';
                 }
+            }
+        };
+
+        // Merge custom options
+        if (customOptions.plugins) {
+            Object.assign(chartConfig.options.plugins, customOptions.plugins);
+        }
+        if (customOptions.scales) {
+            Object.assign(chartConfig.options.scales, customOptions.scales);
+        }
+        if (customOptions.options) {
+            Object.assign(chartConfig.options, customOptions.options);
+        }
+
+        // Create the chart
+        this.charts[chartKey] = new Chart(ctx, chartConfig);
+    }
+
+    // Create Events Per Year Stacked Bar Chart with Shows Behind
+    createEventsPerYearChart() {
+        const eventsData = dataManager.getEventsPerYearByType();
+        const showsData = dataManager.getShowsPerYearStats();
+        const years = Object.keys(eventsData).sort();
+
+        // Prepare data arrays
+        const concertData = years.map(year => eventsData[year]?.concert || 0);
+        const festivalData = years.map(year => eventsData[year]?.festival || 0);
+        const showsDataArray = years.map(year => -showsData[year] || 0);
+
+        const datasets = [
+            // Shows dataset (behind, wider bars, offset)
+            {
+                label: 'Shows',
+                data: showsDataArray,
+                backgroundColor: this.defaultColors.black,
+                borderColor: this.defaultColors.darkGrey,
+                order: 2
+            },
+            // Concerts dataset (stacked, narrower bars, in front)
+            {
+                label: 'Concerts',
+                data: concertData,
+                backgroundColor: this.defaultColors.darkRed,
+                borderColor: this.defaultColors.darkRed,
+                order: 0
+            },
+            // Festivals dataset (stacked on top of concerts, narrower bars, in front)
+            {
+                label: 'Festivals',
+                data: festivalData,
+                backgroundColor: this.defaultColors.red,
+                borderColor: this.defaultColors.red,
+                order: 1
+            }
+        ];
+
+        this.createVerticalBarChart({
+            canvasId: 'events-per-year-chart',
+            chartKey: 'eventsPerYear',
+            datasets: datasets,
+            labels: years,
+            stacked: true,
+            stackName: 'events',
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Events per year chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
+            },
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
+                },
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const value = Math.abs(context.parsed.y);
+                    return `${datasetLabel}: ${value}`;
+                }
+            },
+            yAxisCallback: function(value) {
+                return Math.abs(value);
             }
         });
     }
 
     // Create Bands Per Year Chart with dual bars (total and first-time)
     createBandsPerYearChart() {
-        const ctx = document.getElementById('bands-per-year-chart');
-        if (!ctx) return;
-
         const bandsData = dataManager.getBandsPerYearStats();
         const firstTimeBandsData = dataManager.getFirstTimeBandsPerYearStats();
         const years = Object.keys(bandsData).sort();
@@ -214,136 +266,57 @@ class ChartsManager {
         // Calculate repeat bands (total - first-time) for stacking
         const repeatBandsData = years.map(year => (bandsData[year] || 0) - (firstTimeBandsData[year] || 0));
 
-        // Destroy existing chart if it exists
-        if (this.charts.bandsPerYear) {
-            this.charts.bandsPerYear.destroy();
-        }
-
-        this.charts.bandsPerYear = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: years,
-                datasets: [
-                    // Repeat bands dataset (black bars, bottom of stack)
-                    {
-                        label: 'Total Bands',
-                        data: repeatBandsData,
-                        backgroundColor: this.defaultColors.black,
-                        borderColor: this.defaultColors.darkGrey,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        stack: 'bands',
-                        order: 2
-                    },
-                    // First-time bands dataset (red bars, top of stack)
-                    {
-                        label: 'First-time Bands',
-                        data: firstTimeBandsDataArray,
-                        backgroundColor: this.defaultColors.red,
-                        borderColor: this.defaultColors.darkRed,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        stack: 'bands',
-                        order: 1
-                    }
-                ]
+        const datasets = [
+            // Repeat bands dataset (black bars, bottom of stack)
+            {
+                label: 'Total Bands',
+                data: repeatBandsData,
+                backgroundColor: this.defaultColors.black,
+                borderColor: this.defaultColors.darkGrey,
+                order: 2
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            // First-time bands dataset (red bars, top of stack)
+            {
+                label: 'First-time Bands',
+                data: firstTimeBandsDataArray,
+                backgroundColor: this.defaultColors.red,
+                borderColor: this.defaultColors.darkRed,
+                order: 1
+            }
+        ];
+
+        this.createVerticalBarChart({
+            canvasId: 'bands-per-year-chart',
+            chartKey: 'bandsPerYear',
+            datasets: datasets,
+            labels: years,
+            stacked: true,
+            stackName: 'bands',
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Bands per year chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
+            },
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const yearIndex = context.dataIndex;
-                                
-                                if (datasetLabel === 'Total Bands') {
-                                    // Show total bands for the black portion
-                                    const totalBands = totalBandsData[yearIndex];
-                                    return `Total Bands: ${totalBands}`;
-                                } else {
-                                    // Show first-time bands for the red portion
-                                    const value = context.parsed.y;
-                                    return `${datasetLabel}: ${value}`;
-                                }
-                            }
-                        }
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const yearIndex = context.dataIndex;
+                    
+                    if (datasetLabel === 'Total Bands') {
+                        // Show total bands for the black portion
+                        const totalBands = totalBandsData[yearIndex];
+                        return `Total Bands: ${totalBands}`;
+                    } else {
+                        // Show first-time bands for the red portion
+                        const value = context.parsed.y;
+                        return `${datasetLabel}: ${value}`;
                     }
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const dataIndex = elements[0].index;
-                        const year = years[dataIndex];
-                        console.log('Bands per year chart clicked - navigating to year:', year);
-                        router.navigateTo(`year/${year}`);
-                    }
-                },
-                onHover: (event, elements) => {
-                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
-                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
-                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
                 }
             }
         });
@@ -1194,106 +1167,42 @@ class ChartsManager {
 
     // Create Cost Per Year Vertical Bar Chart
     createCostPerYearChart() {
-        const ctx = document.getElementById('cost-per-year-chart');
-        if (!ctx) return;
-
         const costData = dataManager.getCostPerYearStats();
         const years = Object.keys(costData).sort();
         const data = years.map(year => costData[year] || 0);
 
-        // Destroy existing chart if it exists
-        if (this.charts.costPerYear) {
-            this.charts.costPerYear.destroy();
-        }
+        const datasets = [{
+            label: 'Total Cost',
+            data: data,
+            backgroundColor: this.defaultColors.black,
+            borderColor: this.defaultColors.darkGrey
+        }];
 
-        this.charts.costPerYear = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: years,
-                datasets: [{
-                    label: 'Total Cost',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.9
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            label: function(context) {
-                                const value = context.parsed.y;
-                                return `Total Cost: ${value}€`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            },
-                            callback: function(value) {
-                                return value + '€';
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const dataIndex = elements[0].index;
-                        const year = years[dataIndex];
-                        console.log('Cost per year chart clicked - navigating to year:', year);
-                        router.navigateTo(`year/${year}`);
-                    }
-                },
-                onHover: (event, elements) => {
-                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
-                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
-                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
+        this.createVerticalBarChart({
+            canvasId: 'cost-per-year-chart',
+            chartKey: 'costPerYear',
+            datasets: datasets,
+            labels: years,
+            showLegend: false,
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Cost per year chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
                 }
+            },
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
+                },
+                label: function(context) {
+                    const value = context.parsed.y;
+                    return `Total Cost: ${value}€`;
+                }
+            },
+            yAxisCallback: function(value) {
+                return value + '€';
             }
         });
     }
@@ -1548,9 +1457,6 @@ class ChartsManager {
 
     // Create Events Per Year Chart (Events only, no Shows bars)
     createEventsPerYearChartEvents() {
-        const ctx = document.getElementById('events-per-year-chart-detailed');
-        if (!ctx) return;
-
         const eventsData = dataManager.getEventsPerYearByType();
         const years = Object.keys(eventsData).sort();
 
@@ -1559,132 +1465,53 @@ class ChartsManager {
         const festivalData = years.map(year => eventsData[year]?.festival || 0);
         const totalData = years.map(year => (eventsData[year]?.concert || 0) + (eventsData[year]?.festival || 0));
 
-        // Destroy existing chart if it exists
-        if (this.charts.eventsPerYearEvents) {
-            this.charts.eventsPerYearEvents.destroy();
-        }
-
-        this.charts.eventsPerYearEvents = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: years,
-                datasets: [
-                    // Festivals dataset (top of stack) - LEGEND ORDER: First
-                    {
-                        label: 'Festivals',
-                        data: festivalData,
-                        backgroundColor: this.defaultColors.red,
-                        borderColor: this.defaultColors.red,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        stack: 'events',
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        order: 1
-                    },
-                    // Concerts dataset (bottom of stack) - LEGEND ORDER: Second
-                    {
-                        label: 'Concerts',
-                        data: concertData,
-                        backgroundColor: this.defaultColors.darkRed,
-                        borderColor: this.defaultColors.darkRed,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        stack: 'events',
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        order: 0
-                    }
-                ]
+        const datasets = [
+            // Festivals dataset (top of stack) - LEGEND ORDER: First
+            {
+                label: 'Festivals',
+                data: festivalData,
+                backgroundColor: this.defaultColors.red,
+                borderColor: this.defaultColors.red,
+                order: 1
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            // Concerts dataset (bottom of stack) - LEGEND ORDER: Second
+            {
+                label: 'Concerts',
+                data: concertData,
+                backgroundColor: this.defaultColors.darkRed,
+                borderColor: this.defaultColors.darkRed,
+                order: 0
+            }
+        ];
+
+        this.createVerticalBarChart({
+            canvasId: 'events-per-year-chart-detailed',
+            chartKey: 'eventsPerYearEvents',
+            datasets: datasets,
+            labels: years,
+            stacked: true,
+            stackName: 'events',
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Events per year (events view) chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
+            },
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            beforeBody: function(context) {
-                                const yearIndex = context[0].dataIndex;
-                                const totalEvents = totalData[yearIndex];
-                                return `Total Events: ${totalEvents}`;
-                            },
-                            label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const value = context.parsed.y;
-                                return `${datasetLabel}: ${value}`;
-                            }
-                        }
-                    }
+                beforeBody: function(context) {
+                    const yearIndex = context[0].dataIndex;
+                    const totalEvents = totalData[yearIndex];
+                    return `Total Events: ${totalEvents}`;
                 },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const dataIndex = elements[0].index;
-                        const year = years[dataIndex];
-                        console.log('Events per year (events view) chart clicked - navigating to year:', year);
-                        router.navigateTo(`year/${year}`);
-                    }
-                },
-                onHover: (event, elements) => {
-                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
-                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
-                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const value = context.parsed.y;
+                    return `${datasetLabel}: ${value}`;
                 }
             }
         });
@@ -1692,106 +1519,39 @@ class ChartsManager {
 
     // Create Shows Per Year Vertical Bar Chart
     createShowsPerYearChart() {
-        const ctx = document.getElementById('shows-per-year-chart');
-        if (!ctx) return;
-
         const showsData = dataManager.getShowsPerYearStats();
         const years = Object.keys(showsData).sort();
         const data = years.map(year => showsData[year] || 0);
 
-        // Destroy existing chart if it exists
-        if (this.charts.showsPerYear) {
-            this.charts.showsPerYear.destroy();
-        }
+        const datasets = [{
+            label: 'Shows',
+            data: data,
+            backgroundColor: this.defaultColors.black,
+            borderColor: this.defaultColors.darkGrey
+        }];
 
-        this.charts.showsPerYear = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: years,
-                datasets: [{
-                    label: 'Shows',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.9
-                }]
+        this.createVerticalBarChart({
+            canvasId: 'shows-per-year-chart',
+            chartKey: 'showsPerYear',
+            datasets: datasets,
+            labels: years,
+            showLegend: false,
+            stacked: true,
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Shows per year chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            label: function(context) {
-                                const value = context.parsed.y;
-                                return `Shows: ${value}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const dataIndex = elements[0].index;
-                        const year = years[dataIndex];
-                        console.log('Shows per year chart clicked - navigating to year:', year);
-                        router.navigateTo(`year/${year}`);
-                    }
-                },
-                onHover: (event, elements) => {
-                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
-                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
-                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
+                label: function(context) {
+                    const value = context.parsed.y;
+                    return `Shows: ${value}`;
                 }
             }
         });
@@ -2002,9 +1762,6 @@ class ChartsManager {
 
     // Create artist-specific shows per year chart (moved from router.js)
     createArtistShowsPerYearChart(artistId) {
-        const ctx = document.getElementById('artist-shows-per-year-chart');
-        if (!ctx) return;
-
         // Get all available years from the entire concert history
         const allYears = dataManager.getAvailableYears();
         
@@ -2030,100 +1787,35 @@ class ChartsManager {
         const years = allYears.sort();
         const data = years.map(year => showsPerYear[year] || 0);
 
-        // Destroy existing chart if it exists
-        if (this.charts.artistShowsPerYear) {
-            this.charts.artistShowsPerYear.destroy();
-        }
+        const datasets = [{
+            label: 'Shows',
+            data: data,
+            backgroundColor: this.defaultColors.black,
+            borderColor: this.defaultColors.darkGrey
+        }];
 
-        // Create chart using the same styling as the main shows per year chart
-        this.charts.artistShowsPerYear = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: years,
-                datasets: [{
-                    label: 'Shows',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.9
-                }]
+        this.createVerticalBarChart({
+            canvasId: 'artist-shows-per-year-chart',
+            chartKey: 'artistShowsPerYear',
+            datasets: datasets,
+            labels: years,
+            showLegend: false,
+            stacked: true,
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Artist shows per year chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            label: function(context) {
-                                const value = context.parsed.y;
-                                return `Shows: ${value}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const dataIndex = elements[0].index;
-                        const year = years[dataIndex];
-                        console.log('Artist shows per year chart clicked - navigating to year:', year);
-                        router.navigateTo(`year/${year}`);
-                    }
-                },
-                onHover: (event, elements) => {
-                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
-                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
-                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
+                label: function(context) {
+                    const value = context.parsed.y;
+                    return `Shows: ${value}`;
                 }
             }
         });
@@ -2140,9 +1832,6 @@ class ChartsManager {
 
     // Create Events Per Month Chart for a specific year (modified from createEventsPerYearChartEvents)
     createEventsPerMonthChart(year) {
-        const ctx = document.getElementById('year-events-per-month-chart');
-        if (!ctx) return;
-
         // Filter concerts for the specific year
         const yearConcerts = dataManager.getConcertsByYear(year);
         
@@ -2164,119 +1853,45 @@ class ChartsManager {
         const festivalData = months.map(month => monthlyData[month]?.festival || 0);
         const totalData = months.map(month => (monthlyData[month]?.concert || 0) + (monthlyData[month]?.festival || 0));
 
-        // Destroy existing chart if it exists
-        if (this.charts.eventsPerMonth) {
-            this.charts.eventsPerMonth.destroy();
-        }
-
-        this.charts.eventsPerMonth = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: monthLabels,
-                datasets: [
-                    // Festivals dataset (top of stack) - LEGEND ORDER: First
-                    {
-                        label: 'Festivals',
-                        data: festivalData,
-                        backgroundColor: this.defaultColors.red,
-                        borderColor: this.defaultColors.red,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        stack: 'events',
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        order: 1
-                    },
-                    // Concerts dataset (bottom of stack) - LEGEND ORDER: Second
-                    {
-                        label: 'Concerts',
-                        data: concertData,
-                        backgroundColor: this.defaultColors.darkRed,
-                        borderColor: this.defaultColors.darkRed,
-                        borderWidth: 1,
-                        borderSkipped: false,
-                        stack: 'events',
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9,
-                        order: 0
-                    }
-                ]
+        const datasets = [
+            // Festivals dataset (top of stack) - LEGEND ORDER: First
+            {
+                label: 'Festivals',
+                data: festivalData,
+                backgroundColor: this.defaultColors.red,
+                borderColor: this.defaultColors.red,
+                order: 1
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            // Concerts dataset (bottom of stack) - LEGEND ORDER: Second
+            {
+                label: 'Concerts',
+                data: concertData,
+                backgroundColor: this.defaultColors.darkRed,
+                borderColor: this.defaultColors.darkRed,
+                order: 0
+            }
+        ];
+
+        this.createVerticalBarChart({
+            canvasId: 'year-events-per-month-chart',
+            chartKey: 'eventsPerMonth',
+            datasets: datasets,
+            labels: monthLabels,
+            stacked: true,
+            stackName: 'events',
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `${context[0].label} ${year}`;
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `${context[0].label} ${year}`;
-                            },
-                            beforeBody: function(context) {
-                                const monthIndex = context[0].dataIndex;
-                                const totalEvents = totalData[monthIndex];
-                                return `Total Events: ${totalEvents}`;
-                            },
-                            label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const value = context.parsed.y;
-                                return `${datasetLabel}: ${value}`;
-                            }
-                        }
-                    }
+                beforeBody: function(context) {
+                    const monthIndex = context[0].dataIndex;
+                    const totalEvents = totalData[monthIndex];
+                    return `Total Events: ${totalEvents}`;
                 },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const value = context.parsed.y;
+                    return `${datasetLabel}: ${value}`;
                 }
             }
         });
@@ -2284,9 +1899,6 @@ class ChartsManager {
 
     // Create Shows Per Month Chart for a specific year (modified from createShowsPerYearChart)
     createShowsPerMonthChart(year) {
-        const ctx = document.getElementById('year-shows-per-month-chart');
-        if (!ctx) return;
-
         // Filter concerts for the specific year
         const yearConcerts = dataManager.getConcertsByYear(year);
         
@@ -2307,86 +1919,27 @@ class ChartsManager {
         const monthLabels = months.map(month => this.getMonthName(month));
         const data = months.map(month => monthlyShows[month] || 0);
 
-        // Destroy existing chart if it exists
-        if (this.charts.showsPerMonth) {
-            this.charts.showsPerMonth.destroy();
-        }
+        const datasets = [{
+            label: 'Shows',
+            data: data,
+            backgroundColor: this.defaultColors.black,
+            borderColor: this.defaultColors.darkGrey
+        }];
 
-        this.charts.showsPerMonth = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: monthLabels,
-                datasets: [{
-                    label: 'Shows',
-                    data: data,
-                    backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
-                    borderWidth: 1,
-                    borderSkipped: false,
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.9
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+        this.createVerticalBarChart({
+            canvasId: 'year-shows-per-month-chart',
+            chartKey: 'showsPerMonth',
+            datasets: datasets,
+            labels: monthLabels,
+            showLegend: false,
+            stacked: true,
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `${context[0].label} ${year}`;
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `${context[0].label} ${year}`;
-                            },
-                            label: function(context) {
-                                const value = context.parsed.y;
-                                return `Shows: ${value}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
+                label: function(context) {
+                    const value = context.parsed.y;
+                    return `Shows: ${value}`;
                 }
             }
         });
@@ -2443,9 +1996,6 @@ class ChartsManager {
 
     // Create City Events Per Year Chart with venue stacking and color coding
     createCityEventsPerYearChart(cityName) {
-        const ctx = document.getElementById('city-events-per-year-chart');
-        if (!ctx) return;
-
         // Get all concerts for venues in this city
         const cityVenues = venuesData.filter(v =>
             normalizeStringForId(v.city) === normalizeStringForId(cityName)
@@ -2527,120 +2077,44 @@ class ChartsManager {
                 label: venueName,
                 data: data,
                 backgroundColor: generateVenueColor(index, sortedVenueIds.length),
-                borderColor: generateVenueColor(index, sortedVenueIds.length),
-                borderWidth: 1,
-                borderSkipped: false,
-                stack: 'venues',
-                barPercentage: 0.8,
-                categoryPercentage: 0.9
+                borderColor: generateVenueColor(index, sortedVenueIds.length)
             };
         });
 
-        // Destroy existing chart if it exists
-        if (this.charts.cityEventsPerYear) {
-            this.charts.cityEventsPerYear.destroy();
-        }
-
-        this.charts.cityEventsPerYear = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: allYears,
-                datasets: datasets
+        this.createVerticalBarChart({
+            canvasId: 'city-events-per-year-chart',
+            chartKey: 'cityEventsPerYear',
+            datasets: datasets,
+            labels: allYears,
+            stacked: true,
+            stackName: 'venues',
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = allYears[dataIndex];
+                    console.log('City events per year chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            beforeBody: function(context) {
-                                const yearIndex = context[0].dataIndex;
-                                const year = allYears[yearIndex];
-                                const totalEvents = sortedVenueIds.reduce((sum, venueId) =>
-                                    sum + (yearVenueData[year][venueId] || 0), 0
-                                );
-                                return totalEvents > 0 ? `Total Events: ${totalEvents}` : '';
-                            },
-                            label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const value = context.parsed.y;
-                                return value > 0 ? `${datasetLabel}: ${value}` : null;
-                            },
-                            filter: function(tooltipItem) {
-                                return tooltipItem.parsed.y > 0; // Only show non-zero values
-                            }
-                        }
-                    }
+                beforeBody: function(context) {
+                    const yearIndex = context[0].dataIndex;
+                    const year = allYears[yearIndex];
+                    const totalEvents = sortedVenueIds.reduce((sum, venueId) =>
+                        sum + (yearVenueData[year][venueId] || 0), 0
+                    );
+                    return totalEvents > 0 ? `Total Events: ${totalEvents}` : '';
                 },
-                scales: {
-                    x: {
-                        stacked: true,
-                        offset: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        ticks: {
-                            stepSize: 1,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const value = context.parsed.y;
+                    return value > 0 ? `${datasetLabel}: ${value}` : null;
                 },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const dataIndex = elements[0].index;
-                        const year = allYears[dataIndex];
-                        console.log('City events per year chart clicked - navigating to year:', year);
-                        router.navigateTo(`year/${year}`);
-                    }
-                },
-                onHover: (event, elements) => {
-                    // Only show pointer cursor when hovering over actual bar elements (not axis labels)
-                    const isOverBar = elements.length > 0 && elements[0].element && elements[0].element.constructor.name === 'BarElement';
-                    event.native.target.style.cursor = isOverBar ? 'pointer' : 'default';
+                filter: function(tooltipItem) {
+                    return tooltipItem.parsed.y > 0; // Only show non-zero values
                 }
             }
         });
