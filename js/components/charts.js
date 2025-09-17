@@ -804,75 +804,48 @@ class ChartsManager {
         });
     }
 
-    // Create Average Venue Size per Year Line Chart
-    createVenueSizeChart() {
-        const ctx = document.getElementById('venue-size-chart');
+    // Base method for creating line charts with common configuration
+    createLineChart(config) {
+        const {
+            canvasId,
+            chartKey,
+            datasets,
+            labels,
+            showLegend = true,
+            legendPosition = 'top',
+            clickHandler = null,
+            tooltipCallbacks = {},
+            yAxisCallback = null,
+            yAxisLabel = null,
+            customOptions = {}
+        } = config;
+
+        const ctx = document.getElementById(canvasId);
         if (!ctx) return;
 
-        const venueSizeData = dataManager.getAverageVenueSizePerYear();
-        const years = Object.keys(venueSizeData).sort();
-
-        // Prepare data arrays
-        const overallData = years.map(year => venueSizeData[year]?.overall || null);
-        const concertData = years.map(year => venueSizeData[year]?.concert || null);
-        const festivalData = years.map(year => venueSizeData[year]?.festival || null);
-
         // Destroy existing chart if it exists
-        if (this.charts.venueSize) {
-            this.charts.venueSize.destroy();
+        if (this.charts[chartKey]) {
+            this.charts[chartKey].destroy();
         }
 
-        this.charts.venueSize = new Chart(ctx, {
+        // Apply common defaults to all datasets
+        const processedDatasets = datasets.map(dataset => ({
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            pointBorderWidth: 3,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            tension: 0, // Straight lines
+            spanGaps: false,
+            ...dataset // User-provided properties override defaults
+        }));
+
+        // Base chart configuration
+        const chartConfig = {
             type: 'line',
             data: {
-                labels: years,
-                datasets: [
-                    // Overall (black line)
-                    {
-                        label: 'Overall',
-                        data: overallData,
-                        borderColor: this.defaultColors.black,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.black,
-                        pointBorderColor: this.defaultColors.black,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    },
-                    // Festival (bright red line)
-                    {
-                        label: 'Festival',
-                        data: festivalData,
-                        borderColor: this.defaultColors.red,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.red,
-                        pointBorderColor: this.defaultColors.red,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    },
-                    // Concert (dark red line)
-                    {
-                        label: 'Concert',
-                        data: concertData,
-                        borderColor: this.defaultColors.darkRed,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.darkRed,
-                        pointBorderColor: this.defaultColors.darkRed,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    }
-                ]
+                labels: labels,
+                datasets: processedDatasets
             },
             options: {
                 responsive: true,
@@ -883,8 +856,8 @@ class ChartsManager {
                 },
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'top',
+                        display: showLegend,
+                        position: legendPosition,
                         labels: {
                             padding: 20,
                             usePointStyle: true,
@@ -902,12 +875,14 @@ class ChartsManager {
                         borderWidth: 1,
                         callbacks: {
                             title: function(context) {
-                                return context[0].label;
+                                return tooltipCallbacks.title ?
+                                    tooltipCallbacks.title(context) :
+                                    context[0].label;
                             },
                             label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const value = context.parsed.y;
-                                return value !== null ? `${datasetLabel}: ${value.toLocaleString()}` : `${datasetLabel}: No data`;
+                                return tooltipCallbacks.label ?
+                                    tooltipCallbacks.label(context) :
+                                    `${context.dataset.label}: ${context.parsed.y !== null ? context.parsed.y.toLocaleString() : 'No data'}`;
                             }
                         }
                     }
@@ -931,7 +906,7 @@ class ChartsManager {
                             font: {
                                 size: 14
                             },
-                            callback: function(value) {
+                            callback: yAxisCallback || function(value) {
                                 return value.toLocaleString();
                             }
                         },
@@ -943,6 +918,73 @@ class ChartsManager {
                 animation: {
                     duration: 1000,
                     easing: 'easeOutQuart'
+                },
+                onClick: clickHandler || null
+            }
+        };
+
+        // Merge custom options
+        if (customOptions.plugins) {
+            Object.assign(chartConfig.options.plugins, customOptions.plugins);
+        }
+        if (customOptions.scales) {
+            Object.assign(chartConfig.options.scales, customOptions.scales);
+        }
+        if (customOptions.options) {
+            Object.assign(chartConfig.options, customOptions.options);
+        }
+
+        // Create the chart
+        this.charts[chartKey] = new Chart(ctx, chartConfig);
+    }
+
+    // Create Average Venue Size per Year Line Chart
+    createVenueSizeChart() {
+        const venueSizeData = dataManager.getAverageVenueSizePerYear();
+        const years = Object.keys(venueSizeData).sort();
+
+        // Prepare data arrays
+        const overallData = years.map(year => venueSizeData[year]?.overall || null);
+        const concertData = years.map(year => venueSizeData[year]?.concert || null);
+        const festivalData = years.map(year => venueSizeData[year]?.festival || null);
+
+        const datasets = [
+            // Overall (black line)
+            {
+                label: 'Overall',
+                data: overallData,
+                borderColor: this.defaultColors.black,
+                pointBackgroundColor: this.defaultColors.black,
+                pointBorderColor: this.defaultColors.black
+            },
+            // Festival (bright red line)
+            {
+                label: 'Festival',
+                data: festivalData,
+                borderColor: this.defaultColors.red,
+                pointBackgroundColor: this.defaultColors.red,
+                pointBorderColor: this.defaultColors.red
+            },
+            // Concert (dark red line)
+            {
+                label: 'Concert',
+                data: concertData,
+                borderColor: this.defaultColors.darkRed,
+                pointBackgroundColor: this.defaultColors.darkRed,
+                pointBorderColor: this.defaultColors.darkRed
+            }
+        ];
+
+        this.createLineChart({
+            canvasId: 'venue-size-chart',
+            chartKey: 'venueSize',
+            datasets: datasets,
+            labels: years,
+            tooltipCallbacks: {
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const value = context.parsed.y;
+                    return value !== null ? `${datasetLabel}: ${value.toLocaleString()}` : `${datasetLabel}: No data`;
                 }
             }
         });
@@ -992,9 +1034,6 @@ class ChartsManager {
 
     // Create Cost Trend Line Chart (Average Cost per Show by Year)
     createCostTrendChart() {
-        const ctx = document.getElementById('cost-trend-chart');
-        if (!ctx) return;
-
         const costTrendData = dataManager.getAverageCostPerShowByYear();
         const years = Object.keys(costTrendData).sort();
 
@@ -1003,133 +1042,50 @@ class ChartsManager {
         const festivalData = years.map(year => costTrendData[year]?.festival || null);
         const concertData = years.map(year => costTrendData[year]?.concert || null);
 
-        // Destroy existing chart if it exists
-        if (this.charts.costTrend) {
-            this.charts.costTrend.destroy();
-        }
-
-        this.charts.costTrend = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [
-                    // Overall (black line)
-                    {
-                        label: 'All Events',
-                        data: overallData,
-                        borderColor: this.defaultColors.black,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.black,
-                        pointBorderColor: this.defaultColors.black,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    },
-                    // Festival (light red line)
-                    {
-                        label: 'Festivals',
-                        data: festivalData,
-                        borderColor: this.defaultColors.red,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.red,
-                        pointBorderColor: this.defaultColors.red,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    },
-                    // Concert (dark red line)
-                    {
-                        label: 'Concerts',
-                        data: concertData,
-                        borderColor: this.defaultColors.darkRed,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.darkRed,
-                        pointBorderColor: this.defaultColors.darkRed,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    }
-                ]
+        const datasets = [
+            // Overall (black line)
+            {
+                label: 'All Events',
+                data: overallData,
+                borderColor: this.defaultColors.black,
+                pointBackgroundColor: this.defaultColors.black,
+                pointBorderColor: this.defaultColors.black
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            // Festival (light red line)
+            {
+                label: 'Festivals',
+                data: festivalData,
+                borderColor: this.defaultColors.red,
+                pointBackgroundColor: this.defaultColors.red,
+                pointBorderColor: this.defaultColors.red
+            },
+            // Concert (dark red line)
+            {
+                label: 'Concerts',
+                data: concertData,
+                borderColor: this.defaultColors.darkRed,
+                pointBackgroundColor: this.defaultColors.darkRed,
+                pointBorderColor: this.defaultColors.darkRed
+            }
+        ];
+
+        this.createLineChart({
+            canvasId: 'cost-trend-chart',
+            chartKey: 'costTrend',
+            datasets: datasets,
+            labels: years,
+            tooltipCallbacks: {
+                title: function(context) {
+                    return `Year ${context[0].label}`;
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return `Year ${context[0].label}`;
-                            },
-                            label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const value = context.parsed.y;
-                                return value !== null ? `${datasetLabel}: ${value}€` : `${datasetLabel}: No data`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '20'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            },
-                            callback: function(value) {
-                                return value + '€';
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const value = context.parsed.y;
+                    return value !== null ? `${datasetLabel}: ${value}€` : `${datasetLabel}: No data`;
                 }
+            },
+            yAxisCallback: function(value) {
+                return value + '€';
             }
         });
     }
@@ -1401,9 +1357,6 @@ class ChartsManager {
 
     // Create Artist Average Venue Size per Year Line Chart
     createArtistVenueSizeChart(artistId) {
-        const ctx = document.getElementById('artist-venue-size-chart');
-        if (!ctx) return;
-
         const venueSizeData = dataManager.getArtistVenueSizePerYear(artistId);
         const years = Object.keys(venueSizeData).sort();
 
@@ -1412,132 +1365,43 @@ class ChartsManager {
         const concertsOnlyData = years.map(year => venueSizeData[year]?.concertsOnly || null);
         const headlineShowsData = years.map(year => venueSizeData[year]?.headlineShows || null);
 
-        // Destroy existing chart if it exists
-        if (this.charts.artistVenueSize) {
-            this.charts.artistVenueSize.destroy();
-        }
-
-        this.charts.artistVenueSize = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [
-                    // All Shows (black line)
-                    {
-                        label: 'All Shows',
-                        data: allShowsData,
-                        borderColor: this.defaultColors.black,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.black,
-                        pointBorderColor: this.defaultColors.black,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    },
-                    // Concerts Only (dark red line)
-                    {
-                        label: 'Concerts Only',
-                        data: concertsOnlyData,
-                        borderColor: this.defaultColors.darkRed,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.darkRed,
-                        pointBorderColor: this.defaultColors.darkRed,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    },
-                    // Headline Shows (bright red line)
-                    {
-                        label: 'Headline Shows',
-                        data: headlineShowsData,
-                        borderColor: this.defaultColors.red,
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        pointBackgroundColor: this.defaultColors.red,
-                        pointBorderColor: this.defaultColors.red,
-                        pointBorderWidth: 3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        tension: 0, // Straight lines
-                        spanGaps: false
-                    }
-                ]
+        const datasets = [
+            // All Shows (black line)
+            {
+                label: 'All Shows',
+                data: allShowsData,
+                borderColor: this.defaultColors.black,
+                pointBackgroundColor: this.defaultColors.black,
+                pointBorderColor: this.defaultColors.black
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: this.defaultColors.black,
-                        titleColor: this.defaultColors.white,
-                        bodyColor: this.defaultColors.white,
-                        borderColor: this.defaultColors.lightGrey,
-                        borderWidth: 1,
-                        callbacks: {
-                            title: function(context) {
-                                return context[0].label;
-                            },
-                            label: function(context) {
-                                const datasetLabel = context.dataset.label;
-                                const value = context.parsed.y;
-                                return value !== null ? `${datasetLabel}: ${value.toLocaleString()}` : `${datasetLabel}: No data`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '20'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: this.defaultColors.white,
-                            font: {
-                                size: 14
-                            },
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        },
-                        grid: {
-                            color: this.defaultColors.lightGrey + '40'
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
+            // Concerts Only (dark red line)
+            {
+                label: 'Concerts Only',
+                data: concertsOnlyData,
+                borderColor: this.defaultColors.darkRed,
+                pointBackgroundColor: this.defaultColors.darkRed,
+                pointBorderColor: this.defaultColors.darkRed
+            },
+            // Headline Shows (bright red line)
+            {
+                label: 'Headline Shows',
+                data: headlineShowsData,
+                borderColor: this.defaultColors.red,
+                pointBackgroundColor: this.defaultColors.red,
+                pointBorderColor: this.defaultColors.red
+            }
+        ];
+
+        this.createLineChart({
+            canvasId: 'artist-venue-size-chart',
+            chartKey: 'artistVenueSize',
+            datasets: datasets,
+            labels: years,
+            tooltipCallbacks: {
+                label: function(context) {
+                    const datasetLabel = context.dataset.label;
+                    const value = context.parsed.y;
+                    return value !== null ? `${datasetLabel}: ${value.toLocaleString()}` : `${datasetLabel}: No data`;
                 }
             }
         });
