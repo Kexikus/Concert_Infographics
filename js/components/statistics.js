@@ -52,8 +52,8 @@ class StatisticsManager {
         }
     }
 
-    // Animate number counting up
-    animateNumber(element, start, end, duration = this.animationDuration) {
+    // Unified animation function that accepts a formatter
+    animateValue(element, start, end, formatter, duration = this.animationDuration) {
         if (!element) return;
 
         const startTime = performance.now();
@@ -65,45 +65,38 @@ class StatisticsManager {
             
             // Use easing function for smooth animation
             const easedProgress = this.easeOutQuart(progress);
-            const current = Math.floor(start + (difference * easedProgress));
+            const current = formatter.useRound ?
+                Math.round(start + (difference * easedProgress)) :
+                Math.floor(start + (difference * easedProgress));
             
-            element.textContent = current.toLocaleString();
+            element.textContent = formatter.format(current);
             
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
-                element.textContent = end.toLocaleString();
+                element.textContent = formatter.format(end);
             }
         };
 
         requestAnimationFrame(step);
     }
 
-    // Animate euro amounts (integers)
-    animateEuro(element, start, end, duration = this.animationDuration) {
-        if (!element) return;
-
-        const startTime = performance.now();
-        const difference = end - start;
-
-        const step = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            // Use easing function for smooth animation
-            const easedProgress = this.easeOutQuart(progress);
-            const current = Math.round(start + (difference * easedProgress));
-            
-            element.textContent = `${current}€`;
-            
-            if (progress < 1) {
-                requestAnimationFrame(step);
-            } else {
-                element.textContent = `${end}€`;
-            }
+    // Animate number counting up (refactored to use unified function)
+    animateNumber(element, start, end, duration = this.animationDuration) {
+        const numberFormatter = {
+            format: (value) => value.toLocaleString(),
+            useRound: false
         };
+        this.animateValue(element, start, end, numberFormatter, duration);
+    }
 
-        requestAnimationFrame(step);
+    // Animate euro amounts (refactored to use unified function)
+    animateEuro(element, start, end, duration = this.animationDuration) {
+        const euroFormatter = {
+            format: (value) => `${value}€`,
+            useRound: true
+        };
+        this.animateValue(element, start, end, euroFormatter, duration);
     }
 
     // Easing function for smooth animations
