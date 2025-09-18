@@ -4,11 +4,14 @@ const worldMapData = {
     svgPath: 'assets/world.svg',
 
     // Color scale configuration
-    colorScale: {
-        min: '#000000',  // Black for 0 bands
-        max: '#dc3545',  // Bright red for maximum bands
-        background: '#2a2a2a',  // Dark grey background
-        borders: '#cccccc'      // Light grey borders
+    // Color scale configuration - colors are resolved when accessed
+    get colorScale() {
+        return {
+            min: COLORS.black,  // Black for 0 bands
+            max: COLORS.red,  // Bright red for maximum bands
+            background: COLORS.darkGrey,  // Dark grey background
+            borders: COLORS.lightGrey      // Light grey borders
+        };
     },
 
     // ISO code to country name mapping (for our venue data)

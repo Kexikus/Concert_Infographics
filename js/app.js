@@ -25,6 +25,11 @@ class ConcertInfographicsApp {
                 });
             }
 
+            // Inject CSS custom properties from centralized color configuration
+            if (typeof injectCSSProperties === 'function') {
+                injectCSSProperties();
+            }
+
             // Initialize components
             this.initializeComponents();
             
@@ -83,12 +88,13 @@ class ConcertInfographicsApp {
     handleInitializationError(error) {
         const errorContainer = document.createElement('div');
         errorContainer.className = 'error initialization-error';
+        const errorMessage = error && error.message ? error.message : 'Unknown initialization error';
         errorContainer.innerHTML = `
             <h3>Application Initialization Failed</h3>
             <p>There was an error starting the application. Please refresh the page and try again.</p>
             <details>
                 <summary>Technical Details</summary>
-                <pre>${error.message}</pre>
+                <pre>${errorMessage}</pre>
             </details>
         `;
         
@@ -100,7 +106,8 @@ class ConcertInfographicsApp {
         console.error(`${context}:`, error);
         
         // Show user-friendly error message
-        this.showErrorNotification(`${context}: ${error.message}`);
+        const errorMessage = error && error.message ? error.message : 'Unknown error occurred';
+        this.showErrorNotification(`${context}: ${errorMessage}`);
     }
 
     // Show error notification to user

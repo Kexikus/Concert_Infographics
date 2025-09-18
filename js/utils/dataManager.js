@@ -1052,12 +1052,12 @@ class DataManager {
             {
                 label: 'Festivals',
                 value: typeStats.festival || 0,
-                color: '#dc3545' // red
+                color: COLORS.red
             },
             {
                 label: 'Concerts',
                 value: typeStats.concert || 0,
-                color: '#a71e2a' // darkRed
+                color: COLORS.darkRed
             }
         ];
     }

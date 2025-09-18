@@ -30,15 +30,8 @@ class GermanMapManager {
             showMetrics: false // Enable to see performance metrics
         });
         
-        // Color configuration
-        this.colors = {
-            fill: '#000000',        // Black fill for all states
-            borders: '#cccccc',     // Light gray borders
-            cityDot: '#ff0000',     // Bright red for city dots
-            countCircle: '#8b0000', // Dark red for count circles
-            connectingLine: '#8b0000', // Dark red for connecting lines
-            countText: '#ffffff'    // White text for count numbers
-        };
+        // Color configuration - colors are resolved when accessed
+        this._colors = null;
         
         // Visual configuration
         this.config = {
@@ -48,6 +41,21 @@ class GermanMapManager {
             minDistance: 50, // Minimum distance between count circles
             offsetDistance: 40 // Distance from city dot to count circle
         };
+    }
+
+    // Getter for colors - resolves COLORS when first accessed
+    get colors() {
+        if (!this._colors) {
+            this._colors = {
+                fill: COLORS.black,        // Black fill for all states
+                borders: COLORS.lightGrey,     // Light gray borders
+                cityDot: COLORS.red,     // Bright red for city dots
+                countCircle: COLORS.darkRed, // Dark red for count circles
+                connectingLine: COLORS.darkRed, // Dark red for connecting lines
+                countText: COLORS.white    // White text for count numbers
+            };
+        }
+        return this._colors;
     }
 
     // Initialize German map with concert data
@@ -759,7 +767,7 @@ class GermanMapManager {
                 if (countCircle) {
                     countCircle.style.filter = 'brightness(1.2)';
                     countCircle.style.strokeWidth = '2';
-                    countCircle.style.stroke = '#ffffff';
+                    countCircle.style.stroke = this.colors.countText;
                 }
             }
         });

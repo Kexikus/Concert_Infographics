@@ -2,14 +2,7 @@
 class ChartsManager {
     constructor() {
         this.charts = {};
-        this.defaultColors = {
-            white: '#ffffff',
-            black: '#000000',
-            darkGrey: '#2a2a2a',
-            lightGrey: '#cccccc',
-            red: '#dc3545',
-            darkRed: '#a71e2a'
-        };
+        this.defaultColors = COLORS;
     }
 
     // Helper function to calculate dynamic chart container height for horizontal bar charts
@@ -101,13 +94,13 @@ class ChartsManager {
                                     tooltipCallbacks.title(context) :
                                     context[0].label;
                             },
-                            beforeBody: tooltipCallbacks.beforeBody || null,
+                            beforeBody: tooltipCallbacks.beforeBody,
                             label: function(context) {
                                 return tooltipCallbacks.label ?
                                     tooltipCallbacks.label(context) :
                                     `${context.dataset.label}: ${context.parsed.y}`;
                             },
-                            filter: tooltipCallbacks.filter || null
+                            filter: tooltipCallbacks.filter
                         }
                     }
                 },
@@ -347,7 +340,7 @@ class ChartsManager {
                 const value = data[index];
                 const displayValue = valueFormatter(value);
                 
-                ctx.fillStyle = '#ffffff';
+                ctx.fillStyle = this.defaultColors.white;
                 ctx.font = 'bold 20px Arial';
                 ctx.textBaseline = 'middle';
                 
@@ -373,7 +366,7 @@ class ChartsManager {
                 // Default: draw labels on the left
                 meta.data.forEach((bar, index) => {
                     const label = labels[index];
-                    ctx.fillStyle = '#ffffff';
+                    ctx.fillStyle = this.defaultColors.white;
                     ctx.font = '16px Arial';
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
@@ -662,10 +655,11 @@ class ChartsManager {
                                 
                                 // If pixel is white or light (assuming logo is white)
                                 if (r > 200 && g > 200 && b > 200 && a > 0) {
-                                    // Convert to red (#dc3545)
-                                    data[i] = 220;     // Red component
-                                    data[i + 1] = 53;  // Green component
-                                    data[i + 2] = 69;  // Blue component
+                                    // Convert to red using centralized color
+                                    const redRgb = COLOR_UTILS.hexToRgb(COLORS.red);
+                                    data[i] = redRgb.r;     // Red component
+                                    data[i + 1] = redRgb.g;  // Green component
+                                    data[i + 2] = redRgb.b;  // Blue component
                                     // Keep original alpha
                                 }
                             }
@@ -683,7 +677,7 @@ class ChartsManager {
                     img.onerror = function() {
                         // Fallback to text if image fails to load
                         // Color text red if artist is a headliner, white otherwise
-                        ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
+                        ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? COLORS.red : COLORS.white;
                         ctx.font = '16px Arial';
                         ctx.textAlign = 'left';
                         ctx.textBaseline = 'middle';
@@ -694,7 +688,7 @@ class ChartsManager {
                 } else if (artist) {
                     // Draw text for artists without logos
                     // Color text red if artist is a headliner, white otherwise
-                    ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? '#dc3545' : '#ffffff';
+                    ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? COLORS.red : COLORS.white;
                     ctx.font = '16px Arial';
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
@@ -1124,8 +1118,6 @@ class ChartsManager {
             const artistLink = document.createElement('a');
             artistLink.href = artist.id ? `#artist/${artist.id}` : '#';
             artistLink.className = 'artist-item';
-            artistLink.style.textDecoration = 'none';
-            artistLink.style.color = 'inherit';
 
             // Create logo/name element
             if (artist.logo) {
@@ -1136,7 +1128,7 @@ class ChartsManager {
                 
                 // Apply red filter to headliner logos
                 if (dataManager.isHeadliner(artist.id)) {
-                    logoImg.style.filter = 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)';
+                    artistLink.classList.add('highlighted');
                 }
                 
                 // Add error handling for missing logos
@@ -1147,7 +1139,7 @@ class ChartsManager {
                     textElement.textContent = artist.name;
                     // Color text red if artist is a headliner
                     if (dataManager.isHeadliner(artist.id)) {
-                        textElement.style.color = '#dc3545';
+                        textElement.style.color = COLORS.red;
                     }
                     artistLink.innerHTML = '';
                     artistLink.appendChild(textElement);
@@ -1162,7 +1154,7 @@ class ChartsManager {
                 nameElement.textContent = artist.name;
                 // Color text red if artist is a headliner
                 if (dataManager.isHeadliner(artist.id)) {
-                    nameElement.style.color = '#dc3545';
+                    nameElement.style.color = COLORS.red;
                 }
                 artistLink.appendChild(nameElement);
             }
@@ -1676,16 +1668,19 @@ class ChartsManager {
         const generateVenueColor = (index, total) => {
             if (total <= 3) {
                 // For 3 or fewer venues, use fixed colors
-                if (index === 0) return '#000000'; // First venue: black
-                if (index === 1) return '#991b1b'; // Second venue: dark red
-                if (index === 2) return '#dc2626'; // Third venue: red
-                return '#dc2626'; // Fallback to red
+                if (index === 0) return this.defaultColors.black; // First venue: black
+                if (index === 1) return this.defaultColors.darkRed; // Second venue: dark red
+                if (index === 2) return this.defaultColors.red; // Third venue: red
+                return this.defaultColors.red; // Fallback to red
             } else {
                 // For 4+ venues: interpolate between black (first) and red (last)
                 const ratio = index / (total - 1); // 0 to 1 across all venues
-                const r = Math.round(0 + (220 - 0) * ratio); // 0 to 220 (black to red)
-                const g = Math.round(0 + (38 - 0) * ratio);  // 0 to 38
-                const b = Math.round(0 + (38 - 0) * ratio);  // 0 to 38
+                const blackRgb = COLOR_UTILS.hexToRgb(this.defaultColors.black);
+                const redRgb = COLOR_UTILS.hexToRgb(this.defaultColors.red);
+                
+                const r = Math.round(blackRgb.r + (redRgb.r - blackRgb.r) * ratio);
+                const g = Math.round(blackRgb.g + (redRgb.g - blackRgb.g) * ratio);
+                const b = Math.round(blackRgb.b + (redRgb.b - blackRgb.b) * ratio);
                 
                 return `rgb(${r}, ${g}, ${b})`;
             }
