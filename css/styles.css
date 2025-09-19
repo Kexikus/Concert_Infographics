@@ -231,7 +231,8 @@ h2 {
 /* Odd rows: extend from right edge */
 .paired-stat-link:nth-child(odd) .paired-stat-row {
     margin-right: -100vw;
-    padding-right: 4rem;
+    margin-left: 2rem;
+    padding-right: calc(100vw + 4rem);
     padding-left: 4rem;
     background-color: var(--red);
 }
@@ -240,7 +241,8 @@ h2 {
 .paired-stat-link:nth-child(even) .paired-stat-row {
     justify-content: flex-end;
     margin-left: -100vw;
-    padding-left: 4rem;
+    margin-right: 2rem;
+    padding-left: calc(100vw + 4rem);
     padding-right: 4rem;
     background-color: var(--dark-red);
 }
@@ -293,6 +295,26 @@ h2 {
     aspect-ratio: 4;
 }
 
+@media (max-width: 900px) {
+    .chart-container.vertical-bar-chart, .chart-container.line-chart {
+        aspect-ratio: 3;
+    }
+
+    .chart-container.vertical-bar-chart.city-events-per-year-chart {
+        aspect-ratio: 2;
+    }
+}
+
+@media (max-width: 550px) {
+    .chart-container.vertical-bar-chart, .chart-container.line-chart {
+        aspect-ratio: 2;
+    }
+    
+    .chart-container.vertical-bar-chart.city-events-per-year-chart {
+        aspect-ratio: 1.5;
+    }
+}
+
 .chart-container canvas {
     max-width: 100%;
     height: auto;
@@ -303,7 +325,7 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 2rem;
+    gap: 2rem 3rem;
     align-items: center;
 }
 
@@ -313,7 +335,6 @@ h2 {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 0.75rem;
     position: relative;
 }
 
@@ -617,13 +638,6 @@ h1 {
     }
 }
 
-/* German Map Styles */
-.german-map-section {
-    background: transparent;
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-}
-
 .german-map-container {
     position: relative;
     width: 100%;
@@ -656,10 +670,6 @@ h1 {
 }
 
 @media (max-width: 550px) {
-    .german-map-section {
-        padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
-    }
 }
 
 @media (max-width: 400px) {
@@ -1078,7 +1088,7 @@ section.light-grey {
     }
 
     .event-types-stats-grid .stat-box-base {
-        transform: skewX(-15deg);
+        transform: skewX(-5deg);
     }
 
     .event-types-stats-grid .stat-box-base.event-types-stat-pie-chart {
@@ -1153,13 +1163,6 @@ section.light-grey {
     .artist-stats-grid {
         grid-template-columns: 1fr; /* Single column on mobile */
     }
-}
-
-/* Artist Shows Section */
-.artist-shows-section {
-    background: transparent;
-    padding: 2rem 0;
-    margin-top: 2rem;
 }
 
 .artist-shows-grid {
@@ -1265,6 +1268,11 @@ section.light-grey {
     gap: 0.75rem 1.5rem;
 }
 
+.event-artists-section .show-artists.two-column {
+    flex-direction: row;
+    gap: 1.5rem 3rem;
+}
+
 .show-artist {
     display: flex;
     flex-direction: column;
@@ -1353,13 +1361,13 @@ section.light-grey {
     .show-artist-text {
         font-size: 1.7rem; /* Doubled from 0.85rem */
     }
+
+    .german-map-container {
+        aspect-ratio: 1;
+    }
 }
 
 @media (max-width: 550px) {
-    .artist-shows-section {
-        padding: 1.5rem 0;
-        margin-top: 1.5rem;
-    }
     
     .artist-show-box {
         min-height: 160px;
@@ -1383,6 +1391,10 @@ section.light-grey {
     
     .show-artists {
         gap: 0.5rem;
+    }
+    
+    .show-artists.two-column, .event-artists-section .show-artists.two-column {
+        gap: 0.5rem 1rem;
     }
     
     .show-artist {
@@ -1813,11 +1825,6 @@ section.light-grey {
     margin: 0 auto;
 }
 
-.event-artists-section .show-artists.two-column {
-    flex-direction: row;
-    gap: 1.5rem 3rem;
-}
-
 .event-artists-section .show-artist {
     display: flex;
     flex-direction: column;
@@ -2113,6 +2120,12 @@ section.light-grey {
     }
 }
 
+@media (max-width: 1050px) {
+    .stats-grid-base {
+        transform: skewX(-5deg);
+    }
+}
+
 @media (max-width: 900px) {
     .stat-number-large {
         font-size: 6rem;
@@ -2151,12 +2164,11 @@ section.light-grey {
     }
     
     .other-artists-grid {
-        gap: 1.5rem;
+        gap: 1.5rem 2rem;
     }
     
     .artist-logo {
-        max-width: 70px;
-        max-height: 55px;
+        max-width: 120px;
     }
     
     .artist-name {
@@ -2219,13 +2231,12 @@ section.light-grey {
     
     /* Base class responsive adjustments */
     section {
-        padding: 1.5rem 0;
+        padding: 1.5rem 0.5rem;
     }
     
     .stats-grid-base {
         gap: 1rem;
-        padding: 0 1rem;
-        transform: skewX(-8deg); /* Further reduce skew on mobile */
+        padding: 1rem;
     }
     
     .stat-box-base {
@@ -2244,12 +2255,12 @@ section.light-grey {
 
 @media (max-width: 480px) {
     .other-artists-grid {
-        gap: 1rem;
+        gap: 1rem 1.5rem;
     }
     
     .artist-logo {
-        max-width: 60px;
-        max-height: 45px;
+        max-width: 90px;
+        max-height: 35px;
     }
     
     .artist-name {
@@ -2260,15 +2271,17 @@ section.light-grey {
 @media (max-width: 400px) {
     .paired-stat-row {
         padding: 1.5rem 0.5rem;
-        transform: skewX(-8deg);
+        transform: skewX(-5deg);
     }
     
     .paired-stat-link:nth-child(odd) .paired-stat-row {
         padding-left: 3rem;
+        margin-left: 1rem;
     }
     
     .paired-stat-link:nth-child(even) .paired-stat-row {
         padding-right: 3rem;
+        margin-right: 1rem;
     }
     
     .paired-stat-connector {

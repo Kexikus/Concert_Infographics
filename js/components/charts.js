@@ -3,6 +3,51 @@ class ChartsManager {
     constructor() {
         this.charts = {};
         this.defaultColors = COLORS;
+        this._lastScreenWasSmall = window.innerWidth <= 550;
+    }
+
+    // Helper function to get responsive y-axis width for horizontal bar charts
+    getResponsiveYAxisWidth(defaultWidth = 200) {
+        // Check if screen width is 550px or smaller
+        if (window.innerWidth <= 550) {
+            return 100;
+        }
+        return defaultWidth;
+    }
+
+    // Helper function to get responsive point radius for line charts
+    getResponsivePointScaling() {
+        // Check if screen width is 550px or smaller
+        if (window.innerWidth <= 550) {
+            return 1 / 1.5;
+        }
+        return 1;
+    }
+
+    // Helper function to break text into multiple lines based on available width
+    breakTextIntoLines(text, maxWidth, ctx, font = '16px Arial') {
+        ctx.font = font;
+        const words = text.split(' ');
+        const lines = [];
+        let currentLine = '';
+
+        for (let i = 0; i < words.length; i++) {
+            const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+            const testWidth = ctx.measureText(testLine).width;
+            
+            if (testWidth > maxWidth && currentLine) {
+                lines.push(currentLine);
+                currentLine = words[i];
+            } else {
+                currentLine = testLine;
+            }
+        }
+        
+        if (currentLine) {
+            lines.push(currentLine);
+        }
+        
+        return lines.length > 0 ? lines : [text];
     }
 
     // Helper function to calculate dynamic chart container height for horizontal bar charts
@@ -312,8 +357,7 @@ class ChartsManager {
             datasetLabel = 'Count',
             clickHandler = null,
             valueFormatter = (value) => value.toString(),
-            labelTruncateLength = 20,
-            yAxisWidth = 200,
+            yAxisWidth = this.getResponsiveYAxisWidth(200),
             customEventHandlers = null,
             customDrawFunction = null,
             clickData = null // Array of data objects for click handling
@@ -364,16 +408,30 @@ class ChartsManager {
             if (customDrawFunction) {
                 customDrawFunction(chart);
             } else {
-                // Default: draw labels on the left
+                // Default: draw labels on the left with line-breaking
                 meta.data.forEach((bar, index) => {
                     const label = labels[index];
                     ctx.fillStyle = this.defaultColors.white;
                     ctx.font = '16px Arial';
                     ctx.textAlign = 'right';
                     ctx.textBaseline = 'middle';
-                    const truncatedLabel = label.length > labelTruncateLength ?
-                        label.substring(0, labelTruncateLength) + '...' : label;
-                    ctx.fillText(truncatedLabel, yAxisWidth - 10, bar.y);
+                    
+                    // Calculate available width for text (leave some padding)
+                    const availableWidth = yAxisWidth * 0.9;
+                    
+                    // Break text into lines if needed
+                    const lines = this.breakTextIntoLines(label, availableWidth, ctx, '16px Arial');
+                    
+                    // Calculate starting Y position for multi-line text (center vertically)
+                    const lineHeight = 18;
+                    const totalHeight = lines.length * lineHeight;
+                    const startY = bar.y - (totalHeight / 2) + (lineHeight / 2);
+                    
+                    // Draw each line
+                    lines.forEach((line, lineIndex) => {
+                        const y = startY + (lineIndex * lineHeight);
+                        ctx.fillText(line, yAxisWidth * 0.95, y);
+                    });
                 });
             }
         };
@@ -589,15 +647,15 @@ class ChartsManager {
         const labels = artistData.map(artist => artist.name);
         const data = artistData.map(artist => artist.count);
 
-        // Get the y-axis width for right alignment (default is 200px)
-        const yAxisWidth = 200; // This matches the default yAxisWidth in createHorizontalBarChart
+        // Get the y-axis width for right alignment (responsive based on screen size)
+        const yAxisWidth = this.getResponsiveYAxisWidth(200);
 
         // Custom draw function for artist logos and names (values are handled by base function)
         const artistDrawFunction = (chart) => {
             const ctx = chart.ctx;
             const meta = chart.getDatasetMeta(0);
             
-            const rightAlignX = yAxisWidth - 10; // Right edge minus padding
+            const rightAlignX = yAxisWidth * 0.95; // Right edge minus padding
             
             // Draw logos and artist names
             meta.data.forEach((bar, index) => {
@@ -611,7 +669,7 @@ class ChartsManager {
                         
                         // Define constraints
                         const maxHeight = 28; // Slightly smaller than bar height for padding
-                        const maxWidth = 150; // Reasonable width limit for logos
+                        const maxWidth = Math.max(yAxisWidth * 0.75, 75); // Responsive width limit for logos, minimum 75px
                         
                         // Calculate aspect ratio
                         const aspectRatio = originalWidth / originalHeight;
@@ -689,8 +747,23 @@ class ChartsManager {
                         ctx.font = '16px Arial';
                         ctx.textAlign = 'right';
                         ctx.textBaseline = 'middle';
-                        const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
-                        ctx.fillText(label, rightAlignX, bar.y);
+                        
+                        // Calculate available width for text (leave some padding)
+                        const availableWidth = yAxisWidth * 0.9;
+                        
+                        // Break text into lines if needed
+                        const lines = chartsManager.breakTextIntoLines(artist.name, availableWidth, ctx, '16px Arial');
+                        
+                        // Calculate starting Y position for multi-line text (center vertically)
+                        const lineHeight = 18;
+                        const totalHeight = lines.length * lineHeight;
+                        const startY = bar.y - (totalHeight / 2) + (lineHeight / 2);
+                        
+                        // Draw each line
+                        lines.forEach((line, lineIndex) => {
+                            const y = startY + (lineIndex * lineHeight);
+                            ctx.fillText(line, rightAlignX, y);
+                        });
                     };
                     img.src = artist.logo;
                 } else if (artist) {
@@ -700,8 +773,23 @@ class ChartsManager {
                     ctx.font = '16px Arial';
                     ctx.textAlign = 'right';
                     ctx.textBaseline = 'middle';
-                    const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
-                    ctx.fillText(label, rightAlignX, bar.y);
+                    
+                    // Calculate available width for text (leave some padding)
+                    const availableWidth = yAxisWidth * 0.9;
+                    
+                    // Break text into lines if needed
+                    const lines = chartsManager.breakTextIntoLines(artist.name, availableWidth, ctx, '16px Arial');
+                    
+                    // Calculate starting Y position for multi-line text (center vertically)
+                    const lineHeight = 18;
+                    const totalHeight = lines.length * lineHeight;
+                    const startY = bar.y - (totalHeight / 2) + (lineHeight / 2);
+                    
+                    // Draw each line
+                    lines.forEach((line, lineIndex) => {
+                        const y = startY + (lineIndex * lineHeight);
+                        ctx.fillText(line, rightAlignX, y);
+                    });
                 }
             });
         };
@@ -805,7 +893,6 @@ class ChartsManager {
             clickHandler = null,
             tooltipCallbacks = {},
             yAxisCallback = null,
-            yAxisLabel = null,
             customOptions = {}
         } = config;
 
@@ -817,15 +904,15 @@ class ChartsManager {
             this.charts[chartKey].destroy();
         }
 
-        // Apply common defaults to all datasets
+        // Apply common defaults to all datasets with responsive point sizes
         const processedDatasets = datasets.map(dataset => ({
             backgroundColor: 'transparent',
             borderWidth: 2,
-            pointBorderWidth: 3,
-            pointRadius: 6,
-            pointHoverRadius: 8,
-            tension: 0, // Straight lines
-            spanGaps: false,
+            pointBorderWidth: 3 * this.getResponsivePointScaling(),
+            pointRadius: 6 * this.getResponsivePointScaling(),
+            pointHoverRadius: 8 * this.getResponsivePointScaling(),
+            tension: 0.5, // Straight lines
+            spanGaps: true,
             ...dataset // User-provided properties override defaults
         }));
 
@@ -1358,7 +1445,8 @@ class ChartsManager {
     // Create Artist Average Venue Size per Year Line Chart
     createArtistVenueSizeChart(artistId) {
         const venueSizeData = dataManager.getArtistVenueSizePerYear(artistId);
-        const years = Object.keys(venueSizeData).sort();
+        // Get all available years from the entire concert history to show complete timeline
+        const years = dataManager.getAvailableYears().sort();
 
         // Prepare data arrays
         const allShowsData = years.map(year => venueSizeData[year]?.allShows || null);
