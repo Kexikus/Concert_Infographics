@@ -73,7 +73,6 @@ class GermanMapManager {
             // Load and create SVG map
             this.loadSVGMap();
             
-            this.isInitialized = true;
             console.log('German map initialized successfully');
             
         } catch (error) {
@@ -417,11 +416,16 @@ class GermanMapManager {
             // Add the SVG to the container
             this.mapContainer.appendChild(this.svgElement);
             
-            // Add concert visualization elements
-            this.addConcertVisualization();
-            
-            this.isInitialized = true;
-            console.log(`German map initialized successfully with ${Object.keys(this.stateElements).length} states`);
+            // Add concert visualization elements with proper timing
+            setTimeout(() => {
+                this.addConcertVisualization().then(() => {
+                    this.isInitialized = true;
+                    console.log(`German map initialized successfully with ${Object.keys(this.stateElements).length} states`);
+                }).catch(error => {
+                    console.error('Error adding concert visualization:', error);
+                    this.isInitialized = true; // Still mark as initialized even if visualization fails
+                });
+            }, 50); // Small delay to ensure DOM is ready
             
         } catch (error) {
             console.error('Error processing German SVG content:', error);
@@ -456,8 +460,11 @@ class GermanMapManager {
     // Add concert visualization elements to the SVG using the new algorithm
     async addConcertVisualization() {
         if (!this.svgElement || this.cityStats.size === 0) {
+            console.log('Skipping concert visualization: SVG not ready or no city data');
             return;
         }
+        
+        console.log(`Starting concert visualization for ${this.cityStats.size} cities`);
         
         // Clear existing visual elements
         this.clearVisualElements();
@@ -573,7 +580,23 @@ class GermanMapManager {
         this.svgElement.appendChild(cityDotsGroup);
         this.svgElement.appendChild(countCirclesGroup);
         
+        // Force a repaint to ensure elements are visible
+        this.svgElement.style.display = 'none';
+        this.svgElement.offsetHeight; // Trigger reflow
+        this.svgElement.style.display = 'block';
+        
         console.log(`Added concert visualization for ${this.cityStats.size} cities using advanced label placement`);
+        
+        // Verify elements are actually in the DOM
+        const cityDots = this.svgElement.querySelectorAll('.city-dot');
+        const countCircles = this.svgElement.querySelectorAll('.count-circle-group');
+        const connectingLines = this.svgElement.querySelectorAll('.connecting-line');
+        
+        console.log(`Verification: ${cityDots.length} city dots, ${countCircles.length} count circles, ${connectingLines.length} connecting lines in DOM`);
+        
+        if (cityDots.length === 0 && this.cityStats.size > 0) {
+            console.warn('Warning: No city dots found in DOM despite having city data');
+        }
     }
     
     // Calculate map bounds for boundary constraints
@@ -826,19 +849,26 @@ class GermanMapManager {
     // Refresh map (reload data and recreate visualization)
     refresh() {
         if (!this.isInitialized) {
+            console.log('German map not initialized, initializing now');
             this.initializeGermanMap();
             return;
         }
         
+        console.log('Refreshing German map visualization');
+        
         // Reload concert data
         this.loadConcertData();
         
-        // Recreate visualization
-        if (this.svgElement) {
-            this.addConcertVisualization();
+        // Recreate visualization with proper async handling
+        if (this.svgElement && this.cityStats.size > 0) {
+            this.addConcertVisualization().then(() => {
+                console.log('German map refreshed successfully');
+            }).catch(error => {
+                console.error('Error refreshing German map visualization:', error);
+            });
+        } else {
+            console.warn('Cannot refresh: SVG element missing or no city data');
         }
-        
-        console.log('German map refreshed successfully');
     }
 
     // Handle errors

@@ -157,14 +157,34 @@ class Router {
         this.showView('locations-view');
         
         // Initialize location-related components
-        // Small delay to ensure DOM is ready
+        // Increased delay to ensure DOM is ready and add fallback
         setTimeout(() => {
             statisticsManager.initializeLocationStatistics();
-            germanMapManager.initializeGermanMap();
+            
+            // Initialize German map with fallback
+            if (!germanMapManager.isInitialized) {
+                germanMapManager.initializeGermanMap();
+            } else {
+                // If already initialized, refresh to ensure visibility
+                germanMapManager.refresh();
+            }
+            
             chartsManager.createTopVenuesChart();
             chartsManager.createTopCitiesChart();
             chartsManager.createVenueSizeChart();
-        }, 100);
+            
+            // Additional fallback check after a longer delay
+            setTimeout(() => {
+                const mapContainer = document.getElementById('german-map-container');
+                if (mapContainer && mapContainer.querySelector('svg')) {
+                    const cityDots = mapContainer.querySelectorAll('.city-dot');
+                    if (cityDots.length === 0 && germanMapManager.cityStats && germanMapManager.cityStats.size > 0) {
+                        console.warn('City dots not visible, attempting to refresh German map');
+                        germanMapManager.refresh();
+                    }
+                }
+            }, 500);
+        }, 200);
         
         console.log('Locations page loaded');
     }
