@@ -628,8 +628,7 @@ h1 {
     position: relative;
     width: 100%;
     max-width: 100%;
-    aspect-ratio: 4 / 3; /* Changed to 4/3 for larger map */
-    background-color: var(--dark-grey);
+    aspect-ratio: 4 / 3;
     overflow: hidden;
 }
 

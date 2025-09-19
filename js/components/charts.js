@@ -369,11 +369,11 @@ class ChartsManager {
                     const label = labels[index];
                     ctx.fillStyle = this.defaultColors.white;
                     ctx.font = '16px Arial';
-                    ctx.textAlign = 'left';
+                    ctx.textAlign = 'right';
                     ctx.textBaseline = 'middle';
                     const truncatedLabel = label.length > labelTruncateLength ?
                         label.substring(0, labelTruncateLength) + '...' : label;
-                    ctx.fillText(truncatedLabel, 10, bar.y);
+                    ctx.fillText(truncatedLabel, yAxisWidth - 10, bar.y);
                 });
             }
         };
@@ -908,7 +908,12 @@ class ChartsManager {
                     duration: 1000,
                     easing: 'easeOutQuart'
                 },
-                onClick: clickHandler || null
+                onClick: clickHandler || null,
+                onHover: (event, elements) => {
+                    // Show pointer cursor when hovering over data points
+                    const isOverDataPoint = elements.length > 0;
+                    event.native.target.style.cursor = (isOverDataPoint && clickHandler) ? 'pointer' : 'default';
+                }
             }
         };
 
@@ -930,7 +935,8 @@ class ChartsManager {
     // Create Average Venue Size per Year Line Chart
     createVenueSizeChart() {
         const venueSizeData = dataManager.getAverageVenueSizePerYear();
-        const years = Object.keys(venueSizeData).sort();
+        // Get all available years from the entire concert history to show complete timeline
+        const years = dataManager.getAvailableYears().sort();
 
         // Prepare data arrays
         const overallData = years.map(year => venueSizeData[year]?.overall || null);
@@ -969,6 +975,14 @@ class ChartsManager {
             chartKey: 'venueSize',
             datasets: datasets,
             labels: years,
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Venue size chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
+            },
             tooltipCallbacks: {
                 label: function(context) {
                     const datasetLabel = context.dataset.label;
@@ -1063,6 +1077,14 @@ class ChartsManager {
             chartKey: 'costTrend',
             datasets: datasets,
             labels: years,
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Cost trend chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
+            },
             tooltipCallbacks: {
                 title: function(context) {
                     return `Year ${context[0].label}`;
@@ -1375,6 +1397,14 @@ class ChartsManager {
             chartKey: 'artistVenueSize',
             datasets: datasets,
             labels: years,
+            clickHandler: (event, elements) => {
+                if (elements.length > 0) {
+                    const dataIndex = elements[0].index;
+                    const year = years[dataIndex];
+                    console.log('Artist venue size chart clicked - navigating to year:', year);
+                    router.navigateTo(`year/${year}`);
+                }
+            },
             tooltipCallbacks: {
                 label: function(context) {
                     const datasetLabel = context.dataset.label;

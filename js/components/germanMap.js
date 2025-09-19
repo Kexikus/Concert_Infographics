@@ -21,7 +21,7 @@ class GermanMapManager {
             minDistance: 25, // Reduced by 50% from 25 to allow labels closer together
             simulationIterations: 50, // Reduced for faster calculation
             convergenceThreshold: 0.2, // Slightly higher for faster convergence
-            attractionStrength: 0.2, // Increased to keep labels closer to cities
+            attractionStrength: 0.25, // Increased to keep labels closer to cities
             repulsionStrength: -20, // Reduced to allow closer placement
             biasStrength: 0.15,
             boundaryStrength: 0.5,
@@ -37,7 +37,7 @@ class GermanMapManager {
         this.config = {
             cityDotRadius: 4,
             countCircleRadius: 12, // Fixed radius of 12px for all labels
-            lineStrokeWidth: 2,
+            lineStrokeWidth: 3,
             minDistance: 50, // Minimum distance between count circles
             offsetDistance: 40 // Distance from city dot to count circle
         };
@@ -609,6 +609,7 @@ class GermanMapManager {
         dot.setAttribute('cy', y);
         dot.setAttribute('r', this.config.cityDotRadius);
         dot.setAttribute('fill', this.colors.cityDot);
+        dot.setAttribute('stroke', 'none');
         dot.setAttribute('class', 'city-dot');
         dot.setAttribute('data-city', cityName);
         dot.setAttribute('data-count', cityData.count);
@@ -647,6 +648,7 @@ class GermanMapManager {
         circle.setAttribute('cy', y);
         circle.setAttribute('r', radius);
         circle.setAttribute('fill', this.colors.countCircle);
+        circle.setAttribute('stroke', 'none');
         circle.setAttribute('class', 'count-circle');
         
         // Create count text
@@ -701,9 +703,9 @@ class GermanMapManager {
         const tooltip = document.createElement('div');
         tooltip.className = 'map-tooltip';
         
-        // Sort venues alphabetically and create list with visit counts
+        // Sort venues by number of events (descending) and create list with visit counts
         const sortedVenues = cityData.venueVisits ? Array.from(cityData.venueVisits.entries())
-            .sort((a, b) => a[0].localeCompare(b[0])) // Sort by venue name alphabetically
+            .sort((a, b) => b[1] - a[1]) // Sort by visit count descending
             .map(([venueName, visitCount]) => `<div class="map-tooltip-list-item">${venueName} (${visitCount})</div>`)
             .join('') : '';
         

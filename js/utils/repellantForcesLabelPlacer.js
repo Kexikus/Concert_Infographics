@@ -184,63 +184,43 @@ class D3RepellantForcesLabelPlacer {
     }
     
     /**
-     * Calculate initial position with top-right bias, avoiding clusters
+     * Calculate initial position facing away from nearby cities' center
      */
     calculateInitialPosition(city, clusters) {
         // Default top-right direction (-45 degrees in SVG coordinates)
-        let preferredAngle = -Math.PI / 4;
+        const preferredAngle = -Math.PI / 4;
         
-        // If there are clusters, find the direction with least density
-        if (clusters.length > 0) {
-            preferredAngle = this.findLeastDenseDirection(clusters);
+        // If there are no nearby cities, use the preferred angle
+        if (clusters.length === 0) {
+            const distance = this.config.offsetDistance;
+            return {
+                x: city.x + Math.cos(preferredAngle) * distance,
+                y: city.y + Math.sin(preferredAngle) * distance,
+                radius: city.radius || 20
+            };
         }
         
-        // Apply top-right bias to the preferred angle
-        const biasedAngle = this.applyTopRightBias(preferredAngle);
+        // Calculate mean position of all nearby cities (including the target city)
+        let meanX = city.x;
+        let meanY = city.y;
+        
+        clusters.forEach(cluster => {
+            meanX += cluster.city.x;
+            meanY += cluster.city.y;
+        });
+        
+        meanX /= (clusters.length + 1); // +1 for the target city itself
+        meanY /= (clusters.length + 1);
+        
+        // Calculate angle facing directly away from the mean position
+        const awayAngle = Math.atan2(city.y - meanY, city.x - meanX);
         
         const distance = this.config.offsetDistance;
         return {
-            x: city.x + Math.cos(biasedAngle) * distance,
-            y: city.y + Math.sin(biasedAngle) * distance,
+            x: city.x + Math.cos(awayAngle) * distance,
+            y: city.y + Math.sin(awayAngle) * distance,
             radius: city.radius || 20
         };
-    }
-    
-    /**
-     * Find direction with least cluster density
-     */
-    findLeastDenseDirection(clusters) {
-        const sectors = 8; // Divide circle into 8 sectors
-        const sectorSize = (2 * Math.PI) / sectors;
-        const sectorDensity = new Array(sectors).fill(0);
-        
-        // Count clusters in each sector
-        clusters.forEach(cluster => {
-            let angle = cluster.angle;
-            if (angle < 0) angle += 2 * Math.PI; // Normalize to 0-2π
-            
-            const sector = Math.floor(angle / sectorSize);
-            const weight = 1 / (cluster.distance + 1); // Closer clusters have more weight
-            sectorDensity[sector] += weight;
-        });
-        
-        // Find sector with minimum density
-        let minDensity = Math.min(...sectorDensity);
-        let bestSector = sectorDensity.indexOf(minDensity);
-        
-        // Return angle in the middle of the best sector
-        return bestSector * sectorSize + sectorSize / 2;
-    }
-    
-    /**
-     * Apply top-right bias to angle
-     */
-    applyTopRightBias(angle) {
-        const topRightAngle = -Math.PI / 4; // -45 degrees
-        const biasStrength = 0.3; // How much to bias towards top-right
-        
-        // Blend the preferred angle with top-right bias
-        return angle * (1 - biasStrength) + topRightAngle * biasStrength;
     }
     
     /**
