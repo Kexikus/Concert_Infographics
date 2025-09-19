@@ -25,14 +25,12 @@ class ChartsManager {
             chartKey,
             datasets,
             labels,
-            title = null,
             showLegend = true,
             legendPosition = 'top',
             stacked = false,
             clickHandler = null,
             tooltipCallbacks = {},
             yAxisCallback = null,
-            yAxisLabel = null,
             customOptions = {},
             stackName = 'default'
         } = config;
@@ -116,6 +114,9 @@ class ChartsManager {
                         },
                         grid: {
                             display: false
+                        },
+                        border: {
+                            color: this.defaultColors.white
                         }
                     },
                     y: {
@@ -388,7 +389,6 @@ class ChartsManager {
                     label: datasetLabel,
                     data: data,
                     backgroundColor: this.defaultColors.black,
-                    borderColor: this.defaultColors.darkGrey,
                     borderWidth: 1,
                     borderSkipped: false,
                 }]
@@ -445,6 +445,9 @@ class ChartsManager {
                         },
                         grid: {
                             display: false
+                        },
+                        border: {
+                            color: this.defaultColors.white
                         },
                         afterFit: function(scale) {
                             scale.width = yAxisWidth; // Configurable width for labels
@@ -586,10 +589,15 @@ class ChartsManager {
         const labels = artistData.map(artist => artist.name);
         const data = artistData.map(artist => artist.count);
 
+        // Get the y-axis width for right alignment (default is 200px)
+        const yAxisWidth = 200; // This matches the default yAxisWidth in createHorizontalBarChart
+
         // Custom draw function for artist logos and names (values are handled by base function)
         const artistDrawFunction = (chart) => {
             const ctx = chart.ctx;
             const meta = chart.getDatasetMeta(0);
+            
+            const rightAlignX = yAxisWidth - 10; // Right edge minus padding
             
             // Draw logos and artist names
             meta.data.forEach((bar, index) => {
@@ -627,8 +635,8 @@ class ChartsManager {
                             scaledHeight = scaledWidth / aspectRatio;
                         }
                         
-                        // Position the logo (centered vertically)
-                        const x = 10;
+                        // Position the logo (right-aligned and centered vertically)
+                        const x = rightAlignX - scaledWidth;
                         const y = bar.y - scaledHeight / 2;
                         
                         // Check if this artist is a headliner and apply red tint if so
@@ -679,10 +687,10 @@ class ChartsManager {
                         // Color text red if artist is a headliner, white otherwise
                         ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? COLORS.red : COLORS.white;
                         ctx.font = '16px Arial';
-                        ctx.textAlign = 'left';
+                        ctx.textAlign = 'right';
                         ctx.textBaseline = 'middle';
                         const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
-                        ctx.fillText(label, 10, bar.y);
+                        ctx.fillText(label, rightAlignX, bar.y);
                     };
                     img.src = artist.logo;
                 } else if (artist) {
@@ -690,10 +698,10 @@ class ChartsManager {
                     // Color text red if artist is a headliner, white otherwise
                     ctx.fillStyle = (showHeadlinerColors && dataManager.isHeadliner(artist.id)) ? COLORS.red : COLORS.white;
                     ctx.font = '16px Arial';
-                    ctx.textAlign = 'left';
+                    ctx.textAlign = 'right';
                     ctx.textBaseline = 'middle';
                     const label = artist.name.length > 20 ? artist.name.substring(0, 20) + '...' : artist.name;
-                    ctx.fillText(label, 10, bar.y);
+                    ctx.fillText(label, rightAlignX, bar.y);
                 }
             });
         };
@@ -704,6 +712,7 @@ class ChartsManager {
             chartKey,
             labels,
             data,
+            yAxisWidth: yAxisWidth,
             datasetLabel: label,
             customDrawFunction: artistDrawFunction,
             clickHandler: clickHandler ? (artist, index) => {

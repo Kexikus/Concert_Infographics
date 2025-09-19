@@ -99,6 +99,15 @@ class StatisticsManager {
         this.animateValue(element, start, end, euroFormatter, duration);
     }
 
+    // Animate percentage amounts (refactored to use unified function)
+    animatePercentage(element, start, end, duration = this.animationDuration) {
+        const percentageFormatter = {
+            format: (value) => `${value}%`,
+            useRound: false
+        };
+        this.animateValue(element, start, end, percentageFormatter, duration);
+    }
+
     // Easing function for smooth animations
     easeOutQuart(t) {
         return 1 - Math.pow(1 - t, 2.5);
@@ -294,7 +303,7 @@ class StatisticsManager {
         // Animate the statistics
         this.animateNumber(this.elements.bandsAvgPerYear, 0, parseFloat(bandsStats.avgBandsPerYear));
         this.animateNumber(this.elements.bandsTotal, 0, bandsStats.totalBands);
-        this.updateElement(this.elements.bandsAtLeastTwice, bandsStats.percentageAtLeastTwice);
+        this.animatePercentage(this.elements.bandsAtLeastTwice, 0, bandsStats.percentageAtLeastTwice);
         
         // Animate the new statistics
         this.animateNumber(this.elements.bandsShowsPerBand, 0, parseFloat(bandsStats.showsPerBand));

@@ -182,7 +182,7 @@ body {
 
 /* Common Header Styles */
 h2 {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     color: var(--white);
     font-weight: 300;
     font-size: 2rem;
@@ -287,6 +287,9 @@ h2 {
     width: 100%;
     background: transparent;
     min-height: 200px;
+}
+
+.chart-container.vertical-bar-chart {
     aspect-ratio: 4;
 }
 
@@ -504,9 +507,9 @@ h1 {
     z-index: 1000;
     border: 1px solid var(--light-grey);
     box-shadow: 0 2px 8px var(--black-opacity-30);
-    max-width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
 }
 
 .map-tooltip-title {
@@ -523,8 +526,15 @@ h1 {
 .map-tooltip-list {
     border-top: 1px solid var(--light-grey);
     padding-top: 0.5rem;
-    max-height: 200px;
-    overflow-y: auto;
+    max-height: none;
+}
+
+.map-tooltip-list.multi-column {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 2), 1fr);
+    grid-template-rows: repeat(var(--rows, 15), auto);
+    grid-auto-flow: column;
+    column-gap: 1rem;
 }
 
 .map-tooltip-list-item {
@@ -532,6 +542,10 @@ h1 {
     color: var(--white);
     padding: 0.1rem 0;
     line-height: 1.2;
+}
+
+.map-tooltip-list-item:hover {
+    color: var(--red);
 }
 
 .map-error {
@@ -2018,7 +2032,7 @@ section.light-grey {
 @media (max-width: 768px) {
     h2 {
         font-size: 1.3rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.75rem;
     }
     
     .other-artists-grid {
@@ -2056,7 +2070,6 @@ section.light-grey {
     
     h2 {
         font-size: 1.5rem;
-        margin-bottom: 1.5rem;
     }
     
     .paired-stats-list {

@@ -6,6 +6,8 @@ class WorldMapManager {
         this.countryElements = {}; // Maps country name to array of path elements
         this.countryData = {};
         this.isInitialized = false;
+        this.persistentTooltip = null; // Track persistent (clicked) tooltip
+        this.persistentTooltipCountry = null; // Track which country has persistent tooltip
         
         // Color configuration
         this.colors = {
@@ -176,6 +178,9 @@ class WorldMapManager {
             // Add the SVG to the container
             this.mapContainer.appendChild(this.svgElement);
             
+            // Add click-outside listener to hide persistent tooltips
+            this.addClickOutsideListener();
+            
             // Update colors based on data
             this.updateMapColors();
             
@@ -338,6 +343,11 @@ class WorldMapManager {
         const bandCount = this.countryData[countryName] || 0;
         const countryPaths = this.countryElements[countryName] || [];
         
+        // Don't show hover tooltip if this country already has a persistent tooltip
+        if (this.persistentTooltipCountry === countryName) {
+            return;
+        }
+        
         if (isEntering) {
             // Highlight ALL paths for this country
             countryPaths.forEach(path => {
@@ -346,8 +356,10 @@ class WorldMapManager {
                 path.style.filter = 'brightness(1.2)';
             });
             
-            // Show tooltip
-            this.showTooltip(event, countryName, bandCount);
+            // Show tooltip only if no persistent tooltip is active
+            if (!this.persistentTooltip) {
+                this.showTooltip(event, countryName, bandCount);
+            }
         } else {
             // Remove highlight from ALL paths for this country
             countryPaths.forEach(path => {
@@ -356,8 +368,10 @@ class WorldMapManager {
                 path.style.filter = 'none';
             });
             
-            // Hide tooltip
-            this.hideTooltip();
+            // Hide tooltip only if it's not persistent
+            if (!this.persistentTooltip) {
+                this.hideTooltip();
+            }
         }
     }
 
@@ -367,11 +381,25 @@ class WorldMapManager {
         
         console.log(`Clicked on ${countryName}: ${bandCount} bands`);
         
-        // Future implementation: Show artist list for country
-        // For now, just log the click
+        // If clicking on the same country that already has a persistent tooltip, hide it
+        if (this.persistentTooltipCountry === countryName) {
+            this.hidePersistentTooltip();
+            return;
+        }
+        
+        // Hide any existing persistent tooltip from other countries
+        this.hidePersistentTooltip();
+        
+        // Make the existing hover tooltip persistent (if it exists and has bands)
         if (bandCount > 0) {
-            const artists = dataManager.getArtistsByCountry(countryName);
-            console.log(`Artists from ${countryName}:`, artists);
+            const existingTooltip = this.mapContainer.querySelector('.map-tooltip');
+            if (existingTooltip) {
+                // Make the existing tooltip persistent
+                this.makeTooltipPersistent(existingTooltip, countryName, bandCount);
+            } else {
+                // If no tooltip exists, create a persistent one
+                this.makePersistentTooltip(event, countryName, bandCount);
+            }
         }
     }
 
@@ -380,9 +408,16 @@ class WorldMapManager {
         // Remove existing tooltip
         this.hideTooltip();
         
-        // Get artists from this country
+        // Get artists from this country (now includes showCount)
         const artists = dataManager.getArtistsByCountry(countryName);
-        const artistNames = artists.map(artist => artist.name).sort();
+        
+        // Sort artists by show count descending, then by name
+        const sortedArtists = artists.sort((a, b) => {
+            if (b.showCount !== a.showCount) {
+                return b.showCount - a.showCount;
+            }
+            return a.name.localeCompare(b.name);
+        });
         
         // Create tooltip element
         const tooltip = document.createElement('div');
@@ -393,11 +428,31 @@ class WorldMapManager {
             <div class="map-tooltip-numbering">${bandCount} band${bandCount !== 1 ? 's' : ''}</div>
         `;
         
+        // Determine if we need multiple columns
+        const needsMultipleColumns = sortedArtists.length > 15;
+        const columnsNeeded = Math.min(Math.ceil(sortedArtists.length / 15), 6); // Allow up to 6 columns for very large lists
+        
         // Add artist list if there are any
-        if (artistNames.length > 0) {
-            tooltipContent += `<div class="map-tooltip-list">`;
-            artistNames.forEach(artistName => {
-                tooltipContent += `<div class="map-tooltip-list-item">${artistName}</div>`;
+        if (sortedArtists.length > 0) {
+            if (needsMultipleColumns) {
+                const rowsNeeded = Math.ceil(sortedArtists.length / columnsNeeded);
+                tooltipContent += `<div class="map-tooltip-list multi-column" style="--columns: ${columnsNeeded}; --rows: ${rowsNeeded}">`;
+            } else {
+                tooltipContent += `<div class="map-tooltip-list">`;
+            }
+            
+            sortedArtists.forEach(artist => {
+                // Find artist data to get the ID for linking
+                const artistData = artistsData.find(a => a.name === artist.name);
+                const artistId = artistData ? artistData.id : null;
+                
+                if (artistId) {
+                    // Make artist names clickable links
+                    tooltipContent += `<div class="map-tooltip-list-item"><a href="#artist/${artistId}" class="artist-link">${artist.name} (${artist.showCount})</a></div>`;
+                } else {
+                    // Fallback for artists without IDs
+                    tooltipContent += `<div class="map-tooltip-list-item">${artist.name} (${artist.showCount})</div>`;
+                }
             });
             tooltipContent += `</div>`;
         }
@@ -409,22 +464,44 @@ class WorldMapManager {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
         
-        // Adjust positioning based on content size
-        const tooltipWidth = Math.max(200, Math.max(...artistNames.map(name => name.length * 8 + 20)));
-        const tooltipHeight = 60 + (artistNames.length * 18);
+        // Adjust positioning based on content size and columns
+        const baseWidth = 200;
+        let tooltipWidth, tooltipHeight;
+        
+        if (needsMultipleColumns) {
+            tooltipWidth = baseWidth * columnsNeeded + (columnsNeeded - 1) * 20;
+            const itemsPerColumn = Math.ceil(sortedArtists.length / columnsNeeded);
+            tooltipHeight = 60 + (itemsPerColumn * 18);
+        } else {
+            // For single column, calculate width based on longest artist name
+            const maxNameLength = Math.max(...sortedArtists.map(artist => (artist.name + ` (${artist.showCount})`).length));
+            tooltipWidth = Math.max(200, maxNameLength * 8 + 40);
+            tooltipHeight = 60 + (sortedArtists.length * 18);
+        }
         
         let left = x + 10;
         let top = y - 10;
         
-        // Adjust if tooltip would go outside container
+        // Adjust if tooltip would go outside container - be more aggressive for large tooltips
         if (left + tooltipWidth > rect.width) {
-            left = x - tooltipWidth - 10;
+            left = Math.max(10, x - tooltipWidth - 10);
         }
+        
+        // For very wide tooltips, center them if possible
+        if (tooltipWidth > rect.width * 0.8) {
+            left = Math.max(10, (rect.width - tooltipWidth) / 2);
+        }
+        
         if (top < 0) {
             top = y + 20;
         }
         if (top + tooltipHeight > rect.height) {
-            top = y - tooltipHeight - 10;
+            top = Math.max(10, y - tooltipHeight - 10);
+        }
+        
+        // For very tall tooltips, position them at the top
+        if (tooltipHeight > rect.height * 0.8) {
+            top = 10;
         }
         
         tooltip.style.left = `${left}px`;
@@ -436,9 +513,64 @@ class WorldMapManager {
     // Hide tooltip
     hideTooltip() {
         const existingTooltip = this.mapContainer.querySelector('.map-tooltip');
-        if (existingTooltip) {
+        if (existingTooltip && !existingTooltip.classList.contains('persistent')) {
             existingTooltip.remove();
         }
+    }
+
+    // Make an existing tooltip persistent
+    makeTooltipPersistent(tooltip, countryName, bandCount) {
+        // Add persistent class and enable pointer events
+        tooltip.classList.add('persistent');
+        tooltip.style.pointerEvents = 'auto';
+        
+        // Store reference
+        this.persistentTooltip = tooltip;
+        this.persistentTooltipCountry = countryName;
+    }
+
+    // Fallback: Create a new persistent tooltip (only if no hover tooltip exists)
+    makePersistentTooltip(event, countryName, bandCount) {
+        // First show the regular tooltip
+        this.showTooltip(event, countryName, bandCount);
+        
+        // Then make it persistent
+        const tooltip = this.mapContainer.querySelector('.map-tooltip');
+        if (tooltip) {
+            this.makeTooltipPersistent(tooltip, countryName, bandCount);
+        }
+    }
+
+    // Hide persistent tooltip
+    hidePersistentTooltip() {
+        if (this.persistentTooltip) {
+            this.persistentTooltip.remove();
+            
+            // Also remove highlight from the country that had the persistent tooltip
+            if (this.persistentTooltipCountry) {
+                const countryPaths = this.countryElements[this.persistentTooltipCountry] || [];
+                countryPaths.forEach(path => {
+                    path.style.strokeWidth = '0.5';
+                    path.style.stroke = this.colors.borders;
+                    path.style.filter = 'none';
+                });
+            }
+            
+            this.persistentTooltip = null;
+            this.persistentTooltipCountry = null;
+        }
+    }
+
+    // Add click-outside listener to hide persistent tooltips
+    addClickOutsideListener() {
+        document.addEventListener('click', (event) => {
+            // Check if click is outside the map container or on a non-country element
+            if (!this.mapContainer.contains(event.target) ||
+                (!event.target.classList.contains('country-path') &&
+                 !event.target.closest('.map-tooltip'))) {
+                this.hidePersistentTooltip();
+            }
+        });
     }
 
     // Refresh map with updated data
@@ -503,6 +635,10 @@ class WorldMapManager {
         if (this.mapContainer) {
             this.mapContainer.innerHTML = '';
         }
+        
+        // Clean up persistent tooltip state
+        this.persistentTooltip = null;
+        this.persistentTooltipCountry = null;
         
         this.countryElements = {};
         this.countryData = {};

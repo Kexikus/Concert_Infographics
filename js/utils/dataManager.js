@@ -603,7 +603,7 @@ class DataManager {
         return countryStats;
     }
 
-    // Get artists by country (based on artist origin)
+    // Get artists by country (based on artist origin) with show counts
     getArtistsByCountry(countryName) {
         // Reverse country name mapping for lookup
         const reverseCountryNameMap = {
@@ -666,10 +666,21 @@ class DataManager {
             });
         });
         
-        // Filter artists by their origin country (only those that have been seen)
-        return this.artists.filter(artist =>
-            artist.country === artistCountryName && seenArtistIds.has(artist.id)
-        );
+        // Calculate show counts for each artist
+        const artistShowCounts = {};
+        this.concerts.forEach(concert => {
+            concert.artistIds.forEach(artistId => {
+                artistShowCounts[artistId] = (artistShowCounts[artistId] || 0) + 1;
+            });
+        });
+        
+        // Filter artists by their origin country (only those that have been seen) and add show counts
+        return this.artists
+            .filter(artist => artist.country === artistCountryName && seenArtistIds.has(artist.id))
+            .map(artist => ({
+                ...artist,
+                showCount: artistShowCounts[artist.id] || 0
+            }));
     }
 
     // Get concerts by country
@@ -746,7 +757,7 @@ class DataManager {
         return {
             avgBandsPerYear: avgBandsPerYear,
             totalBands: totalUniqueBands,
-            percentageAtLeastTwice: percentageAtLeastTwice + '%',
+            percentageAtLeastTwice: percentageAtLeastTwice,
             showsPerBand: showsPerBand,
             uniqueCountries: uniqueCountries
         };
