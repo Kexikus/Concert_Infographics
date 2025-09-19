@@ -21,13 +21,13 @@
                         <a href="#events" class="nav-link" data-route="events">Events</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#bands" class="nav-link" data-route="bands">Bands</a>
+                        <a href="#bands" class="nav-link" data-route="bands">Artists</a>
                     </li>
                     <li class="nav-item">
                         <a href="#locations" class="nav-link" data-route="locations">Venues</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#cost" class="nav-link" data-route="cost">Cost</a>
+                        <a href="#cost" class="nav-link" data-route="cost">Spending</a>
                     </li>
                 </ul>
                 <div class="nav-toggle" id="nav-toggle">
@@ -239,7 +239,7 @@
             <div id="bands-view" class="view">
                 <div class="subpage-container">
                     <header class="subpage-header">
-                        <h1>Bands</h1>
+                        <h1>Artists</h1>
                         <p class="subpage-description">Discover patterns in your musical journey and artist preferences</p>
                     </header>
                     
@@ -299,7 +299,7 @@
 
                         <!-- Bands per Year Chart -->
                         <section class="chart-section dark-grey">
-                            <h2>Bands per Year</h2>
+                            <h2>Artists per Year</h2>
                             <div class="chart-container vertical-bar-chart">
                                 <canvas id="bands-per-year-chart"></canvas>
                             </div>
@@ -393,7 +393,7 @@
             <div id="cost-view" class="view">
                 <div class="subpage-container">
                     <header class="subpage-header">
-                        <h1>Cost</h1>
+                        <h1>Spending</h1>
                         <p class="subpage-description">Track your concert spending and budget insights</p>
                     </header>
                     
@@ -413,7 +413,7 @@
                                 <div class="stat-box-base stat-box-red costs-stat-total">
                                     <div class="stat-content-base">
                                         <div class="stat-number-base stat-number-large" id="costs-total">0€</div>
-                                        <div class="stat-label-base">total cost</div>
+                                        <div class="stat-label-base">total spending</div>
                                     </div>
                                 </div>
                                 
@@ -428,17 +428,17 @@
                         </section>
 
                         <!-- Cost per Year Chart (Vertical Bar Chart) -->
-                        <section class="chart-section">
-                            <h2>Cost per Year</h2>
-                            <div class="chart-container">
+                        <section class="chart-section dark-red">
+                            <h2>Spending per Year</h2>
+                            <div class="chart-container vertical-bar-chart">
                                 <canvas id="cost-per-year-chart"></canvas>
                             </div>
                         </section>
 
                         <!-- Cost Trend Chart (Line Chart with Dots) -->
-                        <section class="chart-section">
-                            <h2>Cost Trend Over Time</h2>
-                            <div class="chart-container">
+                        <section class="chart-section dark-grey">
+                            <h2>Spending Trend Over Time</h2>
+                            <div class="chart-container line-chart">
                                 <canvas id="cost-trend-chart"></canvas>
                             </div>
                         </section>
