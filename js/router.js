@@ -460,7 +460,7 @@ class Router {
         const artistsHtml = showDisplayManager.getEventArtistsHtml(event.id);
         if (artistsHtml) {
             contentElement.innerHTML = `
-                <section class="event-artists-section">
+                <section class="event-artists-section black">
                     ${artistsHtml}
                 </section>
             `;

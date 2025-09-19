@@ -18,6 +18,7 @@ body {
     background-image: url('/assets/Background.jpg');
     background-size: cover;
     background-attachment: fixed;
+    min-height: 100vh;
 }
 
 /* Navigation Bar Styles */
@@ -140,7 +141,7 @@ body {
 
 /* Adjust main content to account for fixed navigation */
 .main-nav:not(.hidden) ~ #main-content {
-    padding-top: 80px; /* 60px nav height + 20px extra spacing */
+    padding-top: 100px; /* 60px nav height + 20px extra spacing */
 }
 
 /* Main Content */
@@ -1809,8 +1810,12 @@ section.light-grey {
     align-items: center;
     gap: 1.5rem;
     width: 100%;
-    max-width: 800px;
     margin: 0 auto;
+}
+
+.event-artists-section .show-artists.two-column {
+    flex-direction: row;
+    gap: 1.5rem 3rem;
 }
 
 .event-artists-section .show-artist {
@@ -1937,6 +1942,14 @@ section.light-grey {
     filter: brightness(1.1);
 }
 
+.subpage-description a {
+    display: inline-block;
+}
+
+.subpage-description a:hover {
+    filter: brightness(2);
+}
+
 .show-display-link:hover > .show-event-name, .date-link:hover, .venue-link:hover, .artist-link:hover > .show-artist > * {
     transform: scale(1.02);
 }
@@ -2010,7 +2023,7 @@ section.light-grey {
     
     /* Adjust main content padding for mobile nav */
     .main-nav:not(.hidden) ~ #main-content {
-        padding-top: 80px;
+        padding-top: 100px;
     }
     
     .main-nav:not(.hidden).nav-open ~ #main-content {
@@ -2048,7 +2061,7 @@ section.light-grey {
     
     /* Adjust main content padding for smaller mobile nav */
     .main-nav:not(.hidden) ~ #main-content {
-        padding-top: 70px;
+        padding-top: 80px;
     }
     
     .main-nav:not(.hidden).nav-open ~ #main-content {
