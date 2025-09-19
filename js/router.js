@@ -329,6 +329,9 @@ class Router {
 
     // Initialize year page with data filtering and component loading
     initializeYearPage(year) {
+        // Initialize year navigation
+        this.initializeYearNavigation(year);
+        
         // Initialize year statistics
         statisticsManager.initializeYearStatistics(year);
         
@@ -339,6 +342,44 @@ class Router {
         
         // Initialize year events display
         showDisplayManager.initializeYearShowDisplays(year);
+    }
+
+    // Initialize year navigation arrows
+    initializeYearNavigation(currentYear) {
+        const prevBtn = document.getElementById('prev-year-btn');
+        const nextBtn = document.getElementById('next-year-btn');
+        
+        if (!prevBtn || !nextBtn) return;
+        
+        // Get all available years with events
+        const availableYears = dataManager.getAvailableYears();
+        const currentIndex = availableYears.indexOf(currentYear);
+        
+        // Find previous and next years
+        const prevYear = currentIndex > 0 ? availableYears[currentIndex - 1] : null;
+        const nextYear = currentIndex < availableYears.length - 1 ? availableYears[currentIndex + 1] : null;
+        
+        // Configure previous year button
+        if (prevYear) {
+            prevBtn.disabled = false;
+            prevBtn.title = `Previous year (${prevYear})`;
+            prevBtn.onclick = () => this.navigateTo(`year/${prevYear}`);
+        } else {
+            prevBtn.disabled = true;
+            prevBtn.title = 'No previous year with events';
+            prevBtn.onclick = null;
+        }
+        
+        // Configure next year button
+        if (nextYear) {
+            nextBtn.disabled = false;
+            nextBtn.title = `Next year (${nextYear})`;
+            nextBtn.onclick = () => this.navigateTo(`year/${nextYear}`);
+        } else {
+            nextBtn.disabled = true;
+            nextBtn.title = 'No next year with events';
+            nextBtn.onclick = null;
+        }
     }
 
     // Show Event page

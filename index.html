@@ -593,7 +593,15 @@
             <div id="year-view" class="view">
                 <div class="subpage-container">
                     <header class="subpage-header">
-                        <h1 id="year-title">Year</h1>
+                        <div class="year-navigation">
+                            <button id="prev-year-btn" class="year-nav-arrow" title="Previous year">
+                                <span class="arrow-left">‹</span>
+                            </button>
+                            <h1 id="year-title">Year</h1>
+                            <button id="next-year-btn" class="year-nav-arrow" title="Next year">
+                                <span class="arrow-right">›</span>
+                            </button>
+                        </div>
                         <p class="subpage-description">All concerts from this year</p>
                     </header>
                     
@@ -653,23 +661,23 @@
                         </section>
 
                         <!-- Events per Month Chart -->
-                        <section class="chart-section">
+                        <section class="chart-section dark-grey">
                             <h2>Events per Month</h2>
-                            <div class="chart-container">
+                            <div class="chart-container vertical-bar-chart">
                                 <canvas id="year-events-per-month-chart"></canvas>
                             </div>
                         </section>
 
                         <!-- Shows per Month Chart -->
-                        <section class="chart-section">
+                        <section class="chart-section dark-red">
                             <h2>Shows per Month</h2>
-                            <div class="chart-container">
+                            <div class="chart-container vertical-bar-chart">
                                 <canvas id="year-shows-per-month-chart"></canvas>
                             </div>
                         </section>
 
                         <!-- Top 10 Bands Chart -->
-                        <section class="chart-section">
+                        <section class="chart-section dark-red">
                             <h2>Top 10 Bands</h2>
                             <div class="chart-container">
                                 <canvas id="year-top-bands-chart"></canvas>
@@ -677,7 +685,7 @@
                         </section>
 
                         <!-- All Events Section -->
-                        <section class="all-events-section">
+                        <section class="all-events-section dark-red">
                             <h2>All Events</h2>
                             <div id="year-all-events" class="all-events-container">
                                 <!-- All events grid will be populated here -->

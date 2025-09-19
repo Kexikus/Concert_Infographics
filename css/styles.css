@@ -286,7 +286,6 @@ h2 {
     position: relative;
     width: 100%;
     background: transparent;
-    min-height: 200px;
 }
 
 .chart-container.vertical-bar-chart, .chart-container.line-chart {
@@ -1701,6 +1700,102 @@ section.light-grey {
     }
 }
 
+/* Year Navigation Styles */
+.year-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    position: relative;
+}
+
+.year-nav-arrow {
+    background: none;
+    border: 2px solid var(--red);
+    color: var(--red);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.year-nav-arrow:hover {
+    background-color: var(--red);
+    color: var(--white);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px var(--red-opacity-50);
+}
+
+.year-nav-arrow:active {
+    transform: scale(0.95);
+}
+
+.year-nav-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--light-grey);
+    color: var(--light-grey);
+}
+
+.year-nav-arrow:disabled:hover {
+    background: none;
+    color: var(--light-grey);
+    transform: none;
+    box-shadow: none;
+}
+
+.arrow-left, .arrow-right {
+    display: block;
+    line-height: 1;
+    user-select: none;
+}
+
+/* Responsive Design for Year Navigation */
+@media (max-width: 768px) {
+    .year-navigation {
+        gap: 1.5rem;
+    }
+    
+    .year-nav-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .year-navigation {
+        gap: 1rem;
+    }
+    
+    .year-nav-arrow {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+        border-width: 1px;
+    }
+}
+
+@media (max-width: 400px) {
+    .year-navigation {
+        gap: 0.75rem;
+    }
+    
+    .year-nav-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+}
+
 /* Event Page Styles */
 .event-logo-header {
     max-width: 600px;
@@ -2109,10 +2204,6 @@ section.light-grey {
         font-size: 1rem;
     }
     
-    .chart-container {
-        min-height: 180px;
-    }
-    
     /* Base class responsive adjustments */
     section {
         padding: 1.5rem 0;
@@ -2182,10 +2273,6 @@ section.light-grey {
     
     .stat-label {
         font-size: 0.9rem;
-    }
-    
-    .chart-container {
-        min-height: 160px;
     }
     
     /* Base class responsive adjustments */
