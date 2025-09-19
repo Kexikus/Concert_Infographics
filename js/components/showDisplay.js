@@ -233,7 +233,7 @@ class ShowDisplayManager {
 
         // Format date in German format
         const eventDate = new Date(event.date);
-        const formattedDate = eventDate.toLocaleDateString('de-DE', {
+        const formattedDate = eventDate.toLocaleDateString('en-GB', {
             year: 'numeric',
             month: 'short',
             day: 'numeric'

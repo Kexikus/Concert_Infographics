@@ -61,6 +61,7 @@ const generateCSSProperties = () => {
         // Opacity variants
         '--red-opacity-20': COLOR_UTILS.withOpacity(COLORS.red, 0.2),
         '--red-opacity-15': COLOR_UTILS.withOpacity(COLORS.red, 0.15),
+        '--red-opacity-50': COLOR_UTILS.withOpacity(COLORS.red, 0.5),
         '--black-opacity-90': COLOR_UTILS.withOpacity(COLORS.black, 0.9),
         '--black-opacity-30': COLOR_UTILS.withOpacity(COLORS.black, 0.3),
         '--white-opacity-10': COLOR_UTILS.withOpacity(COLORS.white, 0.1)

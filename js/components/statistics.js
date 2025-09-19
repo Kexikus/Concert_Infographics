@@ -84,7 +84,7 @@ class StatisticsManager {
     // Animate number counting up (refactored to use unified function)
     animateNumber(element, start, end, duration = this.animationDuration) {
         const numberFormatter = {
-            format: (value) => value.toLocaleString(),
+            format: (value) => value,
             useRound: false
         };
         this.animateValue(element, start, end, numberFormatter, duration);
@@ -101,7 +101,7 @@ class StatisticsManager {
 
     // Easing function for smooth animations
     easeOutQuart(t) {
-        return 1 - Math.pow(1 - t, 4);
+        return 1 - Math.pow(1 - t, 2.5);
     }
 
     // Get detailed statistics for tooltips or additional info

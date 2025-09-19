@@ -153,10 +153,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </section>
-
-                        <!-- Event Types Statistics Section -->
-                        <section class="stats-overview-base">
                             <div class="stats-grid-base event-types-stats-grid">
                                 <!-- Left cell: Concerts count (dark red) -->
                                 <div class="stat-box-base stat-box-dark-red event-types-stat-concerts">
@@ -184,58 +180,58 @@
                         </section>
 
                         <!-- Events per Year Chart (moved from dashboard) -->
-                        <section class="chart-section">
+                        <section class="chart-section black">
                             <h2>Events per Year</h2>
                             <div class="chart-container">
                                 <canvas id="events-per-year-chart-detailed"></canvas>
                             </div>
                         </section>
+
+                        <!-- Shows Statistics Section -->
+                        <section class="stats-overview-base shows-stats-overview">
+                            <div class="stats-grid-base shows-stats-grid">
+                                <!-- Left cell: Average shows per year -->
+                                <div class="stat-box-base stat-box-black shows-stat-avg-per-year">
+                                    <div class="stat-content-base">
+                                        <div class="stat-number-base stat-number-small" id="shows-avg-per-year">0</div>
+                                        <div class="stat-label-base">⌀ per year</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Central cell: Total shows (double width, black center with dark red outer) -->
+                                <div class="stat-box-base stat-box-black shows-stat-total">
+                                    <div class="stat-content-base">
+                                        <div class="stat-number-base stat-number-large" id="shows-total">0</div>
+                                        <div class="stat-label-base">total shows</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right cell: Average shows per event -->
+                                <div class="stat-box-base stat-box-black shows-stat-avg-per-event">
+                                    <div class="stat-content-base">
+                                        <div class="stat-number-base stat-number-small" id="shows-avg-per-event">0.0</div>
+                                        <div class="stat-label-base">⌀ per event</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Shows per Year Chart (Vertical Bar Chart) -->
+                        <section class="chart-section dark-red">
+                            <h2>Shows per Year</h2>
+                            <div class="chart-container">
+                                <canvas id="shows-per-year-chart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- All Events Section -->
+                        <section class="all-events-section dark-red">
+                            <h2>All Events</h2>
+                            <div id="all-events-container" class="all-events-container">
+                                <!-- All events grid will be populated here -->
+                            </div>
+                        </section>
                     </div>
-
-                    <!-- Shows Statistics Section -->
-                    <section class="stats-overview-base shows-stats-overview">
-                        <div class="stats-grid-base shows-stats-grid">
-                            <!-- Left cell: Average shows per year -->
-                            <div class="stat-box-base stat-box-black shows-stat-avg-per-year">
-                                <div class="stat-content-base">
-                                    <div class="stat-number-base stat-number-small" id="shows-avg-per-year">0</div>
-                                    <div class="stat-label-base">⌀ per year</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Central cell: Total shows (double width, black center with dark red outer) -->
-                            <div class="stat-box-base stat-box-black shows-stat-total">
-                                <div class="stat-content-base">
-                                    <div class="stat-number-base stat-number-large" id="shows-total">0</div>
-                                    <div class="stat-label-base">total shows</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Right cell: Average shows per event -->
-                            <div class="stat-box-base stat-box-black shows-stat-avg-per-event">
-                                <div class="stat-content-base">
-                                    <div class="stat-number-base stat-number-small" id="shows-avg-per-event">0.0</div>
-                                    <div class="stat-label-base">⌀ per event</div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Shows per Year Chart (Vertical Bar Chart) -->
-                    <section class="chart-section">
-                        <h2>Shows per Year</h2>
-                        <div class="chart-container">
-                            <canvas id="shows-per-year-chart"></canvas>
-                        </div>
-                    </section>
-
-                    <!-- All Events Section -->
-                    <section class="all-events-section">
-                        <h2>All Events</h2>
-                        <div id="all-events-container" class="all-events-container">
-                            <!-- All events grid will be populated here -->
-                        </div>
-                    </section>
                 </div>
             </div>
 

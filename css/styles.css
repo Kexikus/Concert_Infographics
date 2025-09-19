@@ -169,14 +169,9 @@ body {
         "frequency";
 }
 
-/* Common Section Styles */
-.stats-overview,
-.chart-section {
+.stats-overview {
     padding: 2rem 0;
     animation: fadeIn 0.6s ease-out;
-}
-
-.stats-overview {
     grid-area: stats;
 }
 
@@ -286,15 +281,13 @@ h2 {
 }
 
 /* Chart Sections */
-.chart-section {
-    background: transparent;
-}
 
 .chart-container {
     position: relative;
     width: 100%;
     background: transparent;
     min-height: 200px;
+    aspect-ratio: 4;
 }
 
 .chart-container canvas {
@@ -686,18 +679,51 @@ h1 {
 
 /* Base Statistics Classes */
 
+section {
+    padding: 2rem 1rem;
+}
+
+section.black {
+    background-color: var(--black);
+    border: 2px solid var(--dark-red);
+    border-radius: 10px;
+}
+
+section.dark-red {
+    background-color: var(--dark-red);
+    border: 2px solid var(--black);
+    border-radius: 10px;
+}
+
+section.red {
+    background-color: var(--red);
+    border: 2px solid var(--black);
+    border-radius: 10px;
+}
+
+section.dark-grey {
+    background-color: var(--dark-grey);
+    border: 2px solid var(--dark-red);
+    border-radius: 10px;
+}
+
+section.light-grey {
+    background-color: var(--light-grey);
+    border: 2px solid var(--dark-red);
+    border-radius: 10px;
+}
+
 /* Base stats overview section */
 .stats-overview-base {
-    padding: 2rem 0;
-    margin-bottom: 2rem;
     animation: fadeIn 0.6s ease-out;
+    padding: 0;
 }
 
 /* Base stats grid */
 .stats-grid-base {
     display: grid;
     gap: 2rem;
-    padding: 0 2rem;
+    padding: 1rem 2rem;
     transform: skewX(-15deg);
 }
 
@@ -710,6 +736,13 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.stat-box-base:not(.event-types-stat-pie-chart):hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
 }
 
 /* Base stat content */
@@ -1401,7 +1434,7 @@ h1 {
 /* Compact Show Display Styles */
 .show-display.compact {
     background-color: var(--black);
-    border: 1px solid var(--dark-red);
+    border: 1px solid var(--red);
     border-radius: 6px;
     padding: 1rem;
     min-height: 150px;
@@ -1412,7 +1445,7 @@ h1 {
 
 .show-display.compact:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--red-opacity-15);
+    box-shadow: 0 4px 8px var(--red-opacity-50);
 }
 
 .show-display.compact .show-event-name {
@@ -2056,18 +2089,13 @@ h1 {
         font-size: 1rem;
     }
     
-    .chart-section {
-        padding: 1.5rem 0;
-    }
-    
     .chart-container {
         min-height: 180px;
     }
     
     /* Base class responsive adjustments */
-    .stats-overview-base {
+    section {
         padding: 1.5rem 0;
-        margin-bottom: 1.5rem;
     }
     
     .stats-grid-base {
