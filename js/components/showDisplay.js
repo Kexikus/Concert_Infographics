@@ -9,10 +9,10 @@ class ShowDisplayManager {
         const event = dataManager.getConcertById(eventId);
         if (!event) return '';
 
-        const { compact = false, showPrice = true } = options;
+        const { compact = false } = options;
 
         // Use helper method for description
-        const description = this.getEventDescription(eventId, { compact, showPrice });
+        const description = this.getEventDescription(eventId, { compact });
 
         // Use helper method for artists HTML
         const artistsHtml = this.getEventArtistsHtml(eventId, highlightArtistId, { compact });
@@ -109,7 +109,7 @@ class ShowDisplayManager {
 
         // Create compact show displays for all concerts
         const showsHtml = sortedConcerts.map(concert =>
-            this.createShowDisplay(concert.id, artistId, { compact: true, showPrice: true })
+            this.createShowDisplay(concert.id, artistId, { compact: true })
         ).join('');
 
         allShowsContainer.innerHTML = `
@@ -140,7 +140,7 @@ class ShowDisplayManager {
 
         // Create compact show displays for all concerts (no highlighted artist)
         const showsHtml = sortedConcerts.map(concert =>
-            this.createShowDisplay(concert.id, null, { compact: true, showPrice: true })
+            this.createShowDisplay(concert.id, null, { compact: true })
         ).join('');
 
         allEventsContainer.innerHTML = `
@@ -185,7 +185,7 @@ class ShowDisplayManager {
 
         // Create compact show displays for all concerts (no highlighted artist)
         const showsHtml = sortedConcerts.map(concert =>
-            this.createShowDisplay(concert.id, null, { compact: true, showPrice: true })
+            this.createShowDisplay(concert.id, null, { compact: true })
         ).join('');
 
         allEventsContainer.innerHTML = `
@@ -211,7 +211,7 @@ class ShowDisplayManager {
 
         // Create compact show displays for all concerts (no highlighted artist)
         const showsHtml = sortedConcerts.map(concert =>
-            this.createShowDisplay(concert.id, null, { compact: true, showPrice: true })
+            this.createShowDisplay(concert.id, null, { compact: true })
         ).join('');
 
         allEventsContainer.innerHTML = `
@@ -229,7 +229,7 @@ class ShowDisplayManager {
         const venue = dataManager.getVenueById(event.venueId);
         if (!venue) return '';
 
-        const { compact = false, showPrice = true } = options;
+        const { compact = false } = options;
 
         // Format date in German format
         const eventDate = new Date(event.date);
@@ -245,9 +245,9 @@ class ShowDisplayManager {
         // Sanitize city name for the city link
         const sanitizedCity = normalizeStringForId(venue.city);
 
-        // Format price if available and requested
+        // Format price if available (not shown in compact view)
         let priceText = '';
-        if ((!compact || showPrice) && event.price !== null && event.price !== undefined) {
+        if (!compact && event.price !== null && event.price !== undefined) {
             priceText = ` <span style="color: var(--red);">•</span> ${event.price.toFixed(2)}€`;
         }
 
@@ -299,7 +299,9 @@ class ShowDisplayManager {
             }
         }).join('');
 
-        const artistsClass = compact ? 'show-artists compact' : 'show-artists';
+        // Determine if we need two-column layout (more than 5 artists in non-compact view)
+        const useTwoColumns = !compact && event.artistIds.length > 5;
+        const artistsClass = compact ? 'show-artists compact' : `show-artists${useTwoColumns ? ' two-column' : ''}`;
         return `<div class="${artistsClass}">${artistsHtml}</div>`;
     }
 
