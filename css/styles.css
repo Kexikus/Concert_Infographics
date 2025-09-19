@@ -5,16 +5,6 @@
     box-sizing: border-box;
 }
 
-/* Color Palette */
-:root {
-    --white: #ffffff;
-    --black: #000000;
-    --dark-grey: #2a2a2a;
-    --light-grey: #cccccc;
-    --red: #dc3545;
-    --dark-red: #a71e2a;
-}
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--dark-grey);
@@ -25,6 +15,9 @@ body {
 
 #app {
     overflow: hidden;
+    background-image: url('/assets/Background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 /* Navigation Bar Styles */
@@ -431,10 +424,9 @@ h2 {
 .subpage-header {
     text-align: center;
     margin-bottom: 3rem;
-    padding: 2rem 0;
 }
 
-.subpage-header h1 {
+h1 {
     font-size: 4rem;
     font-weight: 300;
     color: var(--white);
@@ -460,7 +452,7 @@ h2 {
 
 /* Responsive Design for Subpages */
 @media (max-width: 768px) {
-    .subpage-header h1 {
+    h1 {
         font-size: 3rem;
     }
     
@@ -677,10 +669,9 @@ h2 {
 @media (max-width: 550px) {
     .subpage-header {
         margin-bottom: 2rem;
-        padding: 1rem 0;
     }
     
-    .subpage-header h1 {
+    h1 {
         font-size: 2rem;
     }
     
