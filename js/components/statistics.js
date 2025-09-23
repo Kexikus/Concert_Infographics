@@ -32,7 +32,7 @@ class StatisticsManager {
         const stats = dataManager.getStatistics();
         const bandsStats = dataManager.getBandsStatistics();
         const locationStats = dataManager.getLocationStatistics();
-        const years = dataManager.getAvailableYears();
+        const roundedYearSpan = dataManager.getRoundedYearSpan();
         
         // Animate paired statistics
         this.animateNumber(this.elements.pairedTotalShows, 0, stats.totalShows);
@@ -42,7 +42,7 @@ class StatisticsManager {
         this.animateNumber(this.elements.pairedTotalVenues, 0, locationStats.totalVenues);
         this.animateNumber(this.elements.pairedCities, 0, locationStats.totalCities);
         this.animateEuro(this.elements.pairedTotalCost, 0, stats.totalCost);
-        this.animateNumber(this.elements.pairedYears, 0, years.length);
+        this.animateNumber(this.elements.pairedYears, 0, roundedYearSpan);
     }
 
     // Update element without animation

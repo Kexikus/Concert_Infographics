@@ -6,6 +6,48 @@ class DataManager {
         this.venues = venuesData || [];
     }
 
+    // Calculate precise year span from first event to today
+    getYearSpan() {
+        if (this.concerts.length === 0) {
+            return 1; // Default to 1 if no concerts
+        }
+
+        // Find the earliest concert date
+        const earliestDate = this.concerts.reduce((earliest, concert) => {
+            const concertDate = new Date(concert.date);
+            return concertDate < earliest ? concertDate : earliest;
+        }, new Date(this.concerts[0].date));
+
+        const today = new Date();
+        
+        // Calculate full years between dates
+        let fullYears = today.getFullYear() - earliestDate.getFullYear();
+        
+        // Check if we haven't reached the anniversary yet this year
+        const thisYearAnniversary = new Date(today.getFullYear(), earliestDate.getMonth(), earliestDate.getDate());
+        if (today < thisYearAnniversary) {
+            fullYears--;
+        }
+        
+        // Calculate remaining days after full years
+        const lastAnniversary = new Date(earliestDate.getFullYear() + fullYears, earliestDate.getMonth(), earliestDate.getDate());
+        const remainingDays = (today - lastAnniversary) / (1000 * 60 * 60 * 24);
+        
+        // Convert remaining days to fractional year
+        const fractionalYear = remainingDays / 365;
+        
+        // Combine full years + fractional year
+        const yearSpan = fullYears + fractionalYear;
+        
+        // Return at least 1 year to avoid division by zero
+        return Math.max(yearSpan, 1);
+    }
+
+    // Get rounded year span for display purposes
+    getRoundedYearSpan() {
+        return Math.round(this.getYearSpan());
+    }
+
     // Get all concerts
     getConcerts() {
         return this.concerts;
@@ -80,9 +122,8 @@ class DataManager {
         const totalConcerts = concertTypeStats.concert || 0;
         const totalFestivals = concertTypeStats.festival || 0;
         
-        // Calculate years span
-        const years = this.getAvailableYears();
-        const yearSpan = years.length > 0 ? years.length : 1;
+        // Calculate precise years span
+        const yearSpan = this.getYearSpan();
         
         // Calculate total shows (sum of artists per event)
         const totalShows = this.concerts.reduce((sum, concert) => sum + concert.artistIds.length, 0);
@@ -105,8 +146,6 @@ class DataManager {
 
         // Calculate years with non-zero costs for average per year calculation
         const costPerYearStats = this.getCostPerYearStats();
-        const yearsWithCosts = Object.values(costPerYearStats).filter(cost => cost > 0);
-        const yearsWithCostsCount = yearsWithCosts.length;
 
         return {
             // Main statistics
@@ -128,7 +167,7 @@ class DataManager {
             avgShowsPerBand: totalUniqueBands > 0 ? (totalShows / totalUniqueBands).toFixed(1) : 0,
             avgShowsPerEvent: totalEvents > 0 ? (totalShows / totalEvents).toFixed(1) : 0,
             
-            avgCostPerYear: yearsWithCostsCount > 0 ? Math.round(totalCost / yearsWithCostsCount) : 0,
+            avgCostPerYear: Math.round(totalCost / yearSpan),
             avgCostPerEvent: concertsWithPrice.length > 0 ? Math.round(totalCost / concertsWithPrice.length) : 0,
             avgCostPerShow: totalShowsWithPrice > 0 ? Math.round(totalCost / totalShowsWithPrice) : 0
         };
@@ -717,8 +756,7 @@ class DataManager {
     // Get bands statistics for the bands view
     getBandsStatistics() {
         const stats = this.getStatistics();
-        const years = this.getAvailableYears();
-        const yearSpan = years.length > 0 ? years.length : 1;
+        const yearSpan = this.getYearSpan();
         
         // Calculate unique artists seen
         const uniqueArtistIds = new Set();
@@ -862,8 +900,7 @@ class DataManager {
     // Get cost statistics for the costs view
     getCostStatistics() {
         const stats = this.getStatistics();
-        const years = this.getAvailableYears();
-        const yearSpan = years.length > 0 ? years.length : 1;
+        const yearSpan = this.getYearSpan();
         
         return {
             totalCost: stats.totalCost,
@@ -945,8 +982,7 @@ class DataManager {
 
     // Get events statistics for the events view
     getEventsStatistics() {
-        const years = this.getAvailableYears();
-        const yearSpan = years.length > 0 ? years.length : 1;
+        const yearSpan = this.getYearSpan();
         
         // Calculate total events (concerts and festivals)
         const totalEvents = this.concerts.length;
