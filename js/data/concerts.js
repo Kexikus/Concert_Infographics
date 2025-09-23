@@ -188,7 +188,7 @@ const concertsData = [
         ],
         "venueId": "posthalle-wuerzburg",
         "price": null,
-        "logo": null,
+        "logo": "EHN2024.png",
         "notes": null
     },
     {
@@ -429,18 +429,18 @@ const concertsData = [
     },
     {
         "id": "eisheilige-nacht-2023",
+        "name": "Eisheilige Nacht 2023",
         "date": "2023-12-16",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "fiddlers-green",
             "manntra"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2023",
         "price": null,
-        "logo": null,
+        "logo": "EHN2023.png",
         "notes": null
     },
     {
@@ -839,8 +839,10 @@ const concertsData = [
     },
     {
         "id": "eisheilige-nacht-2022",
+        "name": "Eisheilige Nacht 2022",
         "date": "2022-12-17",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "mr-hurley-und-die-pulveraffen",
@@ -848,10 +850,8 @@ const concertsData = [
             "mr-irish-bastard"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2022",
         "price": null,
-        "logo": null,
+        "logo": "EHN2022.png",
         "notes": null
     },
     {
@@ -1273,8 +1273,10 @@ const concertsData = [
     },
     {
         "id": "eisheilige-nacht-2019",
+        "name": "Eisheilige Nacht 2019",
         "date": "2019-12-21",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "fiddlers-green",
@@ -1282,10 +1284,8 @@ const concertsData = [
             "vogelfrey"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2019",
         "price": null,
-        "logo": null,
+        "logo": "EHN2019.png",
         "notes": null
     },
     {
@@ -1479,8 +1479,10 @@ const concertsData = [
     },
     {
         "id": "eisheilige-nacht-2018",
+        "name": "Eisheilige Nacht 2018",
         "date": "2018-12-22",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "versengold",
@@ -1488,10 +1490,8 @@ const concertsData = [
             "paddy-and-the-rats"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2018",
         "price": null,
-        "logo": null,
+        "logo": "EHN2018.png",
         "notes": null
     },
     {
@@ -1665,18 +1665,18 @@ const concertsData = [
     },
     {
         "id": "eisheilige-nacht-2017",
+        "name": "Eisheilige Nacht 2017",
         "date": "2017-12-22",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "mono-inc",
             "feuerschwanz"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2017",
         "price": null,
-        "logo": null,
+        "logo": "EHN2017.png",
         "notes": null
     },
     {
@@ -1827,18 +1827,18 @@ const concertsData = [
     },
     {
         "id": "eisheilige-nacht-2016",
+        "name": "Eisheilige Nacht 2016",
         "date": "2016-12-16",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "eluveitie",
             "lord-of-the-lost"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2016",
         "price": null,
-        "logo": null,
+        "logo": "EHN2016.png",
         "notes": null
     },
     {
@@ -1902,18 +1902,18 @@ const concertsData = [
     },
     {
         "id": "eisheilige-nacht-2015",
+        "name": "Eisheilige Nacht 2015",
         "date": "2015-12-19",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "fiddlers-green",
             "letzte-instanz"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2015",
         "price": null,
-        "logo": null,
+        "logo": "EHN2015.png",
         "notes": null
     },
     {
@@ -2001,13 +2001,15 @@ const concertsData = [
         ],
         "venueId": "centralstation-darmstadt",
         "price": null,
-        "logo": null,
+        "logo": "Mitgift2015.png",
         "notes": null
     },
     {
         "id": "eisheilige-nacht-2014",
+        "name": "Eisheilige Nacht 2014",
         "date": "2014-12-20",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "saltatio-mortis",
@@ -2015,10 +2017,8 @@ const concertsData = [
             "heldmaschine"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2014",
         "price": null,
-        "logo": null,
+        "logo": "EHN2014.png",
         "notes": null
     },
     {
@@ -2038,47 +2038,47 @@ const concertsData = [
         "notes": null
     },
     {
-        "id": "nur-die-besten-werden-alt-tour",
+        "id": "2510-tour",
+        "name": "25/10 Tour",
         "date": "2014-11-09",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "jbo",
             "swiss-die-andern"
         ],
         "venueId": "batschkapp-frankfurt",
-        "type": "concert",
-        "name": "Nur die Besten werden alt Tour",
         "price": null,
-        "logo": null,
+        "logo": "2510.png",
         "notes": null
     },
     {
         "id": "per-aspera-ad-aspera-tour",
+        "name": "Per Aspera ad Aspera Tour",
         "date": "2014-10-29",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "asp"
         ],
         "venueId": "batschkapp-frankfurt",
-        "type": "concert",
-        "name": "Per Aspera ad Aspera Tour",
         "price": null,
-        "logo": null,
+        "logo": "PerAsperaAdAspera.png",
         "notes": null
     },
     {
         "id": "mitgift-tour",
+        "name": "Mitgift Tour",
         "date": "2014-04-10",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "darkhaus"
         ],
         "venueId": "batschkapp-frankfurt",
-        "type": "concert",
-        "name": "Mitgift Tour",
         "price": null,
-        "logo": null,
+        "logo": "Mitgift2014.png",
         "notes": null
     },
     {
@@ -2093,44 +2093,46 @@ const concertsData = [
         ],
         "venueId": "batschkapp-frankfurt",
         "price": null,
-        "logo": null,
+        "logo": "DasSchwarzeIXI2014.png",
         "notes": null
     },
     {
         "id": "eisheilige-nacht-2013",
+        "name": "Eisheilige Nacht 2013",
         "date": "2013-12-21",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "lordi",
             "lord-of-the-lost"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2013",
         "price": null,
-        "logo": null,
+        "logo": "EHN.png",
         "notes": null
     },
     {
         "id": "das-schwarze-1x1-tour",
+        "name": "Das Schwarze 1x1 Tour",
         "date": "2013-11-02",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "saltatio-mortis",
             "versengold"
         ],
         "venueId": "posthalle-wuerzburg",
-        "type": "concert",
-        "name": "Das Schwarze 1x1 Tour",
         "price": null,
-        "logo": null,
+        "logo": "DasSchwarzeIXI2013.png",
         "notes": null
     },
     {
         "id": "gothic-meets-klassik-2013",
+        "name": "Gothic Meets Klassik 2013",
         "date": "2013-10-26",
         "endDate": "2013-10-27",
+        "type": "festival",
         "artistIds": [
             "subway-to-sally",
             "combichrist",
@@ -2140,16 +2142,16 @@ const concertsData = [
             "lord-of-the-lost"
         ],
         "venueId": "haus-auensee-leipzig",
-        "type": "festival",
-        "name": "Gothic Meets Klassik 2013",
         "price": null,
-        "logo": null,
+        "logo": "GothicMeetsKlassik.png",
         "notes": null
     },
     {
         "id": "woa-2013",
+        "name": "W:O:A 2013",
         "date": "2013-08-01",
         "endDate": "2013-08-03",
+        "type": "festival",
         "artistIds": [
             "alice-cooper",
             "deep-purple",
@@ -2166,10 +2168,8 @@ const concertsData = [
             "woa-firefighters"
         ],
         "venueId": "wacken-open-air",
-        "type": "festival",
-        "name": "W:O:A 2013",
         "price": null,
-        "logo": null,
+        "logo": "Wacken2013.png",
         "notes": null
     },
     {
@@ -2187,13 +2187,15 @@ const concertsData = [
         ],
         "venueId": "metropolishalle-potsdam",
         "price": null,
-        "logo": null,
+        "logo": "EHN.png",
         "notes": null
     },
     {
         "id": "eisheilige-nacht-2012",
+        "name": "Eisheilige Nacht 2012",
         "date": "2012-12-22",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "die-apokalyptischen-reiter",
@@ -2202,10 +2204,8 @@ const concertsData = [
             "fejd"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2012",
         "price": null,
-        "logo": null,
+        "logo": "EHN.png",
         "notes": null
     },
     {
@@ -2220,21 +2220,21 @@ const concertsData = [
         ],
         "venueId": "kuz-mainz",
         "price": null,
-        "logo": null,
+        "logo": "SturmAufsParadies.png",
         "notes": null
     },
     {
         "id": "das-comeback-tour",
+        "name": "Das Comeback Tour",
         "date": "2012-10-26",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "die-aerzte"
         ],
         "venueId": "europahalle-karlsruhe",
-        "type": "concert",
-        "name": "Das Comeback Tour",
         "price": null,
-        "logo": null,
+        "logo": "DasComeback.png",
         "notes": null
     },
     {
@@ -2268,54 +2268,56 @@ const concertsData = [
     },
     {
         "id": "otterrock-2012",
+        "name": "Otterrock 2012",
         "date": "2012-06-16",
         "endDate": "2012-06-16",
+        "type": "festival",
         "artistIds": [
             "subway-to-sally",
             "brandstein"
         ],
         "venueId": "sommerfesthalle-otterstadt",
-        "type": "festival",
-        "name": "Otterrock 2012",
         "price": null,
-        "logo": null,
+        "logo": "Otterrock2012.png",
         "notes": null
     },
     {
         "id": "imaginaerum-tour",
+        "name": "Imaginaerum Tour",
         "date": "2012-04-23",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "nightwish",
             "battle-beast",
             "eklipse"
         ],
         "venueId": "jahrhunderthalle-frankfurt",
-        "type": "concert",
-        "name": "Imaginaerum Tour",
         "price": null,
-        "logo": null,
+        "logo": "Imaginaerum.png",
         "notes": null
     },
     {
         "id": "sturm-aufs-paradies-tour",
+        "name": "Sturm aufs Paradies Tour",
         "date": "2012-04-12",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "saltatio-mortis",
             "das-niveau"
         ],
         "venueId": "alte-batschkapp-frankfurt",
-        "type": "concert",
-        "name": "Sturm aufs Paradies Tour",
         "price": null,
-        "logo": null,
+        "logo": "SturmAufsParadies.png",
         "notes": null
     },
     {
         "id": "eisheilige-nacht-2011",
+        "name": "Eisheilige Nacht 2011",
         "date": "2011-12-17",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "fiddlers-green",
@@ -2323,70 +2325,68 @@ const concertsData = [
             "megaherz"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2011",
         "price": null,
-        "logo": null,
+        "logo": "EHN.png",
         "notes": null
     },
     {
         "id": "schwarz-in-schwarz-tour",
+        "name": "Schwarz in Schwarz Tour",
         "date": "2011-10-21",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "nachtgeschrei"
         ],
         "venueId": "hugenottenhalle-neu-isenburg",
-        "type": "concert",
-        "name": "Schwarz in Schwarz Tour",
         "price": null,
-        "logo": null,
+        "logo": "SchwarzInSchwarz.png",
         "notes": null
     },
     {
         "id": "amphi-festival-2011",
+        "name": "Amphi Festival 2011",
         "date": "2011-07-17",
         "endDate": "2011-07-17",
+        "type": "festival",
         "artistIds": [
             "subway-to-sally",
             "saltatio-mortis"
         ],
         "venueId": "tanzbrunnen-koeln",
-        "type": "festival",
-        "name": "Amphi Festival 2011",
         "price": null,
-        "logo": null,
+        "logo": "Amphi2011.png",
         "notes": null
     },
     {
         "id": "nackt-ii-tour",
+        "name": "Nackt II Tour",
         "date": "2011-03-28",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally"
         ],
         "venueId": "centralstation-darmstadt",
-        "type": "concert",
-        "name": "Nackt II Tour",
         "price": null,
-        "logo": null,
+        "logo": "NacktII.png",
         "notes": null
     },
     {
         "id": "eisheilige-nacht-2010",
+        "name": "Eisheilige Nacht 2010",
         "date": "2010-12-18",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "subway-to-sally",
             "saltatio-mortis",
             "dunkelschoen"
         ],
         "venueId": "hessenhallen-giessen",
-        "type": "concert",
-        "name": "Eisheilige Nacht 2010",
         "price": null,
-        "logo": null,
+        "logo": "EHN.png",
         "notes": null
     }
 ];

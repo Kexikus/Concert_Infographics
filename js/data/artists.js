@@ -382,7 +382,20 @@ const artistsData = [
         "id": "feuerschwanz",
         "name": "Feuerschwanz",
         "country": "Germany",
-        "logo": "Feuerschwanz.png"
+        "logo": [
+            {
+                "filename": "Feuerschwanz_old.png",
+                "from": null
+            },
+            {
+                "filename": "Feuerschwanz.png",
+                "from": "2020-06-26"
+            },
+            {
+                "filename": "Feuerschwanz_2025.png",
+                "from": "2025-10-01"
+            }
+        ]
     },
     {
         "id": "fiddlers-green",
@@ -616,7 +629,36 @@ const artistsData = [
         "id": "lord-of-the-lost",
         "name": "Lord of the Lost",
         "country": "Germany",
-        "logo": "Lord_of_the_Lost.png"
+        "logo": [
+            {
+                "filename": "Lord_of_the_Lost_2009.png",
+                "from": null
+            },
+            {
+                "filename": "Lord_of_the_Lost_2011.png",
+                "from": "2011-04-01"
+            },
+            {
+                "filename": "Lord_of_the_Lost_2014.png",
+                "from": "2014-05-23"
+            },
+            {
+                "filename": "Lord_of_the_Lost_2018.png",
+                "from": "2018-08-03"
+            },
+            {
+                "filename": "Lord_of_the_Lost.png",
+                "from": "2021-07-02"
+            },
+            {
+                "filename": "Lord_of_the_Lost_2024.png",
+                "from": "2023-12-29"
+            },
+            {
+                "filename": "Lord_of_the_Lost_2025.png",
+                "from": "2025-08-08"
+            }
+        ]
     },
     {
         "id": "lordi",
@@ -796,7 +838,16 @@ const artistsData = [
         "id": "saltatio-mortis",
         "name": "Saltatio Mortis",
         "country": "Germany",
-        "logo": "Saltatio_Mortis.png"
+        "logo": [
+            {
+                "filename": "Saltatio_Mortis_old.png",
+                "from": null
+            },
+            {
+                "filename": "Saltatio_Mortis.png",
+                "from": "2020-10-09"
+            }
+        ]
     },
     {
         "id": "samsas-traum",
@@ -967,7 +1018,16 @@ const artistsData = [
         "id": "versengold",
         "name": "Versengold",
         "country": "Germany",
-        "logo": "Versengold.png"
+        "logo": [
+            {
+                "filename": "Versengold_old.png",
+                "from": null
+            },
+            {
+                "filename": "Versengold.png",
+                "from": "2017-08-04"
+            }
+        ]
     },
     {
         "id": "victorious",
