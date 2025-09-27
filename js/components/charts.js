@@ -1460,7 +1460,8 @@ class ChartsManager {
                 data: allShowsData,
                 borderColor: this.defaultColors.black,
                 pointBackgroundColor: this.defaultColors.black,
-                pointBorderColor: this.defaultColors.black
+                pointBorderColor: this.defaultColors.black,
+                order: 2
             },
             // Concerts Only (dark red line)
             {
@@ -1468,7 +1469,8 @@ class ChartsManager {
                 data: concertsOnlyData,
                 borderColor: this.defaultColors.darkRed,
                 pointBackgroundColor: this.defaultColors.darkRed,
-                pointBorderColor: this.defaultColors.darkRed
+                pointBorderColor: this.defaultColors.darkRed,
+                order: 1
             },
             // Headline Shows (bright red line)
             {
@@ -1476,7 +1478,8 @@ class ChartsManager {
                 data: headlineShowsData,
                 borderColor: this.defaultColors.red,
                 pointBackgroundColor: this.defaultColors.red,
-                pointBorderColor: this.defaultColors.red
+                pointBorderColor: this.defaultColors.red,
+                order: 0
             }
         ];
 
