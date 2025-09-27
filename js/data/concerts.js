@@ -1623,15 +1623,15 @@ const concertsData = [
     {
         "id": "schlossgrabenfest",
         "date": "2018-05-31",
-        "endDate": "1931-06-03",
+        "endDate": "2018-06-03",
         "artistIds": [
             "jbo"
         ],
         "venueId": "karolinenplatz-darmstadt",
         "type": "festival",
-        "name": "Schlossgrabenfest",
+        "name": "Schlossgrabenfest 2018",
         "price": null,
-        "logo": null,
+        "logo": "Schlossgrabenfest2018.png",
         "notes": null
     },
     {
@@ -1958,7 +1958,7 @@ const concertsData = [
         "type": "festival",
         "name": "Ehrlich & Laut Festival 2015",
         "price": null,
-        "logo": null,
+        "logo": "EhrlichUndLaut2015.png",
         "notes": null
     },
     {
@@ -1970,9 +1970,9 @@ const concertsData = [
         ],
         "venueId": "jahrhunderthalle-frankfurt",
         "type": "concert",
-        "name": "Faszination Weltraum Tour",
+        "name": "Es besteht keine Gefahr für die Öffentlichkeit Tour 2015",
         "price": null,
-        "logo": null,
+        "logo": "FURT2015.png",
         "notes": null
     },
     {
@@ -1986,7 +1986,7 @@ const concertsData = [
         "type": "festival",
         "name": "Schlossgrabenfest 2015",
         "price": null,
-        "logo": null,
+        "logo": "Schlossgrabenfest2015.png",
         "notes": null
     },
     {
@@ -2109,7 +2109,7 @@ const concertsData = [
         ],
         "venueId": "hessenhallen-giessen",
         "price": null,
-        "logo": "EHN.png",
+        "logo": "EHN2013.png",
         "notes": null
     },
     {
@@ -2187,7 +2187,7 @@ const concertsData = [
         ],
         "venueId": "metropolishalle-potsdam",
         "price": null,
-        "logo": "EHN.png",
+        "logo": "EHN2012.png",
         "notes": null
     },
     {
@@ -2205,7 +2205,7 @@ const concertsData = [
         ],
         "venueId": "hessenhallen-giessen",
         "price": null,
-        "logo": "EHN.png",
+        "logo": "EHN2012.png",
         "notes": null
     },
     {
@@ -2326,7 +2326,7 @@ const concertsData = [
         ],
         "venueId": "hessenhallen-giessen",
         "price": null,
-        "logo": "EHN.png",
+        "logo": "EHN2011.png",
         "notes": null
     },
     {
