@@ -20,7 +20,7 @@ const concertsData = [
             "fabula"
         ],
         "venueId": "loreley-freilichtbhne",
-        "price": null,
+        "price": 179.3,
         "logo": "mobile_800x800.jpg",
         "notes": null
     },
@@ -392,7 +392,7 @@ const concertsData = [
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
         "name": "Leuchtturm Tour",
-        "price": null,
+        "price": 34.7,
         "logo": null,
         "notes": null
     },
@@ -407,7 +407,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Lautes Gedenken Tour",
-        "price": null,
+        "price": 47.45,
         "logo": null,
         "notes": null
     },
@@ -423,7 +423,7 @@ const concertsData = [
             "coldrain"
         ],
         "venueId": "hanns-martin-schleyer-halle-stuttgart",
-        "price": null,
+        "price": 64.41,
         "logo": null,
         "notes": null
     },
@@ -439,7 +439,7 @@ const concertsData = [
             "manntra"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 49,
         "logo": "EHN2023.png",
         "notes": null
     },
@@ -456,7 +456,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "DisrupTour",
-        "price": null,
+        "price": 39.3,
         "logo": null,
         "notes": null
     },
@@ -472,7 +472,7 @@ const concertsData = [
         "venueId": "barclays-arena-hamburg",
         "type": "concert",
         "name": "Versengold - 20 Jahre",
-        "price": null,
+        "price": 105.45,
         "logo": null,
         "notes": null
     },
@@ -502,7 +502,7 @@ const concertsData = [
         "venueId": "rudolf-weber-arena-oberhausen",
         "type": "festival",
         "name": "Escalation Fest",
-        "price": null,
+        "price": 77.6,
         "logo": null,
         "notes": null
     },
@@ -552,7 +552,7 @@ const concertsData = [
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
         "name": "Blood & Glitter Tour",
-        "price": null,
+        "price": 35.25,
         "logo": null,
         "notes": null
     },
@@ -604,7 +604,7 @@ const concertsData = [
         "venueId": "amphitheater-gelsenkirchen",
         "type": "concert",
         "name": "An Evening with Nightwish",
-        "price": null,
+        "price": 82.35,
         "logo": null,
         "notes": null
     },
@@ -619,7 +619,7 @@ const concertsData = [
         "venueId": "olympiastadion-muenchen",
         "type": "concert",
         "name": "Stadium Tour 2023",
-        "price": null,
+        "price": 145.35,
         "logo": null,
         "notes": null
     },
@@ -635,7 +635,7 @@ const concertsData = [
             "tir-saor"
         ],
         "venueId": "schlosspark-rastede",
-        "price": null,
+        "price": 100,
         "logo": null,
         "notes": null
     },
@@ -650,7 +650,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Himmelfahrt Tour",
-        "price": null,
+        "price": 37,
         "logo": null,
         "notes": null
     },
@@ -666,7 +666,7 @@ const concertsData = [
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
         "name": "Days of Destiny Tour",
-        "price": null,
+        "price": 54,
         "logo": null,
         "notes": null
     },
@@ -681,7 +681,7 @@ const concertsData = [
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
         "name": "Endlich! Tour",
-        "price": null,
+        "price": 36.5,
         "logo": null,
         "notes": null
     },
@@ -696,7 +696,7 @@ const concertsData = [
         "venueId": "nachtleben-frankfurt",
         "type": "concert",
         "name": "Silberne Hochzeit Tour",
-        "price": null,
+        "price": 34.15,
         "logo": null,
         "notes": null
     },
@@ -712,7 +712,7 @@ const concertsData = [
         "venueId": "festhalle-frankfurt",
         "type": "concert",
         "name": "The Tour to End All Tours",
-        "price": null,
+        "price": 67.3,
         "logo": null,
         "notes": null
     },
@@ -728,7 +728,7 @@ const concertsData = [
         "venueId": "festhalle-frankfurt",
         "type": "concert",
         "name": "Tekkno Tour",
-        "price": null,
+        "price": 60.67,
         "logo": null,
         "notes": null
     },
@@ -760,7 +760,7 @@ const concertsData = [
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
         "name": "Superpower Tour",
-        "price": null,
+        "price": 21.2,
         "logo": null,
         "notes": null
     },
@@ -774,7 +774,7 @@ const concertsData = [
         "venueId": "rheingoldhalle-mainz",
         "type": "concert",
         "name": "Nacht der Balladen 2023",
-        "price": null,
+        "price": 57.45,
         "logo": null,
         "notes": null
     },
@@ -788,7 +788,7 @@ const concertsData = [
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
         "name": "Tour der Vernunft",
-        "price": null,
+        "price": 32.15,
         "logo": null,
         "notes": null
     },
@@ -803,7 +803,7 @@ const concertsData = [
         "venueId": "nachtleben-frankfurt",
         "type": "concert",
         "name": "Titanium Tour",
-        "price": null,
+        "price": 28.2,
         "logo": null,
         "notes": null
     },
@@ -818,7 +818,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Dark Connection Tour",
-        "price": null,
+        "price": 43.65,
         "logo": null,
         "notes": null
     },
@@ -833,7 +833,7 @@ const concertsData = [
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
         "name": "Kompass zur Sonne Tour",
-        "price": null,
+        "price": 50,
         "logo": null,
         "notes": null
     },
@@ -850,7 +850,7 @@ const concertsData = [
             "mr-irish-bastard"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 44,
         "logo": "EHN2022.png",
         "notes": null
     },
@@ -881,7 +881,7 @@ const concertsData = [
         "venueId": "festhalle-frankfurt",
         "type": "concert",
         "name": "Human :||: Nature Tour",
-        "price": null,
+        "price": 71.3,
         "logo": null,
         "notes": null
     },
@@ -897,7 +897,7 @@ const concertsData = [
         "venueId": "jahrhunderthalle-frankfurt",
         "type": "concert",
         "name": "Wolfsnächte 2022",
-        "price": null,
+        "price": 53,
         "logo": null,
         "notes": null
     },
@@ -927,7 +927,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Homecoming Tour",
-        "price": null,
+        "price": 36.75,
         "logo": null,
         "notes": null
     },
@@ -942,7 +942,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Was Kost Die Welt Tour",
-        "price": null,
+        "price": 40.85,
         "logo": null,
         "notes": null
     },
@@ -956,7 +956,7 @@ const concertsData = [
             "subway-to-sally"
         ],
         "venueId": "alter-schlachthof-wiesbaden",
-        "price": null,
+        "price": 28,
         "logo": null,
         "notes": null
     },
@@ -970,7 +970,7 @@ const concertsData = [
         "venueId": "amphitheater-gelsenkirchen",
         "type": "concert",
         "name": "XSMX",
-        "price": null,
+        "price": 47.5,
         "logo": null,
         "notes": null
     },
@@ -986,7 +986,7 @@ const concertsData = [
         "venueId": "maimarktgelaende-mannheim",
         "type": "concert",
         "name": "Buffalo Bill in Rome Tour",
-        "price": null,
+        "price": 70,
         "logo": null,
         "notes": null
     },
@@ -1000,7 +1000,7 @@ const concertsData = [
         "venueId": "festplatz-altengronau",
         "type": "festival",
         "name": "Sinner Rock 2022",
-        "price": null,
+        "price": 45,
         "logo": null,
         "notes": null
     },
@@ -1016,7 +1016,7 @@ const concertsData = [
         "venueId": "carlswerk-koeln",
         "type": "concert",
         "name": "Metfest 2022",
-        "price": null,
+        "price": 55.5,
         "logo": null,
         "notes": null
     },
@@ -1032,12 +1032,12 @@ const concertsData = [
         "venueId": "deutsche-bank-park-frankfurt",
         "type": "concert",
         "name": "Legacy of the Beast Tour",
-        "price": null,
+        "price": 91.25,
         "logo": null,
         "notes": null
     },
     {
-        "id": "frankenstein-kulturfestival-2022",
+        "id": "the-book-of-fire-2022",
         "date": "2022-07-22",
         "endDate": null,
         "artistIds": [
@@ -1045,8 +1045,8 @@ const concertsData = [
         ],
         "venueId": "burg-frankenstein-muehltal",
         "type": "concert",
-        "name": "Frankenstein Kulturfestival 2022",
-        "price": null,
+        "name": "The Book of Fire Tour 2022",
+        "price": 36,
         "logo": null,
         "notes": null
     },
@@ -1061,7 +1061,7 @@ const concertsData = [
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
         "name": "Sommernächte 2022",
-        "price": null,
+        "price": 29.7,
         "logo": null,
         "notes": null
     },
@@ -1091,7 +1091,7 @@ const concertsData = [
         "venueId": "flugplatz-ballenstedt",
         "type": "festival",
         "name": "Rockharz Festival 2022",
-        "price": null,
+        "price": 127.8,
         "logo": null,
         "notes": null
     },
@@ -1108,7 +1108,7 @@ const concertsData = [
         "venueId": "burg-abenberg",
         "type": "festival",
         "name": "Feuertanz Festival 2022",
-        "price": null,
+        "price": 80,
         "logo": null,
         "notes": null
     },
@@ -1159,7 +1159,22 @@ const concertsData = [
         "venueId": "kurfuerstliches-schloss-mainz",
         "type": "concert",
         "name": "Nacht der Balladen 2022",
-        "price": null,
+        "price": 47.75,
+        "logo": null,
+        "notes": null
+    },
+    {
+        "id": "das-elfte-gebot-tour",
+        "date": "2022-01-13",
+        "endDate": null,
+        "artistIds": [
+            "feuerschwanz",
+            "warkings"
+        ],
+        "venueId": "batschkapp-frankfurt",
+        "type": "concert",
+        "name": "Das Elfte Gebot Tour",
+        "price": 36.5,
         "logo": null,
         "notes": null
     },
@@ -1190,7 +1205,7 @@ const concertsData = [
         "venueId": "festplatz-finsterloh-wetzlar",
         "type": "concert",
         "name": "Strandkorb Open Air",
-        "price": null,
+        "price": 47.50,
         "logo": null,
         "notes": null
     },
@@ -1220,7 +1235,7 @@ const concertsData = [
             "grailknights"
         ],
         "venueId": "colos-saal-aschaffenburg",
-        "price": null,
+        "price": 15,
         "logo": null,
         "notes": null
     },
@@ -1236,7 +1251,7 @@ const concertsData = [
         "venueId": "festhalle-frankfurt",
         "type": "concert",
         "name": "The Great Tour",
-        "price": null,
+        "price": 61.95,
         "logo": null,
         "notes": null
     },
@@ -1251,7 +1266,7 @@ const concertsData = [
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
         "name": "Kosmonautilus Tour",
-        "price": null,
+        "price": 32.4,
         "logo": null,
         "notes": null
     },
@@ -1267,7 +1282,7 @@ const concertsData = [
         "venueId": "loewensaal-nuernberg",
         "type": "concert",
         "name": "Metfest 2019",
-        "price": null,
+        "price": 32,
         "logo": null,
         "notes": null
     },
@@ -1284,7 +1299,7 @@ const concertsData = [
             "vogelfrey"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 37,
         "logo": "EHN2019.png",
         "notes": null
     },
@@ -1298,7 +1313,7 @@ const concertsData = [
             "saltatio-mortis"
         ],
         "venueId": "fredenbaumpark-dortmund",
-        "price": null,
+        "price": 12,
         "logo": null,
         "notes": null
     },
@@ -1313,7 +1328,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Nordlicht Tour",
-        "price": null,
+        "price": 27.5,
         "logo": null,
         "notes": null
     },
@@ -1329,7 +1344,7 @@ const concertsData = [
         "venueId": "burg-wertheim",
         "type": "concert",
         "name": "In Castellis Tour 2019",
-        "price": null,
+        "price": 35,
         "logo": null,
         "notes": null
     },
@@ -1344,7 +1359,7 @@ const concertsData = [
         "venueId": "amphitheater-hanau",
         "type": "concert",
         "name": "Burgentour 2019",
-        "price": null,
+        "price": 46.8,
         "logo": null,
         "notes": null
     },
@@ -1366,7 +1381,7 @@ const concertsData = [
         "venueId": "flugplatz-hildesheim",
         "type": "festival",
         "name": "M'era Luna 2019",
-        "price": null,
+        "price": 109,
         "logo": null,
         "notes": null
     },
@@ -1413,7 +1428,7 @@ const concertsData = [
         "venueId": "deutsche-bank-park-frankfurt",
         "type": "concert",
         "name": "Rockin' 1000",
-        "price": null,
+        "price": 25,
         "logo": null,
         "notes": null
     },
@@ -1444,7 +1459,7 @@ const concertsData = [
             "indecent-behavior"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": null,
+        "price": 30,
         "logo": null,
         "notes": null
     },
@@ -1459,7 +1474,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Hey! Tour",
-        "price": null,
+        "price": 28,
         "logo": null,
         "notes": null
     },
@@ -1473,7 +1488,7 @@ const concertsData = [
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
         "name": "Pumping Iron Power Tour",
-        "price": null,
+        "price": 14.4,
         "logo": null,
         "notes": null
     },
@@ -1490,7 +1505,7 @@ const concertsData = [
             "paddy-and-the-rats"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 37,
         "logo": "EHN2018.png",
         "notes": null
     },
@@ -1520,7 +1535,7 @@ const concertsData = [
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
         "name": "Brot und Spiele Tour",
-        "price": null,
+        "price": 30,
         "logo": null,
         "notes": null
     },
@@ -1645,7 +1660,7 @@ const concertsData = [
             "antiheld"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": null,
+        "price": 22,
         "logo": null,
         "notes": null
     },
@@ -1659,7 +1674,7 @@ const concertsData = [
         "venueId": "st-johannis-kirche-wuerzburg",
         "type": "concert",
         "name": "Nacht der Balladen 2018",
-        "price": null,
+        "price": 28,
         "logo": null,
         "notes": null
     },
@@ -1675,7 +1690,7 @@ const concertsData = [
             "feuerschwanz"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 37,
         "logo": "EHN2017.png",
         "notes": null
     },
@@ -1689,7 +1704,7 @@ const concertsData = [
             "saltatio-mortis"
         ],
         "venueId": "halle-02-heidelberg",
-        "price": null,
+        "price": 28.5,
         "logo": "ZirkusZeitgeist.png",
         "notes": null
     },
@@ -1704,7 +1719,7 @@ const concertsData = [
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
         "name": "Funkenflug Tour",
-        "price": null,
+        "price": 19,
         "logo": null,
         "notes": null
     },
@@ -1718,7 +1733,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Dark Before Dawn Tour",
-        "price": null,
+        "price": 29.45,
         "logo": null,
         "notes": null
     },
@@ -1764,7 +1779,7 @@ const concertsData = [
         "venueId": "burg-wertheim",
         "type": "concert",
         "name": "In Castellis Tour 2017",
-        "price": null,
+        "price": 34,
         "logo": null,
         "notes": null
     },
@@ -1778,7 +1793,7 @@ const concertsData = [
         "venueId": "mitsubishi-electric-halle-duesseldorf",
         "type": "concert",
         "name": "Uncharted Tour",
-        "price": null,
+        "price": 47.5,
         "logo": null,
         "notes": null
     },
@@ -1792,7 +1807,7 @@ const concertsData = [
             "subway-to-sally"
         ],
         "venueId": "alter-schlachthof-wiesbaden",
-        "price": null,
+        "price": 27,
         "logo": "Neon2017.png",
         "notes": null
     },
@@ -1806,7 +1821,7 @@ const concertsData = [
         "venueId": "historische-stadthalle-wuppertal",
         "type": "concert",
         "name": "Zirkus Zeitgeist Derniere",
-        "price": null,
+        "price": 33,
         "logo": "ZirkusZeitgeistDerniere.png",
         "notes": null
     },
@@ -1837,7 +1852,7 @@ const concertsData = [
             "lord-of-the-lost"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 35,
         "logo": "EHN2016.png",
         "notes": null
     },
@@ -1851,7 +1866,7 @@ const concertsData = [
             "saltatio-mortis"
         ],
         "venueId": "colos-saal-aschaffenburg",
-        "price": null,
+        "price": 25.4,
         "logo": "ZirkusZeitgeist2016.png",
         "notes": null
     },
@@ -1865,7 +1880,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "NEON Tour",
-        "price": null,
+        "price": 27,
         "logo": "Neon2016.png",
         "notes": null
     },
@@ -1896,7 +1911,7 @@ const concertsData = [
             "mr-irish-bastard"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": null,
+        "price": 24,
         "logo": "ZirkusZeitgeist2016.png",
         "notes": null
     },
@@ -1912,7 +1927,7 @@ const concertsData = [
             "letzte-instanz"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 35,
         "logo": "EHN2015.png",
         "notes": null
     },
@@ -1927,7 +1942,7 @@ const concertsData = [
         "venueId": "jahrhunderthalle-frankfurt",
         "type": "concert",
         "name": "Endless Forms Most Beautiful Tour",
-        "price": null,
+        "price": 50.9,
         "logo": "EFMB2015.png",
         "notes": null
     },
@@ -1942,7 +1957,7 @@ const concertsData = [
         "venueId": "posthalle-wuerzburg",
         "type": "concert",
         "name": "Zirkus Zeitgeist Tour",
-        "price": null,
+        "price": 24,
         "logo": "ZirkusZeitgeist2015.png",
         "notes": null
     },
@@ -2000,7 +2015,7 @@ const concertsData = [
             "drescher"
         ],
         "venueId": "centralstation-darmstadt",
-        "price": null,
+        "price": 25.73,
         "logo": "Mitgift2015.png",
         "notes": null
     },
@@ -2017,7 +2032,7 @@ const concertsData = [
             "heldmaschine"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 40.85,
         "logo": "EHN2014.png",
         "notes": null
     },
@@ -2062,7 +2077,7 @@ const concertsData = [
             "asp"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": null,
+        "price": 27,
         "logo": "PerAsperaAdAspera.png",
         "notes": null
     },
@@ -2108,7 +2123,7 @@ const concertsData = [
             "lord-of-the-lost"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 35,
         "logo": "EHN2013.png",
         "notes": null
     },
@@ -2123,7 +2138,7 @@ const concertsData = [
             "versengold"
         ],
         "venueId": "posthalle-wuerzburg",
-        "price": null,
+        "price": 20,
         "logo": "DasSchwarzeIXI2013.png",
         "notes": null
     },
@@ -2142,7 +2157,7 @@ const concertsData = [
             "lord-of-the-lost"
         ],
         "venueId": "haus-auensee-leipzig",
-        "price": null,
+        "price": 66.75,
         "logo": "GothicMeetsKlassik.png",
         "notes": null
     },
@@ -2168,7 +2183,7 @@ const concertsData = [
             "woa-firefighters"
         ],
         "venueId": "wacken-open-air",
-        "price": null,
+        "price": 140,
         "logo": "Wacken2013.png",
         "notes": null
     },
@@ -2186,7 +2201,7 @@ const concertsData = [
             "fejd"
         ],
         "venueId": "metropolishalle-potsdam",
-        "price": null,
+        "price": 34,
         "logo": "EHN2012.png",
         "notes": null
     },
@@ -2204,7 +2219,7 @@ const concertsData = [
             "fejd"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 34,
         "logo": "EHN2012.png",
         "notes": null
     },
@@ -2219,7 +2234,7 @@ const concertsData = [
             "das-niveau"
         ],
         "venueId": "kuz-mainz",
-        "price": null,
+        "price": 20,
         "logo": "SturmAufsParadies.png",
         "notes": null
     },
@@ -2233,7 +2248,7 @@ const concertsData = [
             "die-aerzte"
         ],
         "venueId": "europahalle-karlsruhe",
-        "price": null,
+        "price": 39,
         "logo": "DasComeback.png",
         "notes": null
     },
@@ -2247,7 +2262,7 @@ const concertsData = [
         "venueId": "ferienland-crispendorf",
         "type": "concert",
         "name": "Subway to Sally Fantreffen",
-        "price": null,
+        "price": 12,
         "logo": null,
         "notes": null
     },
@@ -2325,7 +2340,7 @@ const concertsData = [
             "megaherz"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 30,
         "logo": "EHN2011.png",
         "notes": null
     },
@@ -2369,7 +2384,7 @@ const concertsData = [
             "subway-to-sally"
         ],
         "venueId": "centralstation-darmstadt",
-        "price": null,
+        "price": 27.6,
         "logo": "NacktII.png",
         "notes": null
     },
