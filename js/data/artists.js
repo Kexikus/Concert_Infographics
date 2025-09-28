@@ -844,6 +844,14 @@ const artistsData = [
                 "from": null
             },
             {
+                "filename": "Saltatio_Mortis_2015.png",
+                "from": "2015-08-14"
+            },
+            {
+                "filename": "Saltatio_Mortis_old.png",
+                "from": "2018-01-01"
+            },
+            {
                 "filename": "Saltatio_Mortis.png",
                 "from": "2020-10-09"
             }

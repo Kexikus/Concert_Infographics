@@ -1690,7 +1690,7 @@ const concertsData = [
         ],
         "venueId": "halle-02-heidelberg",
         "price": null,
-        "logo": null,
+        "logo": "ZirkusZeitgeist.png",
         "notes": null
     },
     {
@@ -1793,7 +1793,7 @@ const concertsData = [
         ],
         "venueId": "alter-schlachthof-wiesbaden",
         "price": null,
-        "logo": null,
+        "logo": "Neon2017.png",
         "notes": null
     },
     {
@@ -1807,7 +1807,7 @@ const concertsData = [
         "type": "concert",
         "name": "Zirkus Zeitgeist Derniere",
         "price": null,
-        "logo": null,
+        "logo": "ZirkusZeitgeistDerniere.png",
         "notes": null
     },
     {
@@ -1852,7 +1852,7 @@ const concertsData = [
         ],
         "venueId": "colos-saal-aschaffenburg",
         "price": null,
-        "logo": null,
+        "logo": "ZirkusZeitgeist2016.png",
         "notes": null
     },
     {
@@ -1866,7 +1866,7 @@ const concertsData = [
         "type": "concert",
         "name": "NEON Tour",
         "price": null,
-        "logo": null,
+        "logo": "Neon2016.png",
         "notes": null
     },
     {
@@ -1882,7 +1882,7 @@ const concertsData = [
         "type": "concert",
         "name": "Voices of Fire Tour",
         "price": null,
-        "logo": null,
+        "logo": "VoicesOfFire.png",
         "notes": null
     },
     {
@@ -1897,7 +1897,7 @@ const concertsData = [
         ],
         "venueId": "batschkapp-frankfurt",
         "price": null,
-        "logo": null,
+        "logo": "ZirkusZeitgeist2016.png",
         "notes": null
     },
     {
@@ -1928,7 +1928,7 @@ const concertsData = [
         "type": "concert",
         "name": "Endless Forms Most Beautiful Tour",
         "price": null,
-        "logo": null,
+        "logo": "EFMB2015.png",
         "notes": null
     },
     {
@@ -1943,7 +1943,7 @@ const concertsData = [
         "type": "concert",
         "name": "Zirkus Zeitgeist Tour",
         "price": null,
-        "logo": null,
+        "logo": "ZirkusZeitgeist2015.png",
         "notes": null
     },
     {
