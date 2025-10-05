@@ -362,8 +362,8 @@ class DataManager {
             logoPath = this.selectLogoFromArray(artist.logo, concertDate);
         }
 
-        // Automatically prepend assets/images/ path
-        return logoPath ? `assets/images/${logoPath}` : null;
+        // Automatically prepend assets/logos/artists/ path
+        return logoPath ? `assets/logos/artists/${logoPath}` : null;
     }
 
     // Select appropriate logo from multi-logo array based on date
@@ -435,7 +435,7 @@ class DataManager {
             return [{
                 filename: artist.logo,
                 from: null,
-                fullPath: `assets/images/${artist.logo}`,
+                fullPath: `assets/logos/artists/${artist.logo}`,
                 isCurrent: true,
                 isOriginal: true
             }];
@@ -444,7 +444,7 @@ class DataManager {
         if (Array.isArray(artist.logo)) {
             return artist.logo.map(logo => ({
                 ...logo,
-                fullPath: `assets/images/${logo.filename}`,
+                fullPath: `assets/logos/artists/${logo.filename}`,
                 isCurrent: logo.from === null,
                 isOriginal: logo.from === null
             })).sort((a, b) => {
@@ -469,8 +469,8 @@ class DataManager {
         const concert = this.getConcertById(concertId);
         if (!concert || !concert.logo) return null;
 
-        // Automatically prepend assets/images/ path
-        return `assets/images/${concert.logo}`;
+        // Automatically prepend assets/logos/events/ path
+        return `assets/logos/events/${concert.logo}`;
     }
 
     // Get venue coordinates for mapping
