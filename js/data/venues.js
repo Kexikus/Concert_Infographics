@@ -541,6 +541,15 @@ const venuesData = [
         "capacity": null
     },
     {
+        "id": "stadthalle-offenbach",
+        "name": "Stadthalle",
+        "city": "Offenbach",
+        "country": "Germany",
+        "latitude": 50.08292656780726,
+        "longitude": 8.776994708281967,
+        "capacity": 4000
+    },
+    {
         "id": "tanzbrunnen-koeln",
         "name": "Tanzbrunnen",
         "city": "Köln",

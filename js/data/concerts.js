@@ -1,6 +1,22 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "lords-of-fyre",
+        "name": "Lords of Fyre",
+        "date": "2025-10-04",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "feuerschwanz",
+            "lord-of-the-lost",
+            "the-dark-side-of-the-moon"
+        ],
+        "venueId": "stadthalle-offenbach",
+        "price": 66.66,
+        "logo": "LordsOfFyre.png",
+        "notes": null
+    },
+    {
         "id": "30-jahre-das-jubilumsfestival",
         "name": "30 Jahre - Das Jubiläumsfestival",
         "date": "2025-09-04",
@@ -52,7 +68,7 @@ const concertsData = [
         ],
         "venueId": "domgarten-speyer",
         "price": 69,
-        "logo": null,
+        "logo": "MPS2025Speyer.png",
         "notes": null
     },
     {
@@ -267,7 +283,7 @@ const concertsData = [
         ],
         "venueId": "domgarten-speyer",
         "price": null,
-        "logo": null,
+        "logo": "MPS2024Speyer.png",
         "notes": null
     },
     {
@@ -347,7 +363,7 @@ const concertsData = [
         ],
         "venueId": "schlosspark-rastede",
         "price": 160,
-        "logo": null,
+        "logo": "MPS2024Rastede.png",
         "notes": null
     },
     {
@@ -522,7 +538,7 @@ const concertsData = [
         ],
         "venueId": "tunierplatz-luhmuehlen",
         "price": null,
-        "logo": null,
+        "logo": "MPS2023Luhmuehlen.png",
         "notes": null
     },
     {
@@ -538,7 +554,7 @@ const concertsData = [
         ],
         "venueId": "domgarten-speyer",
         "price": null,
-        "logo": null,
+        "logo": "MPS2023Speyer.png",
         "notes": null
     },
     {
@@ -636,7 +652,7 @@ const concertsData = [
         ],
         "venueId": "schlosspark-rastede",
         "price": 100,
-        "logo": null,
+        "logo": "MPS2023Rastede.png",
         "notes": null
     },
     {
@@ -1146,7 +1162,7 @@ const concertsData = [
         ],
         "venueId": "schlosspark-rastede",
         "price": null,
-        "logo": null,
+        "logo": "MPS2022Rastede.png",
         "notes": null
     },
     {
@@ -1345,7 +1361,7 @@ const concertsData = [
         "type": "concert",
         "name": "In Castellis Tour 2019",
         "price": 35,
-        "logo": null,
+        "logo": "InCastellis2019.png",
         "notes": null
     },
     {
@@ -1399,7 +1415,7 @@ const concertsData = [
         ],
         "venueId": "fuehlinger-see-koeln",
         "price": null,
-        "logo": null,
+        "logo": "MPS2019Koeln.png",
         "notes": null
     },
     {
@@ -1414,7 +1430,7 @@ const concertsData = [
         ],
         "venueId": "schlossgarten-karlsruhe",
         "price": null,
-        "logo": null,
+        "logo": "MPS2019Karlsruhe.png",
         "notes": null
     },
     {
@@ -1445,7 +1461,7 @@ const concertsData = [
         ],
         "venueId": "schlosspark-rastede",
         "price": null,
-        "logo": null,
+        "logo": "MPS2019Rastede.png",
         "notes": null
     },
     {
@@ -1566,7 +1582,7 @@ const concertsData = [
         ],
         "venueId": "domgarten-speyer",
         "price": null,
-        "logo": null,
+        "logo": "MPS2018Speyer.png",
         "notes": null
     },
     {
@@ -1602,7 +1618,7 @@ const concertsData = [
         ],
         "venueId": "fuehlinger-see-koeln",
         "price": null,
-        "logo": null,
+        "logo": "MPS2018Koeln.png",
         "notes": null
     },
     {
@@ -1618,7 +1634,7 @@ const concertsData = [
         ],
         "venueId": "schlossgarten-karlsruhe",
         "price": null,
-        "logo": null,
+        "logo": "MPS2018Karlsruhe.png",
         "notes": null
     },
     {
@@ -1661,7 +1677,7 @@ const concertsData = [
         ],
         "venueId": "batschkapp-frankfurt",
         "price": 22,
-        "logo": null,
+        "logo": "Funkenflug2018.png",
         "notes": null
     },
     {
@@ -1720,7 +1736,7 @@ const concertsData = [
         "type": "concert",
         "name": "Funkenflug Tour",
         "price": 19,
-        "logo": null,
+        "logo": "Funkenflug2017.png",
         "notes": null
     },
     {
@@ -1734,7 +1750,7 @@ const concertsData = [
         "type": "concert",
         "name": "Dark Before Dawn Tour",
         "price": 29.45,
-        "logo": null,
+        "logo": "DarkBeforeDawn.png",
         "notes": null
     },
     {
@@ -1749,7 +1765,7 @@ const concertsData = [
         ],
         "venueId": "domgarten-speyer",
         "price": null,
-        "logo": null,
+        "logo": "MPS2017Speyer.png",
         "notes": null
     },
     {
@@ -1765,7 +1781,7 @@ const concertsData = [
         ],
         "venueId": "schlossgarten-karlsruhe",
         "price": null,
-        "logo": null,
+        "logo": "MPS2017Karlsruhe.png",
         "notes": null
     },
     {
@@ -1780,7 +1796,7 @@ const concertsData = [
         "type": "concert",
         "name": "In Castellis Tour 2017",
         "price": 34,
-        "logo": null,
+        "logo": "InCastellis.png",
         "notes": null
     },
     {
@@ -1794,7 +1810,7 @@ const concertsData = [
         "type": "concert",
         "name": "Uncharted Tour",
         "price": 47.5,
-        "logo": null,
+        "logo": "Uncharted.png",
         "notes": null
     },
     {
@@ -1837,7 +1853,7 @@ const concertsData = [
         "type": "concert",
         "name": "The Last Tour",
         "price": null,
-        "logo": null,
+        "logo": "TheLastTour.png",
         "notes": null
     },
     {
@@ -2092,7 +2108,7 @@ const concertsData = [
             "darkhaus"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": null,
+        "price": 29.9,
         "logo": "Mitgift2014.png",
         "notes": null
     },
@@ -2277,7 +2293,7 @@ const concertsData = [
         "venueId": "schlosshof-fulda",
         "type": "festival",
         "name": "Schlosshof Festival 2012",
-        "price": null,
+        "price": 29.75,
         "logo": null,
         "notes": null
     },
@@ -2308,7 +2324,7 @@ const concertsData = [
             "eklipse"
         ],
         "venueId": "jahrhunderthalle-frankfurt",
-        "price": null,
+        "price": 49.75,
         "logo": "Imaginaerum.png",
         "notes": null
     },
@@ -2370,7 +2386,7 @@ const concertsData = [
             "saltatio-mortis"
         ],
         "venueId": "tanzbrunnen-koeln",
-        "price": null,
+        "price": 56,
         "logo": "Amphi2011.png",
         "notes": null
     },
@@ -2400,7 +2416,7 @@ const concertsData = [
             "dunkelschoen"
         ],
         "venueId": "hessenhallen-giessen",
-        "price": null,
+        "price": 34.5,
         "logo": "EHN.png",
         "notes": null
     }
