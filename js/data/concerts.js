@@ -881,8 +881,8 @@ const concertsData = [
             "storm-seeker"
         ],
         "venueId": "fredenbaumpark-dortmund",
-        "price": null,
-        "logo": null,
+        "price": 12,
+        "logo": "PLWM2022.png",
         "notes": null
     },
     {
@@ -973,7 +973,7 @@ const concertsData = [
         ],
         "venueId": "alter-schlachthof-wiesbaden",
         "price": 28,
-        "logo": null,
+        "logo": "Hey2022.png",
         "notes": null
     },
     {
@@ -1252,7 +1252,7 @@ const concertsData = [
         ],
         "venueId": "colos-saal-aschaffenburg",
         "price": 15,
-        "logo": null,
+        "logo": "PumpingIronPower2020.png",
         "notes": null
     },
     {
@@ -1299,7 +1299,7 @@ const concertsData = [
         "type": "concert",
         "name": "Metfest 2019",
         "price": 32,
-        "logo": null,
+        "logo": "Metfest2019.png",
         "notes": null
     },
     {
@@ -1329,8 +1329,8 @@ const concertsData = [
             "saltatio-mortis"
         ],
         "venueId": "fredenbaumpark-dortmund",
-        "price": 12,
-        "logo": null,
+        "price": null,
+        "logo": "PLWM2019.png",
         "notes": null
     },
     {
@@ -1345,7 +1345,7 @@ const concertsData = [
         "type": "concert",
         "name": "Nordlicht Tour",
         "price": 27.5,
-        "logo": null,
+        "logo": "Nordlicht2019.png",
         "notes": null
     },
     {
@@ -1376,7 +1376,7 @@ const concertsData = [
         "type": "concert",
         "name": "Burgentour 2019",
         "price": 46.8,
-        "logo": null,
+        "logo": "Burgentour2019.png",
         "notes": null
     },
     {
@@ -1398,7 +1398,7 @@ const concertsData = [
         "type": "festival",
         "name": "M'era Luna 2019",
         "price": 109,
-        "logo": null,
+        "logo": "MeraLuna2019.png",
         "notes": null
     },
     {
@@ -1445,7 +1445,7 @@ const concertsData = [
         "type": "concert",
         "name": "Rockin' 1000",
         "price": 25,
-        "logo": null,
+        "logo": "Rockin_1000.png",
         "notes": null
     },
     {
@@ -1491,7 +1491,7 @@ const concertsData = [
         "type": "concert",
         "name": "Hey! Tour",
         "price": 28,
-        "logo": null,
+        "logo": "Hey2019.png",
         "notes": null
     },
     {
@@ -1505,7 +1505,7 @@ const concertsData = [
         "type": "concert",
         "name": "Pumping Iron Power Tour",
         "price": 14.4,
-        "logo": null,
+        "logo": "PumpingIronPower.png",
         "notes": null
     },
     {

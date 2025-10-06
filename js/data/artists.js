@@ -814,7 +814,7 @@ const artistsData = [
         "id": "reis-against-the-spuelmachine",
         "name": "Reis against the Spülmachine",
         "country": "Germany",
-        "logo": "Reis_Against_The_Spuelmachine.png"
+        "logo": "Reis_Against_the_Spuelmachine.png"
     },
     {
         "id": "rockin-1000",
