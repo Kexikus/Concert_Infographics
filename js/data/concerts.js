@@ -143,7 +143,7 @@ const concertsData = [
         ],
         "venueId": "rheingoldhalle-mainz",
         "price": 77.45,
-        "logo": null,
+        "logo": "NachtDerBalladen2025.png",
         "notes": null
     },
     {
@@ -791,7 +791,7 @@ const concertsData = [
         "type": "concert",
         "name": "Nacht der Balladen 2023",
         "price": 57.45,
-        "logo": null,
+        "logo": "NachtDerBalladen2023.png",
         "notes": null
     },
     {
@@ -1176,7 +1176,7 @@ const concertsData = [
         "type": "concert",
         "name": "Nacht der Balladen 2022",
         "price": 47.75,
-        "logo": null,
+        "logo": "NachtDerBalladen2022.png",
         "notes": null
     },
     {
@@ -1476,7 +1476,7 @@ const concertsData = [
         ],
         "venueId": "batschkapp-frankfurt",
         "price": 30,
-        "logo": null,
+        "logo": "BrotUndSpiele2019.png",
         "notes": null
     },
     {
@@ -1537,7 +1537,7 @@ const concertsData = [
         "type": "concert",
         "name": "Decades Tour",
         "price": null,
-        "logo": null,
+        "logo": "Decades.png",
         "notes": null
     },
     {
@@ -1552,7 +1552,7 @@ const concertsData = [
         "type": "concert",
         "name": "Brot und Spiele Tour",
         "price": 30,
-        "logo": null,
+        "logo": "BrotUndSpiele2018.png",
         "notes": null
     },
     {
@@ -1568,7 +1568,7 @@ const concertsData = [
         "type": "concert",
         "name": "Tour Number Seven",
         "price": null,
-        "logo": null,
+        "logo": "TourNumberSeven.png",
         "notes": null
     },
     {
@@ -1602,7 +1602,7 @@ const concertsData = [
         "type": "festival",
         "name": "Feuertal Festival 2018",
         "price": null,
-        "logo": null,
+        "logo": "Feuertal2018.png",
         "notes": null
     },
     {
@@ -1648,7 +1648,7 @@ const concertsData = [
         "type": "concert",
         "name": "European Invasion",
         "price": null,
-        "logo": null,
+        "logo": "EuropeanInvasion2018.png",
         "notes": null
     },
     {
@@ -1691,7 +1691,7 @@ const concertsData = [
         "type": "concert",
         "name": "Nacht der Balladen 2018",
         "price": 28,
-        "logo": null,
+        "logo": "NachtDerBalladen2018.png",
         "notes": null
     },
     {
