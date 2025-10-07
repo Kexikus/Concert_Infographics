@@ -175,6 +175,17 @@ const artistsData = [
         "logo": null
     },
     {
+        "id": "bush",
+        "name": "Bush",
+        "country": "UK",
+        "logo": [
+            {
+                "filename": "Bush.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "butcher-babies",
         "name": "Butcher Babies",
         "country": "USA",
@@ -1050,6 +1061,17 @@ const artistsData = [
         "logo": "Vogelfrey.png"
     },
     {
+        "id": "volbeat",
+        "name": "Volbeat",
+        "country": "Denmark",
+        "logo": [
+            {
+                "filename": "Volbeat.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "von-grambusch",
         "name": "Von Grambusch",
         "country": "Germany",
@@ -1078,6 +1100,17 @@ const artistsData = [
         "name": "Wise Guys",
         "country": "Germany",
         "logo": "Wise_Guys.png"
+    },
+    {
+        "id": "witch-fever",
+        "name": "Witch Fever",
+        "country": "UK",
+        "logo": [
+            {
+                "filename": "Witch_Fever.png",
+                "from": null
+            }
+        ]
     },
     {
         "id": "within-temptation",

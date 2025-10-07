@@ -1,6 +1,22 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "the-greatest-of-all-tours-worldwide",
+        "name": "The Greatest of All Tours Worldwide",
+        "date": "2025-10-08",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "volbeat",
+            "bush",
+            "witch-fever"
+        ],
+        "venueId": "festhalle-frankfurt",
+        "price": 106.5,
+        "logo": "GreatestOfAllTours.png",
+        "notes": null
+    },
+    {
         "id": "lords-of-fyre",
         "name": "Lords of Fyre",
         "date": "2025-10-04",
@@ -342,7 +358,7 @@ const concertsData = [
         ],
         "venueId": "deutsche-bank-park-frankfurt",
         "price": null,
-        "logo": null,
+        "logo": "StadiumTour2024.png",
         "notes": null
     },
     {
@@ -606,7 +622,7 @@ const concertsData = [
         "type": "festival",
         "name": "Rockharz Festival 2023",
         "price": null,
-        "logo": null,
+        "logo": "Rockharz2023.png",
         "notes": null
     },
     {
@@ -621,7 +637,7 @@ const concertsData = [
         "type": "concert",
         "name": "An Evening with Nightwish",
         "price": 82.35,
-        "logo": null,
+        "logo": "AnEveningWithNightwish.png",
         "notes": null
     },
     {
@@ -636,7 +652,7 @@ const concertsData = [
         "type": "concert",
         "name": "Stadium Tour 2023",
         "price": 145.35,
-        "logo": null,
+        "logo": "StadiumTour2023.png",
         "notes": null
     },
     {
@@ -850,7 +866,7 @@ const concertsData = [
         "type": "concert",
         "name": "Kompass zur Sonne Tour",
         "price": 50,
-        "logo": null,
+        "logo": "KompassZurSonne.png",
         "notes": null
     },
     {
@@ -898,7 +914,7 @@ const concertsData = [
         "type": "concert",
         "name": "Human :||: Nature Tour",
         "price": 71.3,
-        "logo": null,
+        "logo": "HumanNature.png",
         "notes": null
     },
     {
@@ -914,7 +930,7 @@ const concertsData = [
         "type": "concert",
         "name": "Wolfsnächte 2022",
         "price": 53,
-        "logo": null,
+        "logo": "Wolfsnaechte2022.png",
         "notes": null
     },
     {
@@ -929,7 +945,7 @@ const concertsData = [
         "type": "concert",
         "name": "Für immer Frei Tour",
         "price": null,
-        "logo": null,
+        "logo": "FuerImmerFrei.png",
         "notes": null
     },
     {
@@ -944,7 +960,7 @@ const concertsData = [
         "type": "concert",
         "name": "Homecoming Tour",
         "price": 36.75,
-        "logo": null,
+        "logo": "HomecomingTour.png",
         "notes": null
     },
     {
@@ -959,7 +975,7 @@ const concertsData = [
         "type": "concert",
         "name": "Was Kost Die Welt Tour",
         "price": 40.85,
-        "logo": null,
+        "logo": "WasKostDieWelt.png",
         "notes": null
     },
     {
@@ -987,11 +1003,11 @@ const concertsData = [
         "type": "concert",
         "name": "XSMX",
         "price": 47.5,
-        "logo": null,
+        "logo": "XSMX.png",
         "notes": null
     },
     {
-        "id": "buffalo-bill-in-rome-tour",
+        "id": "buffalo-bill-in-rom-tour",
         "date": "2022-09-11",
         "endDate": null,
         "artistIds": [
@@ -1001,9 +1017,9 @@ const concertsData = [
         ],
         "venueId": "maimarktgelaende-mannheim",
         "type": "concert",
-        "name": "Buffalo Bill in Rome Tour",
+        "name": "Buffalo Bill in Rom Tour",
         "price": 70,
-        "logo": null,
+        "logo": "BuffaloBillInRom.png",
         "notes": null
     },
     {
@@ -1017,7 +1033,7 @@ const concertsData = [
         "type": "festival",
         "name": "Sinner Rock 2022",
         "price": 45,
-        "logo": null,
+        "logo": "SinnerRock2022.png",
         "notes": null
     },
     {
@@ -1033,7 +1049,7 @@ const concertsData = [
         "type": "concert",
         "name": "Metfest 2022",
         "price": 55.5,
-        "logo": null,
+        "logo": "Metfest2022.png",
         "notes": null
     },
     {
@@ -1049,7 +1065,7 @@ const concertsData = [
         "type": "concert",
         "name": "Legacy of the Beast Tour",
         "price": 91.25,
-        "logo": null,
+        "logo": "LegacyOfTheBeast.png",
         "notes": null
     },
     {
@@ -1063,7 +1079,7 @@ const concertsData = [
         "type": "concert",
         "name": "The Book of Fire Tour 2022",
         "price": 36,
-        "logo": null,
+        "logo": "TheBookOfFire.png",
         "notes": null
     },
     {
@@ -1078,7 +1094,7 @@ const concertsData = [
         "type": "concert",
         "name": "Sommernächte 2022",
         "price": 29.7,
-        "logo": null,
+        "logo": "Nordlicht2022.png",
         "notes": null
     },
     {
@@ -1108,7 +1124,7 @@ const concertsData = [
         "type": "festival",
         "name": "Rockharz Festival 2022",
         "price": 127.8,
-        "logo": null,
+        "logo": "Rockharz2022.png",
         "notes": null
     },
     {
@@ -1125,7 +1141,7 @@ const concertsData = [
         "type": "festival",
         "name": "Feuertanz Festival 2022",
         "price": 80,
-        "logo": null,
+        "logo": "Feuertanz2022.png",
         "notes": null
     },
     {
@@ -1140,7 +1156,7 @@ const concertsData = [
         "type": "concert",
         "name": "Stadium Tour 2022",
         "price": null,
-        "logo": null,
+        "logo": "StadiumTour2022.png",
         "notes": null
     },
     {
@@ -1191,7 +1207,7 @@ const concertsData = [
         "type": "concert",
         "name": "Das Elfte Gebot Tour",
         "price": 36.5,
-        "logo": null,
+        "logo": "DasElfteGebot2022.png",
         "notes": null
     },
     {
@@ -1221,7 +1237,7 @@ const concertsData = [
         "venueId": "festplatz-finsterloh-wetzlar",
         "type": "concert",
         "name": "Strandkorb Open Air",
-        "price": 47.50,
+        "price": 47.5,
         "logo": "StrandkorbOpenAir.png",
         "notes": null
     },
