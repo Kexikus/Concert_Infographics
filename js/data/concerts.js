@@ -1208,7 +1208,7 @@ const concertsData = [
         "type": "festival",
         "name": "Hock Rock",
         "price": null,
-        "logo": null,
+        "logo": "HockRock.png",
         "notes": null
     },
     {
@@ -1222,7 +1222,7 @@ const concertsData = [
         "type": "concert",
         "name": "Strandkorb Open Air",
         "price": 47.50,
-        "logo": null,
+        "logo": "StrandkorbOpenAir.png",
         "notes": null
     },
     {
@@ -1238,7 +1238,7 @@ const concertsData = [
         "type": "concert",
         "name": "Strandkorb Metfest",
         "price": null,
-        "logo": null,
+        "logo": "StrandkorbMetfest.png",
         "notes": null
     },
     {
@@ -1268,7 +1268,7 @@ const concertsData = [
         "type": "concert",
         "name": "The Great Tour",
         "price": 61.95,
-        "logo": null,
+        "logo": "TheGreatTour.png",
         "notes": null
     },
     {
@@ -1283,7 +1283,7 @@ const concertsData = [
         "type": "concert",
         "name": "Kosmonautilus Tour",
         "price": 32.4,
-        "logo": null,
+        "logo": "Kosmonautilus.png",
         "notes": null
     },
     {
