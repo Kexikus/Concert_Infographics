@@ -53,7 +53,7 @@ const concertsData = [
         ],
         "venueId": "loreley-freilichtbhne",
         "price": 179.3,
-        "logo": "mobile_800x800.jpg",
+        "logo": null,
         "notes": null
     },
     {
@@ -173,7 +173,7 @@ const concertsData = [
         ],
         "venueId": "rudolf-weber-arena-oberhausen",
         "price": null,
-        "logo": null,
+        "logo": "EscalationFest2025.png",
         "notes": null
     },
     {
@@ -456,7 +456,7 @@ const concertsData = [
         ],
         "venueId": "hanns-martin-schleyer-halle-stuttgart",
         "price": 64.41,
-        "logo": null,
+        "logo": "Tekkno2024.png",
         "notes": null
     },
     {
@@ -489,7 +489,7 @@ const concertsData = [
         "type": "concert",
         "name": "DisrupTour",
         "price": 39.3,
-        "logo": null,
+        "logo": "Disruptour.png",
         "notes": null
     },
     {
@@ -505,7 +505,7 @@ const concertsData = [
         "type": "concert",
         "name": "Versengold - 20 Jahre",
         "price": 105.45,
-        "logo": null,
+        "logo": "20JahreVersengold.png",
         "notes": null
     },
     {
@@ -519,11 +519,11 @@ const concertsData = [
         "type": "concert",
         "name": "Warm-Up Wunschkonzert",
         "price": null,
-        "logo": null,
+        "logo": "WarmUpKonzert.png",
         "notes": null
     },
     {
-        "id": "escalation-fest",
+        "id": "escalation-fest-2023",
         "date": "2023-09-23",
         "endDate": "2023-09-23",
         "artistIds": [
@@ -533,9 +533,9 @@ const concertsData = [
         ],
         "venueId": "rudolf-weber-arena-oberhausen",
         "type": "festival",
-        "name": "Escalation Fest",
+        "name": "Escalation Fest 2023",
         "price": 77.6,
-        "logo": null,
+        "logo": "EscalationFest2023.png",
         "notes": null
     },
     {
@@ -585,7 +585,7 @@ const concertsData = [
         "type": "concert",
         "name": "Blood & Glitter Tour",
         "price": 35.25,
-        "logo": null,
+        "logo": "BloodAndGlitter.png",
         "notes": null
     },
     {
@@ -683,11 +683,11 @@ const concertsData = [
         "type": "concert",
         "name": "Himmelfahrt Tour",
         "price": 37,
-        "logo": null,
+        "logo": "Himmelfahrt.png",
         "notes": null
     },
     {
-        "id": "days-of-destiny-tour",
+        "id": "day-of-destiny-tour",
         "date": "2023-05-04",
         "endDate": null,
         "artistIds": [
@@ -697,9 +697,9 @@ const concertsData = [
         ],
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
-        "name": "Days of Destiny Tour",
+        "name": "Day of Destiny Tour",
         "price": 54,
-        "logo": null,
+        "logo": "DayOfDestiny.png",
         "notes": null
     },
     {
@@ -714,7 +714,7 @@ const concertsData = [
         "type": "concert",
         "name": "Endlich! Tour",
         "price": 36.5,
-        "logo": null,
+        "logo": "Endlich.png",
         "notes": null
     },
     {
@@ -729,7 +729,7 @@ const concertsData = [
         "type": "concert",
         "name": "Silberne Hochzeit Tour",
         "price": 34.15,
-        "logo": null,
+        "logo": "SilberneHochzeit.png",
         "notes": null
     },
     {
@@ -745,7 +745,7 @@ const concertsData = [
         "type": "concert",
         "name": "The Tour to End All Tours",
         "price": 67.3,
-        "logo": null,
+        "logo": "TourToEndAllTours.png",
         "notes": null
     },
     {
@@ -761,7 +761,7 @@ const concertsData = [
         "type": "concert",
         "name": "Tekkno Tour",
         "price": 60.67,
-        "logo": null,
+        "logo": "Tekkno2023.png",
         "notes": null
     },
     {
@@ -777,7 +777,7 @@ const concertsData = [
         "type": "concert",
         "name": "Memento Mori Tour",
         "price": null,
-        "logo": null,
+        "logo": "MementoMori.png",
         "notes": null
     },
     {
@@ -793,7 +793,7 @@ const concertsData = [
         "type": "concert",
         "name": "Superpower Tour",
         "price": 21.2,
-        "logo": null,
+        "logo": "Superpower2023.png",
         "notes": null
     },
     {
@@ -811,7 +811,7 @@ const concertsData = [
         "notes": null
     },
     {
-        "id": "tour-der-vernunft",
+        "id": "sieg-der-vernunft",
         "date": "2023-03-16",
         "endDate": null,
         "artistIds": [
@@ -819,9 +819,9 @@ const concertsData = [
         ],
         "venueId": "colos-saal-aschaffenburg",
         "type": "concert",
-        "name": "Tour der Vernunft",
+        "name": "Sieg der Vernunft Tour",
         "price": 32.15,
-        "logo": null,
+        "logo": "SiegDerVernunft.png",
         "notes": null
     },
     {
@@ -836,7 +836,7 @@ const concertsData = [
         "type": "concert",
         "name": "Titanium Tour",
         "price": 28.2,
-        "logo": null,
+        "logo": "Titanium.png",
         "notes": null
     },
     {
@@ -851,7 +851,7 @@ const concertsData = [
         "type": "concert",
         "name": "Dark Connection Tour",
         "price": 43.65,
-        "logo": null,
+        "logo": "DarkConnection.png",
         "notes": null
     },
     {
