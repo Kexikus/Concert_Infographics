@@ -226,16 +226,24 @@ class ShowDisplayManager {
 
         const { compact = false } = options;
 
-        // Format date in German format
-        const eventDate = new Date(event.date);
-        const formattedDate = eventDate.toLocaleDateString('en-GB', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+        const startDate = new Date(event.date);
+        let formattedDate;
         
-        // Get year for the date link
-        const year = eventDate.getFullYear();
+        // Check if event has an end date and it's different from start date
+        if (event.endDate && event.endDate !== event.date) {
+            const endDate = new Date(event.endDate);
+            formattedDate = this.formatDateRange(startDate, endDate);
+        } else {
+            // Single day event - use original formatting
+            formattedDate = startDate.toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        // Get year for the date link (use start date year)
+        const year = startDate.getFullYear();
         
         // Sanitize city name for the city link
         const sanitizedCity = normalizeStringForId(venue.city);
@@ -254,6 +262,52 @@ class ShowDisplayManager {
         }
 
         return `<a href="#year/${year}" class="date-link">${formattedDate}</a> <span style="color: var(--red);">•</span> <a href="#city/${sanitizedCity}" class="venue-link">${venue.name}, ${venue.city}</a>${priceText}${capacityText}`;
+    }
+
+    // Format date range with shortest possible display
+    formatDateRange(startDate, endDate) {
+        const startYear = startDate.getFullYear();
+        const endYear = endDate.getFullYear();
+        const startMonth = startDate.getMonth();
+        const endMonth = endDate.getMonth();
+        
+        // Different years: "31 Dec 2022 - 3 Jan 2023"
+        if (startYear !== endYear) {
+            const startFormatted = startDate.toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            const endFormatted = endDate.toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            return `${startFormatted} - ${endFormatted}`;
+        }
+        
+        // Different months, same year: "30 Aug - 2 Sep 2022"
+        if (startMonth !== endMonth) {
+            const startFormatted = startDate.toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short'
+            });
+            const endFormatted = endDate.toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            return `${startFormatted} - ${endFormatted}`;
+        }
+        
+        // Same month and year: "4 - 6 June 2022"
+        const startDay = startDate.getDate();
+        const endFormatted = endDate.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+        return `${startDay} - ${endFormatted}`;
     }
 
     // Extract artists HTML for event page

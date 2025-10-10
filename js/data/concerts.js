@@ -1351,7 +1351,7 @@ const concertsData = [
     {
         "id": "mera-luna-2019",
         "date": "2019-08-10",
-        "endDate": "2019-03-11",
+        "endDate": "2019-08-11",
         "artistIds": [
             "asp",
             "within-temptation",
@@ -1623,7 +1623,7 @@ const concertsData = [
     {
         "id": "schlossgrabenfest",
         "date": "2018-05-31",
-        "endDate": "1931-06-03",
+        "endDate": "2018-06-03",
         "artistIds": [
             "jbo"
         ],
