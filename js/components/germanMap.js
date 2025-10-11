@@ -5,6 +5,8 @@ class GermanMapManager {
         this.svgElement = null;
         this.stateElements = {}; // Maps state name to array of path elements
         this.isInitialized = false;
+        this.isInitializing = false; // Prevent concurrent initializations
+        this.initializationState = 'uninitialized'; // 'uninitialized', 'initializing', 'initialized', 'error'
         this.concertData = [];
         this.venueData = [];
         this.cityStats = new Map(); // Maps city name to concert count and coordinates
@@ -13,6 +15,13 @@ class GermanMapManager {
             countCircles: [],
             connectingLines: [],
             tooltips: []
+        };
+        
+        // Async operation tracking for cancellation
+        this.pendingOperations = {
+            svgRequest: null,
+            visualizationTimeout: null,
+            refreshPromise: null
         };
         
         // Initialize the new repellant forces label placer
@@ -58,12 +67,60 @@ class GermanMapManager {
         return this._colors;
     }
 
+    // Set initialization state and manage flags
+    setInitializationState(state) {
+        this.initializationState = state;
+        this.isInitializing = (state === 'initializing');
+        this.isInitialized = (state === 'initialized');
+        console.log(`German map state changed to: ${state}`);
+    }
+
+    // Cancel all pending async operations
+    cancelPendingOperations() {
+        // Cancel XMLHttpRequest if pending
+        if (this.pendingOperations.svgRequest) {
+            this.pendingOperations.svgRequest.abort();
+            this.pendingOperations.svgRequest = null;
+            console.log('Cancelled pending SVG request');
+        }
+
+        // Cancel visualization timeout if pending
+        if (this.pendingOperations.visualizationTimeout) {
+            clearTimeout(this.pendingOperations.visualizationTimeout);
+            this.pendingOperations.visualizationTimeout = null;
+            console.log('Cancelled pending visualization timeout');
+        }
+
+        // Cancel refresh promise if pending
+        if (this.pendingOperations.refreshPromise) {
+            // Note: We can't actually cancel a promise, but we can ignore its result
+            this.pendingOperations.refreshPromise = null;
+            console.log('Marked pending refresh promise for cancellation');
+        }
+    }
+
     // Initialize German map with concert data
     initializeGermanMap() {
+        // Prevent concurrent initializations
+        if (this.isInitializing) {
+            console.log('German map initialization already in progress, skipping');
+            return;
+        }
+
+        if (this.isInitialized) {
+            console.log('German map already initialized, skipping');
+            return;
+        }
+
         try {
+            // Set state to initializing and cancel any pending operations
+            this.setInitializationState('initializing');
+            this.cancelPendingOperations();
+
             this.mapContainer = document.getElementById('german-map-container');
             if (!this.mapContainer) {
                 console.warn('German map container not found');
+                this.setInitializationState('error');
                 return;
             }
 
@@ -73,10 +130,11 @@ class GermanMapManager {
             // Load and create SVG map
             this.loadSVGMap();
             
-            console.log('German map initialized successfully');
+            console.log('German map initialization started');
             
         } catch (error) {
             console.error('Error initializing German map:', error);
+            this.setInitializationState('error');
             this.handleError(error);
         }
     }
@@ -314,21 +372,47 @@ class GermanMapManager {
 
     // Load the German SVG file directly
     loadGermanSVG() {
+        // Cancel any existing request
+        if (this.pendingOperations.svgRequest) {
+            this.pendingOperations.svgRequest.abort();
+        }
+
         // Create XMLHttpRequest to load SVG file
         const xhr = new XMLHttpRequest();
+        this.pendingOperations.svgRequest = xhr;
+        
         xhr.open('GET', './assets/de.svg', true);
         xhr.onreadystatechange = () => {
+            // Check if this request was cancelled
+            if (this.pendingOperations.svgRequest !== xhr) {
+                console.log('SVG request was cancelled, ignoring response');
+                return;
+            }
+
             if (xhr.readyState === 4) {
+                // Clear the pending request reference
+                this.pendingOperations.svgRequest = null;
+
                 if (xhr.status === 200) {
                     // Successfully loaded SVG
                     this.processSVGContent(xhr.responseText);
                 } else {
                     // Failed to load
                     console.error('Failed to load German SVG file');
+                    this.setInitializationState('error');
                     this.handleError(new Error('Failed to load German SVG file'));
                 }
             }
         };
+
+        xhr.onerror = () => {
+            // Clear the pending request reference
+            this.pendingOperations.svgRequest = null;
+            console.error('Network error loading German SVG file');
+            this.setInitializationState('error');
+            this.handleError(new Error('Network error loading German SVG file'));
+        };
+
         xhr.send();
     }
 
@@ -416,14 +500,35 @@ class GermanMapManager {
             // Add the SVG to the container
             this.mapContainer.appendChild(this.svgElement);
             
-            // Add concert visualization elements with proper timing
-            setTimeout(() => {
+            // Add concert visualization elements with proper timing and cancellation support
+            this.pendingOperations.visualizationTimeout = setTimeout(() => {
+                // Check if this timeout was cancelled
+                if (this.pendingOperations.visualizationTimeout === null) {
+                    console.log('Visualization timeout was cancelled, skipping');
+                    return;
+                }
+
+                // Clear the timeout reference since we're now executing
+                this.pendingOperations.visualizationTimeout = null;
+
+                // Check if we're still in initializing state (not cancelled)
+                if (this.initializationState !== 'initializing') {
+                    console.log('Initialization was cancelled, skipping visualization');
+                    return;
+                }
+
                 this.addConcertVisualization().then(() => {
-                    this.isInitialized = true;
-                    console.log(`German map initialized successfully with ${Object.keys(this.stateElements).length} states`);
+                    // Only set initialized if we're still in initializing state
+                    if (this.initializationState === 'initializing') {
+                        this.setInitializationState('initialized');
+                        console.log(`German map initialized successfully with ${Object.keys(this.stateElements).length} states`);
+                    }
                 }).catch(error => {
                     console.error('Error adding concert visualization:', error);
-                    this.isInitialized = true; // Still mark as initialized even if visualization fails
+                    // Set error state if we're still initializing
+                    if (this.initializationState === 'initializing') {
+                        this.setInitializationState('error');
+                    }
                 });
             }, 50); // Small delay to ensure DOM is ready
             
@@ -833,42 +938,84 @@ class GermanMapManager {
         });
     }
 
-    // Clear all visual elements
+    // Clear all visual elements and cancel pending operations
     clearVisualElements() {
-        // Remove existing groups
-        const existingGroups = this.svgElement.querySelectorAll('.city-dots-group, .connecting-lines-group, .count-circles-group');
-        existingGroups.forEach(group => group.remove());
+        // Cancel any pending async operations
+        this.cancelPendingOperations();
+
+        // Remove existing groups if SVG element exists
+        if (this.svgElement) {
+            const existingGroups = this.svgElement.querySelectorAll('.city-dots-group, .connecting-lines-group, .count-circles-group');
+            existingGroups.forEach(group => group.remove());
+        }
         
         // Clear arrays
         this.visualElements.cityDots = [];
         this.visualElements.countCircles = [];
         this.visualElements.connectingLines = [];
         this.visualElements.tooltips = [];
+
+        console.log('Visual elements cleared and pending operations cancelled');
     }
 
     // Refresh map (reload data and recreate visualization)
     refresh() {
+        // Prevent concurrent refreshes
+        if (this.pendingOperations.refreshPromise) {
+            console.log('German map refresh already in progress, skipping');
+            return this.pendingOperations.refreshPromise;
+        }
+
+        // If not initialized, initialize instead
         if (!this.isInitialized) {
             console.log('German map not initialized, initializing now');
             this.initializeGermanMap();
-            return;
+            return Promise.resolve();
+        }
+
+        // If currently initializing, wait for it to complete
+        if (this.isInitializing) {
+            console.log('German map is initializing, cannot refresh now');
+            return Promise.resolve();
         }
         
         console.log('Refreshing German map visualization');
         
-        // Reload concert data
-        this.loadConcertData();
-        
-        // Recreate visualization with proper async handling
-        if (this.svgElement && this.cityStats.size > 0) {
-            this.addConcertVisualization().then(() => {
-                console.log('German map refreshed successfully');
-            }).catch(error => {
-                console.error('Error refreshing German map visualization:', error);
-            });
-        } else {
-            console.warn('Cannot refresh: SVG element missing or no city data');
-        }
+        // Create refresh promise to track operation
+        this.pendingOperations.refreshPromise = new Promise((resolve, reject) => {
+            try {
+                // Reload concert data
+                this.loadConcertData();
+                
+                // Recreate visualization with proper async handling
+                if (this.svgElement && this.cityStats.size > 0) {
+                    this.addConcertVisualization().then(() => {
+                        // Clear refresh promise if this is still the current operation
+                        if (this.pendingOperations.refreshPromise) {
+                            this.pendingOperations.refreshPromise = null;
+                        }
+                        console.log('German map refreshed successfully');
+                        resolve();
+                    }).catch(error => {
+                        // Clear refresh promise if this is still the current operation
+                        if (this.pendingOperations.refreshPromise) {
+                            this.pendingOperations.refreshPromise = null;
+                        }
+                        console.error('Error refreshing German map visualization:', error);
+                        reject(error);
+                    });
+                } else {
+                    console.warn('Cannot refresh: SVG element missing or no city data');
+                    this.pendingOperations.refreshPromise = null;
+                    resolve();
+                }
+            } catch (error) {
+                this.pendingOperations.refreshPromise = null;
+                reject(error);
+            }
+        });
+
+        return this.pendingOperations.refreshPromise;
     }
 
     // Handle errors
@@ -907,6 +1054,9 @@ class GermanMapManager {
 
     // Destroy map (cleanup)
     destroy() {
+        // Cancel all pending operations first
+        this.cancelPendingOperations();
+
         if (this.mapContainer) {
             this.mapContainer.innerHTML = '';
         }
@@ -916,10 +1066,34 @@ class GermanMapManager {
             this.labelPlacer.destroy();
         }
         
+        // Reset all state
         this.stateElements = {};
-        this.isInitialized = false;
+        this.setInitializationState('uninitialized');
+        this.cityStats.clear();
+        this.visualElements = {
+            cityDots: [],
+            countCircles: [],
+            connectingLines: [],
+            tooltips: []
+        };
         
         console.log('German map destroyed');
+    }
+
+    // Get detailed initialization status
+    getInitializationStatus() {
+        return {
+            state: this.initializationState,
+            isInitialized: this.isInitialized,
+            isInitializing: this.isInitializing,
+            hasPendingOperations: {
+                svgRequest: this.pendingOperations.svgRequest !== null,
+                visualizationTimeout: this.pendingOperations.visualizationTimeout !== null,
+                refreshPromise: this.pendingOperations.refreshPromise !== null
+            },
+            statesLoaded: Object.keys(this.stateElements).length,
+            citiesProcessed: this.cityStats.size
+        };
     }
 }
 
