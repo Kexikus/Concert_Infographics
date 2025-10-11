@@ -1398,7 +1398,7 @@ const concertsData = [
     {
         "id": "mera-luna-2019",
         "date": "2019-08-10",
-        "endDate": "2019-03-11",
+        "endDate": "2019-08-11",
         "artistIds": [
             "asp",
             "within-temptation",
