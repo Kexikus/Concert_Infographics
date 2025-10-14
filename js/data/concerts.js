@@ -68,7 +68,7 @@ const concertsData = [
         ],
         "venueId": "festung-ehrenbreitstein",
         "price": 67.5,
-        "logo": null,
+        "logo": "Finsterwacht2025.png",
         "notes": null
     },
     {
@@ -204,7 +204,7 @@ const concertsData = [
         ],
         "venueId": "alter-schlachthof-wiesbaden",
         "price": 60.9,
-        "logo": null,
+        "logo": "Wolkenschieber.png",
         "notes": null
     },
     {
@@ -236,7 +236,7 @@ const concertsData = [
         ],
         "venueId": "grugahalle",
         "price": 57.45,
-        "logo": null,
+        "logo": "20JahreFeuerschwanz.png",
         "notes": null
     },
     {
@@ -252,7 +252,7 @@ const concertsData = [
         ],
         "venueId": "halle-02-heidelberg",
         "price": 42,
-        "logo": null,
+        "logo": "DieZusammenkunft3.png",
         "notes": null
     },
     {
@@ -267,7 +267,7 @@ const concertsData = [
         ],
         "venueId": "posthalle-wuerzburg",
         "price": 59.85,
-        "logo": null,
+        "logo": "MetalFightClub2.png",
         "notes": null
     },
     {
@@ -283,7 +283,7 @@ const concertsData = [
         ],
         "venueId": "flughafen-tempelhof",
         "price": 82,
-        "logo": null,
+        "logo": "OMGDieAerzteLOL.png",
         "notes": null
     },
     {
@@ -328,7 +328,7 @@ const concertsData = [
         ],
         "venueId": "burg-wertheim",
         "price": 57.49,
-        "logo": null,
+        "logo": "Finsterwacht.png",
         "notes": null
     },
     {
@@ -343,7 +343,7 @@ const concertsData = [
         ],
         "venueId": "jazzhaus",
         "price": 36.4,
-        "logo": null,
+        "logo": "TheWarningEurope2024.png",
         "notes": null
     },
     {
@@ -395,7 +395,7 @@ const concertsData = [
         ],
         "venueId": "lka-longhorn",
         "price": 42.45,
-        "logo": null,
+        "logo": "15YearsOfLotL.png",
         "notes": null
     },
     {
@@ -410,7 +410,7 @@ const concertsData = [
         "type": "concert",
         "name": "Lichtermeer Tour",
         "price": null,
-        "logo": null,
+        "logo": "Lichtermeer2024.png",
         "notes": null
     },
     {
@@ -425,7 +425,7 @@ const concertsData = [
         "type": "concert",
         "name": "Leuchtturm Tour",
         "price": 34.7,
-        "logo": null,
+        "logo": "Leuchtturm2024.png",
         "notes": null
     },
     {
@@ -440,7 +440,7 @@ const concertsData = [
         "type": "concert",
         "name": "Lautes Gedenken Tour",
         "price": 47.45,
-        "logo": null,
+        "logo": "LautesGedenken2024.png",
         "notes": null
     },
     {
