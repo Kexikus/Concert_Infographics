@@ -172,7 +172,7 @@ const artistsData = [
         "id": "brunhilde",
         "name": "Brunhilde",
         "country": "Germany",
-        "logo": null
+        "logo": "Brunhilde.png"
     },
     {
         "id": "bush",
@@ -261,7 +261,7 @@ const artistsData = [
         "id": "donots",
         "name": "Donots",
         "country": "Germany",
-        "logo": null
+        "logo": "Donots.png"
     },
     {
         "id": "doro",
@@ -333,13 +333,13 @@ const artistsData = [
         "id": "elvellon",
         "name": "Elvellon",
         "country": "Germany",
-        "logo": null
+        "logo": "Elvellon.png"
     },
     {
         "id": "engst",
         "name": "Engst",
         "country": "Germany",
-        "logo": null
+        "logo": "Engst.png"
     },
     {
         "id": "equilibrium",
@@ -363,7 +363,7 @@ const artistsData = [
         "id": "fabula",
         "name": "Fabula",
         "country": "Germany",
-        "logo": null
+        "logo": "Fabula.png"
     },
     {
         "id": "farin-urlaub-racing-team",
@@ -430,7 +430,7 @@ const artistsData = [
         "id": "focus",
         "name": "Focus.",
         "country": "Germany",
-        "logo": null
+        "logo": "Focus.png"
     },
     {
         "id": "freedom-call",
@@ -496,7 +496,7 @@ const artistsData = [
         "id": "harpyie",
         "name": "Harpyie",
         "country": "Germany",
-        "logo": null
+        "logo": "Harpyie.png"
     },
     {
         "id": "heldmaschine",
@@ -508,7 +508,7 @@ const artistsData = [
         "id": "hell-boulevard",
         "name": "Hell Boulevard",
         "country": "Switzerland",
-        "logo": null
+        "logo": "Hell_Boulevard.png"
     },
     {
         "id": "ignea",
@@ -520,7 +520,7 @@ const artistsData = [
         "id": "illumishade",
         "name": "Illumishade",
         "country": "Switzerland",
-        "logo": null
+        "logo": "Illumishade.png"
     },
     {
         "id": "in-extremo",
@@ -696,10 +696,10 @@ const artistsData = [
         "logo": "MajorVoice.png"
     },
     {
-        "id": "malts",
-        "name": "Malts",
-        "country": "Germany",
-        "logo": null
+        "id": "cri-cari",
+        "name": "Cari Cari",
+        "country": "Austria",
+        "logo": "Cari_Cari.png"
     },
     {
         "id": "manntra",
@@ -872,7 +872,7 @@ const artistsData = [
         "id": "samsas-traum",
         "name": "Samsas Traum",
         "country": "Germany",
-        "logo": null
+        "logo": "Samsas_Traum.png"
     },
     {
         "id": "schandmaul",
@@ -889,8 +889,8 @@ const artistsData = [
     {
         "id": "serenity",
         "name": "Serenity",
-        "country": "Germany",
-        "logo": null
+        "country": "Austria",
+        "logo": "Serenity.png"
     },
     {
         "id": "setyoursails",
@@ -920,7 +920,7 @@ const artistsData = [
         "id": "still-talk",
         "name": "Still Talk",
         "country": "Germany",
-        "logo": null
+        "logo": "Still_Talk.png"
     },
     {
         "id": "stimmgewalt",
@@ -959,7 +959,7 @@ const artistsData = [
         "id": "tabernis",
         "name": "Tabernis",
         "country": "Germany",
-        "logo": null
+        "logo": "Tabernis.png"
     },
     {
         "id": "tanzwut",
@@ -1001,13 +1001,13 @@ const artistsData = [
         "id": "the-raven-age",
         "name": "The Raven Age",
         "country": "UK",
-        "logo": null
+        "logo": "The_Raven_Age.png"
     },
     {
         "id": "the-warning",
         "name": "The Warning",
         "country": "Mexico",
-        "logo": null
+        "logo": "The_Warning.png"
     },
     {
         "id": "tir-saor",

@@ -279,7 +279,7 @@ const concertsData = [
         "artistIds": [
             "die-aerzte",
             "donots",
-            "malts"
+            "cari-cari"
         ],
         "venueId": "flughafen-tempelhof",
         "price": 82,
