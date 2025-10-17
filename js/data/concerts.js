@@ -53,7 +53,7 @@ const concertsData = [
         ],
         "venueId": "loreley-freilichtbhne",
         "price": 179.3,
-        "logo": null,
+        "logo": "30JahreInExtremo.png",
         "notes": null
     },
     {
@@ -100,7 +100,7 @@ const concertsData = [
         ],
         "venueId": "e-werk-open-air-gelnde",
         "price": 67.5,
-        "logo": null,
+        "logo": "SummerOfTheWicked2025.png",
         "notes": null
     },
     {
@@ -114,7 +114,7 @@ const concertsData = [
         ],
         "venueId": "rosengarten",
         "price": 67.59,
-        "logo": null,
+        "logo": "DunkelromantischeMainaechte.png",
         "notes": null
     },
     {
@@ -130,12 +130,12 @@ const concertsData = [
         ],
         "venueId": "essigfabrik",
         "price": 47.45,
-        "logo": null,
+        "logo": "PostMortem.png",
         "notes": null
     },
     {
-        "id": "the-warning-2025",
-        "name": "The Warning 2025",
+        "id": "keep-me-fed-world-tour-2025",
+        "name": "Keep Me Fed World Tour 2025",
         "date": "2025-04-15",
         "endDate": null,
         "type": "concert",
@@ -145,7 +145,7 @@ const concertsData = [
         ],
         "venueId": "palladium",
         "price": 43,
-        "logo": null,
+        "logo": "KeepMeFed.png",
         "notes": null
     },
     {
@@ -189,7 +189,7 @@ const concertsData = [
         ],
         "venueId": "batschkapp-frankfurt",
         "price": 48.2,
-        "logo": null,
+        "logo": "20JahreFuerEuch.png",
         "notes": null
     },
     {
