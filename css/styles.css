@@ -454,7 +454,7 @@ h1 {
 
 .subpage-description {
     font-size: 1.2rem;
-    color: var(--light-grey);
+    color: var(--white);
     font-weight: 400;
     max-width: 600px;
     margin: 0 auto;

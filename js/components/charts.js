@@ -1133,13 +1133,13 @@ class ChartsManager {
         const concertData = years.map(year => costTrendData[year]?.concert || null);
 
         const datasets = [
-            // Overall (black line)
+            // Concert (dark red line)
             {
-                label: 'All Events',
-                data: overallData,
-                borderColor: this.defaultColors.black,
-                pointBackgroundColor: this.defaultColors.black,
-                pointBorderColor: this.defaultColors.black
+                label: 'Concerts',
+                data: concertData,
+                borderColor: this.defaultColors.darkRed,
+                pointBackgroundColor: this.defaultColors.darkRed,
+                pointBorderColor: this.defaultColors.darkRed
             },
             // Festival (light red line)
             {
@@ -1149,13 +1149,13 @@ class ChartsManager {
                 pointBackgroundColor: this.defaultColors.red,
                 pointBorderColor: this.defaultColors.red
             },
-            // Concert (dark red line)
+            // Overall (black line)
             {
-                label: 'Concerts',
-                data: concertData,
-                borderColor: this.defaultColors.darkRed,
-                pointBackgroundColor: this.defaultColors.darkRed,
-                pointBorderColor: this.defaultColors.darkRed
+                label: 'All Events',
+                data: overallData,
+                borderColor: this.defaultColors.black,
+                pointBackgroundColor: this.defaultColors.black,
+                pointBorderColor: this.defaultColors.black
             }
         ];
 

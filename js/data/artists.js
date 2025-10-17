@@ -696,7 +696,7 @@ const artistsData = [
         "logo": "MajorVoice.png"
     },
     {
-        "id": "cri-cari",
+        "id": "cari-cari",
         "name": "Cari Cari",
         "country": "Austria",
         "logo": "Cari_Cari.png"
