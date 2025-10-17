@@ -172,7 +172,7 @@ const concertsData = [
             "electric-callboy"
         ],
         "venueId": "rudolf-weber-arena-oberhausen",
-        "price": null,
+        "price": 75.1,
         "logo": "EscalationFest2025.png",
         "notes": null
     },
@@ -219,7 +219,7 @@ const concertsData = [
             "harpyie"
         ],
         "venueId": "posthalle-wuerzburg",
-        "price": null,
+        "price": 60.2,
         "logo": "EHN2024.png",
         "notes": null
     },
@@ -298,7 +298,7 @@ const concertsData = [
             "subway-to-sally"
         ],
         "venueId": "domgarten-speyer",
-        "price": null,
+        "price": 68,
         "logo": "MPS2024Speyer.png",
         "notes": null
     },
@@ -357,7 +357,7 @@ const concertsData = [
             "abelard"
         ],
         "venueId": "deutsche-bank-park-frankfurt",
-        "price": null,
+        "price": 147,
         "logo": "StadiumTour2024.png",
         "notes": null
     },
@@ -409,7 +409,7 @@ const concertsData = [
         "venueId": "nachtleben-frankfurt",
         "type": "concert",
         "name": "Lichtermeer Tour",
-        "price": null,
+        "price": 21.6,
         "logo": "Lichtermeer2024.png",
         "notes": null
     },
@@ -532,7 +532,7 @@ const concertsData = [
             "future-palace"
         ],
         "venueId": "rudolf-weber-arena-oberhausen",
-        "type": "festival",
+        "type": "concert",
         "name": "Escalation Fest 2023",
         "price": 77.6,
         "logo": "EscalationFest2023.png",
@@ -553,7 +553,7 @@ const concertsData = [
             "mr-hurley-und-die-pulveraffen"
         ],
         "venueId": "tunierplatz-luhmuehlen",
-        "price": null,
+        "price": 44,
         "logo": "MPS2023Luhmuehlen.png",
         "notes": null
     },
@@ -569,7 +569,7 @@ const concertsData = [
             "faun"
         ],
         "venueId": "domgarten-speyer",
-        "price": null,
+        "price": 48,
         "logo": "MPS2023Speyer.png",
         "notes": null
     },
@@ -621,7 +621,7 @@ const concertsData = [
         "venueId": "flugplatz-ballenstedt",
         "type": "festival",
         "name": "Rockharz Festival 2023",
-        "price": null,
+        "price": 154.8,
         "logo": "Rockharz2023.png",
         "notes": null
     },
@@ -776,7 +776,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Memento Mori Tour",
-        "price": null,
+        "price": 37.5,
         "logo": "MementoMori.png",
         "notes": null
     },
@@ -944,7 +944,7 @@ const concertsData = [
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
         "name": "Für immer Frei Tour",
-        "price": null,
+        "price": 37.9,
         "logo": "FuerImmerFrei.png",
         "notes": null
     },
@@ -1155,7 +1155,7 @@ const concertsData = [
         "venueId": "cannstatter-wasen-stuttgart",
         "type": "concert",
         "name": "Stadium Tour 2022",
-        "price": null,
+        "price": 98.58,
         "logo": "StadiumTour2022.png",
         "notes": null
     },
@@ -1177,7 +1177,7 @@ const concertsData = [
             "tir-saor"
         ],
         "venueId": "schlosspark-rastede",
-        "price": null,
+        "price": 105,
         "logo": "MPS2022Rastede.png",
         "notes": null
     },
@@ -1223,7 +1223,7 @@ const concertsData = [
         "venueId": "schlossgarten-karlsruhe",
         "type": "festival",
         "name": "Hock Rock",
-        "price": null,
+        "price": 156,
         "logo": "HockRock.png",
         "notes": null
     },
@@ -1253,7 +1253,7 @@ const concertsData = [
         "venueId": "volkspark-dutzendteich-nuernberg",
         "type": "concert",
         "name": "Strandkorb Metfest",
-        "price": null,
+        "price": 49,
         "logo": "StrandkorbMetfest.png",
         "notes": null
     },
@@ -1345,7 +1345,7 @@ const concertsData = [
             "saltatio-mortis"
         ],
         "venueId": "fredenbaumpark-dortmund",
-        "price": null,
+        "price": 26,
         "logo": "PLWM2019.png",
         "notes": null
     },
@@ -1430,7 +1430,7 @@ const concertsData = [
             "john-kanaka-the-jack-tars"
         ],
         "venueId": "fuehlinger-see-koeln",
-        "price": null,
+        "price": 35,
         "logo": "MPS2019Koeln.png",
         "notes": null
     },
@@ -1445,7 +1445,7 @@ const concertsData = [
             "mr-hurley-und-die-pulveraffen"
         ],
         "venueId": "schlossgarten-karlsruhe",
-        "price": null,
+        "price": 25,
         "logo": "MPS2019Karlsruhe.png",
         "notes": null
     },
@@ -1476,7 +1476,7 @@ const concertsData = [
             "fiddlers-green"
         ],
         "venueId": "schlosspark-rastede",
-        "price": null,
+        "price": 50,
         "logo": "MPS2019Rastede.png",
         "notes": null
     },
@@ -1552,7 +1552,7 @@ const concertsData = [
         "venueId": "festhalle-frankfurt",
         "type": "concert",
         "name": "Decades Tour",
-        "price": null,
+        "price": 60.61,
         "logo": "Decades.png",
         "notes": null
     },
@@ -1583,7 +1583,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Tour Number Seven",
-        "price": null,
+        "price": 28.2,
         "logo": "TourNumberSeven.png",
         "notes": null
     },
@@ -1597,7 +1597,7 @@ const concertsData = [
             "saltatio-mortis"
         ],
         "venueId": "domgarten-speyer",
-        "price": null,
+        "price": 35,
         "logo": "MPS2018Speyer.png",
         "notes": null
     },
@@ -1617,7 +1617,7 @@ const concertsData = [
         "venueId": "waldbuehne-hardt-wuppertal",
         "type": "festival",
         "name": "Feuertal Festival 2018",
-        "price": null,
+        "price": 78,
         "logo": "Feuertal2018.png",
         "notes": null
     },
@@ -1633,7 +1633,7 @@ const concertsData = [
             "versengold"
         ],
         "venueId": "fuehlinger-see-koeln",
-        "price": null,
+        "price": 35,
         "logo": "MPS2018Koeln.png",
         "notes": null
     },
@@ -1649,7 +1649,7 @@ const concertsData = [
             "mr-hurley-und-die-pulveraffen"
         ],
         "venueId": "schlossgarten-karlsruhe",
-        "price": null,
+        "price": 25,
         "logo": "MPS2018Karlsruhe.png",
         "notes": null
     },
@@ -1663,7 +1663,7 @@ const concertsData = [
         "venueId": "alter-schlachthof-wiesbaden",
         "type": "concert",
         "name": "European Invasion",
-        "price": null,
+        "price": 22,
         "logo": "EuropeanInvasion2018.png",
         "notes": null
     },
@@ -1677,7 +1677,7 @@ const concertsData = [
         "venueId": "karolinenplatz-darmstadt",
         "type": "festival",
         "name": "Schlossgrabenfest 2018",
-        "price": null,
+        "price": 0,
         "logo": "Schlossgrabenfest2018.png",
         "notes": null
     },
@@ -1780,7 +1780,7 @@ const concertsData = [
             "versengold"
         ],
         "venueId": "domgarten-speyer",
-        "price": null,
+        "price": 30,
         "logo": "MPS2017Speyer.png",
         "notes": null
     },
@@ -1796,7 +1796,7 @@ const concertsData = [
             "feuerschwanz"
         ],
         "venueId": "schlossgarten-karlsruhe",
-        "price": null,
+        "price": 30,
         "logo": "MPS2017Karlsruhe.png",
         "notes": null
     },
@@ -1865,10 +1865,10 @@ const concertsData = [
             "sabaton",
             "accept"
         ],
-        "venueId": "batschkapp-frankfurt",
+        "venueId": "jahrhunderthalle-frankfurt",
         "type": "concert",
         "name": "The Last Tour",
-        "price": null,
+        "price": 42,
         "logo": "TheLastTour.png",
         "notes": null
     },
@@ -1928,7 +1928,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Voices of Fire Tour",
-        "price": null,
+        "price": 23,
         "logo": "VoicesOfFire.png",
         "notes": null
     },
@@ -2004,7 +2004,7 @@ const concertsData = [
         "venueId": "hessenhalle-alsfeld",
         "type": "festival",
         "name": "Ehrlich & Laut Festival 2015",
-        "price": null,
+        "price": 35,
         "logo": "EhrlichUndLaut2015.png",
         "notes": null
     },
@@ -2018,7 +2018,7 @@ const concertsData = [
         "venueId": "jahrhunderthalle-frankfurt",
         "type": "concert",
         "name": "Es besteht keine Gefahr für die Öffentlichkeit Tour 2015",
-        "price": null,
+        "price": 40,
         "logo": "FURT2015.png",
         "notes": null
     },
@@ -2032,7 +2032,7 @@ const concertsData = [
         "venueId": "karolinenplatz-darmstadt",
         "type": "festival",
         "name": "Schlossgrabenfest 2015",
-        "price": null,
+        "price": 0,
         "logo": "Schlossgrabenfest2015.png",
         "notes": null
     },
@@ -2080,7 +2080,7 @@ const concertsData = [
         "venueId": "batschkapp-frankfurt",
         "type": "concert",
         "name": "Voicefest",
-        "price": null,
+        "price": 30,
         "logo": null,
         "notes": null
     },
@@ -2095,7 +2095,7 @@ const concertsData = [
             "swiss-die-andern"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": null,
+        "price": 35,
         "logo": "2510.png",
         "notes": null
     },
@@ -2139,7 +2139,7 @@ const concertsData = [
             "versengold"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": null,
+        "price": 25,
         "logo": "DasSchwarzeIXI2014.png",
         "notes": null
     },
@@ -2324,7 +2324,7 @@ const concertsData = [
             "brandstein"
         ],
         "venueId": "sommerfesthalle-otterstadt",
-        "price": null,
+        "price": 10,
         "logo": "Otterrock2012.png",
         "notes": null
     },
@@ -2355,7 +2355,7 @@ const concertsData = [
             "das-niveau"
         ],
         "venueId": "alte-batschkapp-frankfurt",
-        "price": null,
+        "price": 20,
         "logo": "SturmAufsParadies.png",
         "notes": null
     },
@@ -2387,7 +2387,7 @@ const concertsData = [
             "nachtgeschrei"
         ],
         "venueId": "hugenottenhalle-neu-isenburg",
-        "price": null,
+        "price": 30,
         "logo": "SchwarzInSchwarz.png",
         "notes": null
     },
