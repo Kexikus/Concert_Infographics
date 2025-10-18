@@ -1753,7 +1753,10 @@ class ChartsManager {
         }
 
         const cityVenueIds = cityVenues.map(v => v.id);
-        const cityConcerts = concertsData.filter(c => cityVenueIds.includes(c.venueId));
+        const cityConcerts = concertsData.filter(c => {
+            const { venueId: baseVenueId } = dataManager.parseVenueReference(c.venueId);
+            return cityVenueIds.includes(baseVenueId);
+        });
 
         // Get all years from the entire dataset for complete range
         const allYears = [...new Set(concertsData.map(c => new Date(c.date).getFullYear()))].sort();
@@ -1770,8 +1773,9 @@ class ChartsManager {
         // Count events per year per venue
         cityConcerts.forEach(concert => {
             const year = new Date(concert.date).getFullYear();
-            if (yearVenueData[year] && yearVenueData[year].hasOwnProperty(concert.venueId)) {
-                yearVenueData[year][concert.venueId]++;
+            const { venueId: baseVenueId } = dataManager.parseVenueReference(concert.venueId);
+            if (yearVenueData[year] && yearVenueData[year].hasOwnProperty(baseVenueId)) {
+                yearVenueData[year][baseVenueId]++;
             }
         });
 
@@ -1882,7 +1886,10 @@ class ChartsManager {
         }
 
         const cityVenueIds = cityVenues.map(v => v.id);
-        const cityConcerts = concertsData.filter(c => cityVenueIds.includes(c.venueId));
+        const cityConcerts = concertsData.filter(c => {
+            const { venueId: baseVenueId } = dataManager.parseVenueReference(c.venueId);
+            return cityVenueIds.includes(baseVenueId);
+        });
 
         // Count visits (concerts) per venue
         const venueVisits = {};
@@ -1891,7 +1898,8 @@ class ChartsManager {
         });
 
         cityConcerts.forEach(concert => {
-            const venue = venuesData.find(v => v.id === concert.venueId);
+            const { venueId: baseVenueId } = dataManager.parseVenueReference(concert.venueId);
+            const venue = venuesData.find(v => v.id === baseVenueId);
             if (venue) {
                 venueVisits[venue.name] = (venueVisits[venue.name] || 0) + 1;
             }

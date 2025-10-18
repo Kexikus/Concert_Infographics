@@ -37,6 +37,7 @@ class AdminManager {
         this.showSection('artists'); // Show artists section by default
         this.loadArtistsList();
         this.initializeMultiLogoInterface(); // Initialize multi-logo interface
+        this.initializeVenueConfigurationsInterface(); // Initialize venue configurations interface
         // this.updateDatabaseStats(); // Remove this call for now since method doesn't exist
     }
 
@@ -61,6 +62,9 @@ class AdminManager {
         
         // Multi-logo interface
         document.getElementById('add-logo-btn').addEventListener('click', () => this.addLogoRow());
+        
+        // Venue configurations interface
+        document.getElementById('add-configuration-btn').addEventListener('click', () => this.addConfigurationRow());
         
         // Modal close events
         document.querySelector('.close').addEventListener('click', () => this.closeModal());
@@ -249,6 +253,14 @@ class AdminManager {
                         errors.push('Capacity must be a positive number');
                     }
                 }
+                // Validate configurations if present
+                if (data.configurations && Object.keys(data.configurations).length > 0) {
+                    const configValidation = this.validateConfigurations(data.configurations);
+                    if (!configValidation.isValid) {
+                        errors.push(...configValidation.errors);
+                    }
+                }
+                
                 // Check for duplicate ID (excluding current editing item)
                 const existingVenue = this.venues.find(v => v.id === data.id);
                 if (existingVenue && (!this.currentEditingItem || this.currentEditingItem.id !== data.id)) {
@@ -297,10 +309,14 @@ class AdminManager {
                 if (!data.venueId || data.venueId.trim() === '') {
                     errors.push('Venue is required');
                 } else {
-                    // Validate that venue ID exists
-                    const venue = this.venues.find(v => v.id === data.venueId);
-                    if (!venue) {
-                        errors.push('Selected venue does not exist');
+                    // Validate venue reference using local venues data
+                    try {
+                        const venueValidation = this.validateVenueReference(data.venueId);
+                        if (!venueValidation.isValid) {
+                            errors.push(venueValidation.error);
+                        }
+                    } catch (error) {
+                        errors.push('Invalid venue reference: ' + error.message);
                     }
                 }
                 if (data.price !== null && data.price !== undefined && data.price !== '') {
@@ -389,6 +405,11 @@ class AdminManager {
             // Special handling for artist form with multi-logo interface
             if (formId === 'artist-form') {
                 this.clearLogosForm();
+            }
+            
+            // Special handling for venue form with configurations interface
+            if (formId === 'venue-form') {
+                this.clearConfigurationsForm();
             }
             
             // Special handling for concert form with enhanced selects
@@ -671,6 +692,9 @@ class AdminManager {
         const coordinatesStr = formData.get('coordinates');
         const parsedCoords = this.parseCoordinates(coordinatesStr);
         
+        // Get configurations from the configurations interface
+        const configurations = this.getConfigurationsFromForm();
+        
         const venueData = {
             id: formData.get('id').trim(),
             name: formData.get('name').trim(),
@@ -680,6 +704,11 @@ class AdminManager {
             longitude: parsedCoords ? parsedCoords.longitude : null,
             capacity: formData.get('capacity') ? parseInt(formData.get('capacity')) : null
         };
+        
+        // Add configurations if any exist
+        if (configurations && Object.keys(configurations).length > 0) {
+            venueData.configurations = configurations;
+        }
         
         // Validate form data
         const validation = this.validateFormData(venueData, 'venue');
@@ -755,6 +784,9 @@ class AdminManager {
         
         document.getElementById('venue-capacity').value = venue.capacity || '';
         
+        // Populate configurations
+        this.populateConfigurationsForm(venue);
+        
         // Update submit button
         const submitBtn = document.querySelector('#venue-form button[type="submit"]');
         submitBtn.textContent = 'Update Venue';
@@ -824,21 +856,42 @@ class AdminManager {
             return;
         }
         
-        const html = filteredVenues.map(venue => `
-            <div class="data-item">
-                <div class="data-info">
-                    <h4>${this.escapeHtml(venue.name)}</h4>
-                    <p><strong>ID:</strong> ${this.escapeHtml(venue.id)}</p>
-                    <p><strong>Location:</strong> ${this.escapeHtml(venue.city)}, ${this.escapeHtml(venue.country)}</p>
-                    <p><strong>Coordinates:</strong> ${venue.latitude}, ${venue.longitude}</p>
-                    ${venue.capacity ? `<p><strong>Capacity:</strong> ${venue.capacity.toLocaleString()}</p>` : '<p><strong>Capacity:</strong> Not specified</p>'}
+        const html = filteredVenues.map(venue => {
+            let configurationsDisplay = '';
+            if (venue.configurations && Object.keys(venue.configurations).length > 0) {
+                const configCount = Object.keys(venue.configurations).length;
+                const configList = Object.entries(venue.configurations)
+                    .map(([name, capacity]) => `${name}: ${capacity ? capacity.toLocaleString() : 'default'}`)
+                    .join(', ');
+                configurationsDisplay = `
+                    <div class="venue-configurations">
+                        <div class="config-title">Configurations (${configCount}):</div>
+                        <div class="config-list">
+                            ${Object.entries(venue.configurations).map(([name, capacity]) =>
+                                `<span class="config-item">${this.escapeHtml(name)}: ${capacity ? capacity.toLocaleString() : 'default'}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="data-item">
+                    <div class="data-info">
+                        <h4>${this.escapeHtml(venue.name)}</h4>
+                        <p><strong>ID:</strong> ${this.escapeHtml(venue.id)}</p>
+                        <p><strong>Location:</strong> ${this.escapeHtml(venue.city)}, ${this.escapeHtml(venue.country)}</p>
+                        <p><strong>Coordinates:</strong> ${venue.latitude}, ${venue.longitude}</p>
+                        ${venue.capacity ? `<p><strong>Capacity:</strong> ${venue.capacity.toLocaleString()}</p>` : '<p><strong>Capacity:</strong> Not specified</p>'}
+                        ${configurationsDisplay}
+                    </div>
+                    <div class="data-actions">
+                        <button onclick="adminManager.editVenue('${venue.id}')" class="btn-edit">Edit</button>
+                        <button onclick="adminManager.deleteVenue('${venue.id}')" class="btn-delete">Delete</button>
+                    </div>
                 </div>
-                <div class="data-actions">
-                    <button onclick="adminManager.editVenue('${venue.id}')" class="btn-edit">Edit</button>
-                    <button onclick="adminManager.deleteVenue('${venue.id}')" class="btn-delete">Delete</button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
         
         container.innerHTML = html;
     }
@@ -1064,9 +1117,28 @@ class AdminManager {
                 return artist ? artist.name : `Unknown (${id})`;
             }).join(', ');
             
-            // Resolve venue name
-            const venue = this.venues.find(v => v.id === concert.venueId);
-            const venueName = venue ? `${venue.name}, ${venue.city}` : `Unknown (${concert.venueId})`;
+            // Resolve venue name and capacity
+            let venueName = `Unknown (${concert.venueId})`;
+            let venueCapacity = null;
+            
+            try {
+                const venueValidation = this.validateVenueReference(concert.venueId);
+                if (venueValidation.isValid) {
+                    const venue = venueValidation.venue;
+                    const config = venueValidation.configuration;
+                    
+                    if (config) {
+                        venueName = `${venue.name} (${concert.venueId.split(':')[1]}), ${venue.city}`;
+                        venueCapacity = config.capacity !== null ? config.capacity : venue.capacity;
+                    } else {
+                        venueName = `${venue.name}, ${venue.city}`;
+                        venueCapacity = venue.capacity;
+                    }
+                }
+            } catch (error) {
+                // Keep default unknown venue name
+                console.warn('Error resolving venue reference:', error.message);
+            }
             
             // Format date
             const startDate = new Date(concert.date).toLocaleDateString();
@@ -1083,6 +1155,7 @@ class AdminManager {
                         <p><strong>Type:</strong> ${this.escapeHtml(concert.type)}</p>
                         <p><strong>Artists:</strong> ${this.escapeHtml(artistNames)}</p>
                         <p><strong>Venue:</strong> ${this.escapeHtml(venueName)}</p>
+                        ${venueCapacity ? `<p><strong>Capacity:</strong> ${venueCapacity.toLocaleString()}</p>` : ''}
                         ${concert.logo ? `<p><strong>Logo:</strong> ${this.escapeHtml(concert.logo)}</p>` : ''}
                         ${concert.price ? `<p><strong>Price:</strong> €${concert.price.toFixed(2)}</p>` : ''}
                         ${concert.notes ? `<p><strong>Notes:</strong> ${this.escapeHtml(concert.notes)}</p>` : ''}
@@ -1134,7 +1207,7 @@ class AdminManager {
     }
 
     /**
-     * Populate venue select with all available venues
+     * Populate venue select with all available venues and their configurations
      */
     populateVenueSelect() {
         const select = document.getElementById('concert-venue');
@@ -1148,10 +1221,22 @@ class AdminManager {
         
         // Add options
         sortedVenues.forEach(venue => {
+            // Add main venue option
             const option = document.createElement('option');
             option.value = venue.id;
             option.textContent = `${venue.name} - ${venue.city}, ${venue.country}`;
             select.appendChild(option);
+            
+            // Add configuration options if they exist
+            if (venue.configurations && Object.keys(venue.configurations).length > 0) {
+                Object.entries(venue.configurations).forEach(([configName, capacity]) => {
+                    const configOption = document.createElement('option');
+                    configOption.value = `${venue.id}:${configName}`;
+                    configOption.textContent = `${venue.name} (${configName}) - ${venue.city}, ${venue.country}`;
+                    configOption.className = 'venue-option-with-config';
+                    select.appendChild(configOption);
+                });
+            }
         });
     }
 
@@ -1392,11 +1477,18 @@ class AdminManager {
                         }
                     }
                     
-                    // Validate venue reference
+                    // Validate venue reference using local venues data (same as form validation)
                     if (!concert.venueId) {
                         errors.push(`Concert "${concert.name}" missing venue`);
-                    } else if (!this.venues.find(v => v.id === concert.venueId)) {
-                        errors.push(`Concert "${concert.name}" references invalid venue: ${concert.venueId}`);
+                    } else {
+                        try {
+                            const venueValidation = this.validateVenueReference(concert.venueId);
+                            if (!venueValidation.isValid) {
+                                errors.push(`Concert "${concert.name}" references invalid venue: ${concert.venueId} - ${venueValidation.error}`);
+                            }
+                        } catch (error) {
+                            errors.push(`Concert "${concert.name}" references invalid venue: ${concert.venueId} - ${error.message}`);
+                        }
                     }
                     
                     // Validate date format
@@ -1876,6 +1968,7 @@ class AdminManager {
         dropdownList.appendChild(emptyItem);
         
         filteredVenues.forEach(venue => {
+            // Add main venue option
             const item = document.createElement('div');
             item.className = 'dropdown-item';
             item.textContent = `${venue.name} - ${venue.city}, ${venue.country}`;
@@ -1885,6 +1978,21 @@ class AdminManager {
             });
             
             dropdownList.appendChild(item);
+            
+            // Add configuration options if they exist
+            if (venue.configurations && Object.keys(venue.configurations).length > 0) {
+                Object.entries(venue.configurations).forEach(([configName, capacity]) => {
+                    const configItem = document.createElement('div');
+                    configItem.className = 'dropdown-item venue-option-with-config';
+                    configItem.textContent = `${venue.name} (${configName}) - ${venue.city}, ${venue.country}`;
+                    
+                    configItem.addEventListener('click', () => {
+                        this.selectVenue(`${venue.id}:${configName}`, select);
+                    });
+                    
+                    dropdownList.appendChild(configItem);
+                });
+            }
         });
     }
 
@@ -2095,6 +2203,274 @@ class AdminManager {
         return {
             isValid: errors.length === 0,
             errors: errors
+        };
+    }
+
+    // ==================== VENUE CONFIGURATIONS MANAGEMENT ====================
+
+    /**
+     * Initialize venue configurations interface
+     */
+    initializeVenueConfigurationsInterface() {
+        this.clearConfigurationsForm();
+        this.addConfigurationRow(); // Add one empty row by default
+    }
+
+    /**
+     * Add a new configuration row to the table
+     * @param {string} configName - Optional configuration name to populate
+     * @param {number} capacity - Optional capacity to populate
+     */
+    addConfigurationRow(configName = '', capacity = '') {
+        const tableBody = document.getElementById('configurations-table-body');
+        const rowIndex = tableBody.children.length;
+        
+        const row = document.createElement('tr');
+        row.className = 'configuration-row';
+        row.dataset.index = rowIndex;
+        
+        row.innerHTML = `
+            <td>
+                <input type="text" class="config-name" placeholder="e.g., seated, standing, festival"
+                       value="${configName}" />
+            </td>
+            <td>
+                <input type="number" class="config-capacity" placeholder="Leave empty for default"
+                       value="${capacity}" />
+            </td>
+            <td>
+                <button type="button" class="btn-remove-configuration" onclick="adminManager.removeConfigurationRow(${rowIndex})">Delete</button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+        this.updateConfigurationRowIndices();
+    }
+
+    /**
+     * Remove a configuration row from the table
+     * @param {number} index - Index of row to remove
+     */
+    removeConfigurationRow(index) {
+        const tableBody = document.getElementById('configurations-table-body');
+        const rows = tableBody.querySelectorAll('.configuration-row');
+        
+        if (rows.length <= 1) {
+            this.showErrorMessage('At least one configuration entry is required');
+            return;
+        }
+        
+        const rowToRemove = tableBody.querySelector(`[data-index="${index}"]`);
+        if (rowToRemove) {
+            rowToRemove.remove();
+            this.updateConfigurationRowIndices();
+        }
+    }
+
+    /**
+     * Update indices of configuration rows after add/remove operations
+     */
+    updateConfigurationRowIndices() {
+        const tableBody = document.getElementById('configurations-table-body');
+        const rows = tableBody.querySelectorAll('.configuration-row');
+        
+        rows.forEach((row, index) => {
+            row.dataset.index = index;
+            const removeBtn = row.querySelector('.btn-remove-configuration');
+            if (removeBtn) {
+                removeBtn.setAttribute('onclick', `adminManager.removeConfigurationRow(${index})`);
+            }
+        });
+    }
+
+    /**
+     * Get configurations data from the form
+     * @returns {Object} Object with configuration names as keys and capacities as values
+     */
+    getConfigurationsFromForm() {
+        const tableBody = document.getElementById('configurations-table-body');
+        const rows = tableBody.querySelectorAll('.configuration-row');
+        const configurations = {};
+        
+        rows.forEach(row => {
+            const configName = row.querySelector('.config-name').value.trim();
+            const capacityValue = row.querySelector('.config-capacity').value.trim();
+            
+            if (configName) {
+                // Convert capacity to number or null if empty
+                const capacity = capacityValue ? parseInt(capacityValue) : null;
+                configurations[configName] = capacity;
+            }
+        });
+        
+        return configurations;
+    }
+
+    /**
+     * Populate configurations form with existing venue data
+     * @param {Object} venue - Venue object
+     */
+    populateConfigurationsForm(venue) {
+        this.clearConfigurationsForm();
+        
+        if (!venue.configurations || Object.keys(venue.configurations).length === 0) {
+            // No configurations, add one empty row
+            this.addConfigurationRow();
+            return;
+        }
+        
+        // Add rows for each configuration
+        Object.entries(venue.configurations).forEach(([configName, capacity]) => {
+            this.addConfigurationRow(configName, capacity || '');
+        });
+    }
+
+    /**
+     * Clear all configuration rows from the table
+     */
+    clearConfigurationsForm() {
+        const tableBody = document.getElementById('configurations-table-body');
+        tableBody.innerHTML = '';
+    }
+
+    /**
+     * Validate configurations data
+     * @param {Object} configurations - Object with configuration names and capacities
+     * @returns {Object} Validation result
+     */
+    validateConfigurations(configurations) {
+        const errors = [];
+        
+        if (!configurations || Object.keys(configurations).length === 0) {
+            return { isValid: true, errors: [] }; // No configurations is valid
+        }
+        
+        // Check for duplicate configuration names (case-insensitive)
+        const configNames = Object.keys(configurations);
+        const lowerCaseNames = configNames.map(name => name.toLowerCase());
+        const duplicates = configNames.filter((name, index) =>
+            lowerCaseNames.indexOf(name.toLowerCase()) !== index
+        );
+        
+        if (duplicates.length > 0) {
+            errors.push(`Duplicate configuration names found: ${duplicates.join(', ')}`);
+        }
+        
+        // Validate configuration names and capacities
+        Object.entries(configurations).forEach(([configName, capacity]) => {
+            if (!configName || configName.trim() === '') {
+                errors.push('Configuration name cannot be empty');
+            } else if (configName.includes(':')) {
+                errors.push(`Configuration name "${configName}" cannot contain colon (:) character`);
+            }
+            
+            if (capacity !== null && capacity !== undefined) {
+                const capacityNum = parseInt(capacity);
+                if (isNaN(capacityNum) || capacityNum < 0) {
+                    errors.push(`Configuration "${configName}": Capacity must be a positive number`);
+                }
+            }
+        });
+        
+        return {
+            isValid: errors.length === 0,
+            errors: errors
+        };
+    }
+
+    /**
+     * Validate venue reference using local venues data (replaces dataManager dependency)
+     * @param {string} venueId - Venue ID to validate (may include configuration)
+     * @returns {Object} Validation result
+     */
+    validateVenueReference(venueId) {
+        try {
+            const { venueId: baseVenueId, configName } = this.parseVenueReference(venueId);
+            const venue = this.venues.find(venue => venue.id === baseVenueId);
+
+            if (!venue) {
+                return {
+                    isValid: false,
+                    error: `Venue not found: ${baseVenueId}`
+                };
+            }
+
+            // If no configuration specified, venue reference is valid
+            if (!configName) {
+                return {
+                    isValid: true,
+                    venue: venue,
+                    configuration: null
+                };
+            }
+
+            // Check if venue has configurations
+            if (!venue.configurations || typeof venue.configurations !== 'object') {
+                return {
+                    isValid: false,
+                    error: `Venue "${venue.name}" does not have any configurations, but configuration "${configName}" was requested`
+                };
+            }
+
+            // Check if requested configuration exists
+            if (!venue.configurations.hasOwnProperty(configName)) {
+                const availableConfigs = Object.keys(venue.configurations).join(', ');
+                return {
+                    isValid: false,
+                    error: `Configuration "${configName}" not found for venue "${venue.name}". Available configurations: ${availableConfigs}`
+                };
+            }
+
+            return {
+                isValid: true,
+                venue: venue,
+                configuration: venue.configurations[configName]
+            };
+
+        } catch (error) {
+            return {
+                isValid: false,
+                error: error.message
+            };
+        }
+    }
+
+    /**
+     * Parse venue reference into venue ID and configuration name (copied from dataManager)
+     * @param {string} venueId - Venue reference to parse
+     * @returns {Object} Parsed venue reference
+     */
+    parseVenueReference(venueId) {
+        if (!venueId || typeof venueId !== 'string') {
+            throw new Error('Invalid venue reference: must be a non-empty string');
+        }
+
+        // Check if venue reference contains configuration (venue-id:config-name format)
+        const colonIndex = venueId.indexOf(':');
+        
+        if (colonIndex === -1) {
+            // No configuration specified, return just the venue ID
+            return {
+                venueId: venueId,
+                configName: null
+            };
+        }
+
+        // Split venue ID and configuration name
+        const baseVenueId = venueId.substring(0, colonIndex);
+        const configName = venueId.substring(colonIndex + 1);
+
+        if (!baseVenueId) {
+            throw new Error('Invalid venue reference: venue ID cannot be empty');
+        }
+
+        if (!configName) {
+            throw new Error('Invalid venue reference: configuration name cannot be empty when using colon separator');
+        }
+
+        return {
+            venueId: baseVenueId,
+            configName: configName
         };
     }
 }
