@@ -7,7 +7,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.1109,
         "longitude": 8.6821,
-        "capacity": 1500
+        "capacity": 400
     },
     {
         "id": "alter-schlachthof-wiesbaden",
@@ -16,7 +16,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.0833,
         "longitude": 8.25,
-        "capacity": 1200
+        "capacity": 2400
     },
     {
         "id": "amphitheater-hanau",
@@ -25,7 +25,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.1333,
         "longitude": 8.9167,
-        "capacity": null
+        "capacity": 2800
     },
     {
         "id": "amphitheater-gelsenkirchen",
@@ -34,7 +34,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.5167,
         "longitude": 7.0833,
-        "capacity": 13000
+        "capacity": 6100
     },
     {
         "id": "barclays-arena-hamburg",
@@ -61,7 +61,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.25,
         "longitude": 10.9667,
-        "capacity": null
+        "capacity": 5000
     },
     {
         "id": "burg-frankenstein-muehltal",
@@ -70,7 +70,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.7833,
         "longitude": 8.6667,
-        "capacity": null
+        "capacity": 2000
     },
     {
         "id": "burg-wertheim",
@@ -79,7 +79,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.7667,
         "longitude": 9.5167,
-        "capacity": null
+        "capacity": 1500
     },
     {
         "id": "cannstatter-wasen-stuttgart",
@@ -88,7 +88,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 48.7996,
         "longitude": 9.2372,
-        "capacity": 60000
+        "capacity": 50000
     },
     {
         "id": "carlswerk-koeln",
@@ -97,7 +97,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.9375,
         "longitude": 6.9583,
-        "capacity": 2000
+        "capacity": 1600
     },
     {
         "id": "centralstation-darmstadt",
@@ -106,7 +106,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.8728,
         "longitude": 8.6512,
-        "capacity": 1200
+        "capacity": 950
     },
     {
         "id": "colos-saal-aschaffenburg",
@@ -115,7 +115,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.9747,
         "longitude": 9.1467,
-        "capacity": 2000
+        "capacity": 500
     },
     {
         "id": "deutsche-bank-park-frankfurt",
@@ -124,7 +124,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.0686,
         "longitude": 8.6454,
-        "capacity": 51500
+        "capacity": 65000
     },
     {
         "id": "domgarten-speyer",
@@ -133,7 +133,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.3167,
         "longitude": 8.4333,
-        "capacity": null
+        "capacity": 10000
     },
     {
         "id": "e-werk-open-air-gelnde",
@@ -151,7 +151,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.9249733378483,
         "longitude": 6.978493985363258,
-        "capacity": null
+        "capacity": 800
     },
     {
         "id": "europahalle-karlsruhe",
@@ -178,7 +178,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.1109,
         "longitude": 8.6821,
-        "capacity": 13500
+        "capacity": 15000
     },
     {
         "id": "festplatz-altengronau",
@@ -187,7 +187,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.2833,
         "longitude": 9.5167,
-        "capacity": null
+        "capacity": 2000
     },
     {
         "id": "festplatz-finsterloh-wetzlar",
@@ -196,7 +196,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.55,
         "longitude": 8.5,
-        "capacity": null
+        "capacity": 1400
     },
     {
         "id": "festung-ehrenbreitstein",
@@ -205,7 +205,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.36511023847094,
         "longitude": 7.615033947273454,
-        "capacity": null
+        "capacity": 1000
     },
     {
         "id": "flughafen-tempelhof",
@@ -214,7 +214,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 52.48278099752736,
         "longitude": 13.38925762757182,
-        "capacity": null
+        "capacity": 60000
     },
     {
         "id": "flugplatz-ballenstedt",
@@ -223,7 +223,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.75,
         "longitude": 11.2333,
-        "capacity": null
+        "capacity": 25000
     },
     {
         "id": "flugplatz-hildesheim",
@@ -232,7 +232,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 52.1833,
         "longitude": 9.95,
-        "capacity": null
+        "capacity": 25000
     },
     {
         "id": "fredenbaumpark-dortmund",
@@ -241,7 +241,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.5333,
         "longitude": 7.4667,
-        "capacity": null
+        "capacity": 5000
     },
     {
         "id": "fuehlinger-see-koeln",
@@ -259,7 +259,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.4311730838979,
         "longitude": 6.9980911695729064,
-        "capacity": null
+        "capacity": 7480
     },
     {
         "id": "gruenspan-hamburg",
@@ -268,7 +268,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 53.5511,
         "longitude": 9.9937,
-        "capacity": 1200
+        "capacity": 950
     },
     {
         "id": "halle-02-heidelberg",
@@ -277,7 +277,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.3988,
         "longitude": 8.6724,
-        "capacity": 3000
+        "capacity": 1500
     },
     {
         "id": "hanns-martin-schleyer-halle-stuttgart",
@@ -295,7 +295,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.3397,
         "longitude": 12.3731,
-        "capacity": 5000
+        "capacity": 3600
     },
     {
         "id": "hessenhalle-alsfeld",
@@ -304,7 +304,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.75,
         "longitude": 9.2667,
-        "capacity": null
+        "capacity": 3000
     },
     {
         "id": "hessenhallen-giessen",
@@ -313,7 +313,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.5836,
         "longitude": 8.6742,
-        "capacity": null
+        "capacity": 2000
     },
     {
         "id": "historische-stadthalle-wuppertal",
@@ -322,7 +322,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.2562,
         "longitude": 7.1508,
-        "capacity": 3200
+        "capacity": 1800
     },
     {
         "id": "hugenottenhalle-neu-isenburg",
@@ -331,7 +331,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.0478,
         "longitude": 8.7017,
-        "capacity": null
+        "capacity": 1800
     },
     {
         "id": "jahrhunderthalle-frankfurt",
@@ -340,7 +340,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.0833,
         "longitude": 8.6833,
-        "capacity": 8000
+        "capacity": 5000
     },
     {
         "id": "jazzhaus",
@@ -349,7 +349,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 47.99495672462254,
         "longitude": 7.8405230846233,
-        "capacity": null
+        "capacity": 400
     },
     {
         "id": "karolinenplatz-darmstadt",
@@ -358,7 +358,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.8728,
         "longitude": 8.6512,
-        "capacity": null
+        "capacity": 400000
     },
     {
         "id": "kurfuerstliches-schloss-mainz",
@@ -367,7 +367,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.9929,
         "longitude": 8.2473,
-        "capacity": null
+        "capacity": 600
     },
     {
         "id": "kuz-mainz",
@@ -376,7 +376,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.9929,
         "longitude": 8.2473,
-        "capacity": null
+        "capacity": 1000
     },
     {
         "id": "lka-longhorn",
@@ -385,7 +385,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 48.76746260473925,
         "longitude": 9.251666698318823,
-        "capacity": null
+        "capacity": 1500
     },
     {
         "id": "loreley-freilichtbhne",
@@ -403,7 +403,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.4521,
         "longitude": 11.0767,
-        "capacity": 1400
+        "capacity": 1500
     },
     {
         "id": "maimarktgelaende-mannheim",
@@ -412,7 +412,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.4875,
         "longitude": 8.466,
-        "capacity": null
+        "capacity": 28000
     },
     {
         "id": "metropolishalle-potsdam",
@@ -421,7 +421,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 52.3906,
         "longitude": 13.0645,
-        "capacity": 3500
+        "capacity": 2000
     },
     {
         "id": "mitsubishi-electric-halle-duesseldorf",
@@ -430,7 +430,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.2277,
         "longitude": 6.7735,
-        "capacity": 7500
+        "capacity": 5450
     },
     {
         "id": "nachtleben-frankfurt",
@@ -439,7 +439,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.1109,
         "longitude": 8.6821,
-        "capacity": 1000
+        "capacity": 280
     },
     {
         "id": "olympiastadion-muenchen",
@@ -448,7 +448,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 48.1741,
         "longitude": 11.5501,
-        "capacity": 69250
+        "capacity": 77000
     },
     {
         "id": "palladium",
@@ -457,7 +457,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.96935694209163,
         "longitude": 7.016978469382453,
-        "capacity": null
+        "capacity": 4000
     },
     {
         "id": "posthalle-wuerzburg",
@@ -466,7 +466,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.7913,
         "longitude": 9.9534,
-        "capacity": 1500
+        "capacity": 2100
     },
     {
         "id": "rheingoldhalle-mainz",
@@ -475,7 +475,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.9929,
         "longitude": 8.2473,
-        "capacity": 4500
+        "capacity": 1260
     },
     {
         "id": "rosengarten",
@@ -484,7 +484,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.48558435930464,
         "longitude": 8.477337940496607,
-        "capacity": null
+        "capacity": 1367
     },
     {
         "id": "rudolf-weber-arena-oberhausen",
@@ -520,7 +520,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 53.25,
         "longitude": 8.2,
-        "capacity": null
+        "capacity": 20000
     },
     {
         "id": "sommerfesthalle-otterstadt",
@@ -529,7 +529,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.3667,
         "longitude": 8.4333,
-        "capacity": null
+        "capacity": 2800
     },
     {
         "id": "st-johannis-kirche-wuerzburg",
@@ -538,7 +538,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.7913,
         "longitude": 9.9534,
-        "capacity": null
+        "capacity": 800
     },
     {
         "id": "stadthalle-offenbach",
@@ -556,7 +556,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.9406,
         "longitude": 6.9599,
-        "capacity": 10000
+        "capacity": 12000
     },
     {
         "id": "tunierplatz-luhmuehlen",
@@ -565,7 +565,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 53.3167,
         "longitude": 10.2833,
-        "capacity": null
+        "capacity": 25000
     },
     {
         "id": "volkspark-dutzendteich-nuernberg",
@@ -574,7 +574,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.4167,
         "longitude": 11.1167,
-        "capacity": null
+        "capacity": 1500
     },
     {
         "id": "wacken-open-air",
@@ -592,7 +592,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 51.2562,
         "longitude": 7.1508,
-        "capacity": null
+        "capacity": 2500
     }
 ];
 
