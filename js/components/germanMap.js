@@ -113,7 +113,9 @@ class GermanMapManager {
         
         // Count concerts per city
         this.concertData.forEach(concert => {
-            const venue = venueMap.get(concert.venueId);
+            const parsed = dataManager.parseVenueReference(concert.venueId);
+            const baseVenueId = parsed.venueId;          
+            const venue = venueMap.get(baseVenueId);
             if (venue && venue.city) {
                 const city = venue.city;
                 

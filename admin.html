@@ -121,6 +121,34 @@
                         <input type="number" id="venue-capacity" name="capacity" placeholder="e.g., 5000">
                     </div>
                     
+                    <div class="form-group">
+                        <label>Configurations (optional):</label>
+                        <div id="venue-configurations-container" class="configurations-container">
+                            <div class="configurations-table-container">
+                                <table id="configurations-table" class="configurations-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Configuration Name</th>
+                                            <th>Capacity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="configurations-table-body">
+                                        <!-- Configuration rows will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" id="add-configuration-btn" class="btn-add-configuration">+ Add Configuration</button>
+                            <div class="configurations-help">
+                                <small>
+                                    • Configurations allow venues to have different capacity setups (e.g., "seated", "standing", "festival")<br>
+                                    • Configuration names must be unique within a venue<br>
+                                    • Leave capacity empty to use venue's default capacity
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <button type="submit">Add Venue</button>
                     <button type="button" onclick="clearForm('venue-form')">Clear</button>
                 </form>

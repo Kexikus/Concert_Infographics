@@ -68,9 +68,83 @@ class DataManager {
         return this.artists.find(artist => artist.id === id);
     }
 
-    // Get venue by ID
+    // Get venue by ID (updated to handle base venue ID parsing)
     getVenueById(id) {
-        return this.venues.find(venue => venue.id === id);
+        // Parse venue reference to get base venue ID
+        const { venueId } = this.parseVenueReference(id);
+        return this.venues.find(venue => venue.id === venueId);
+    }
+
+    // Parse venue reference into venue ID and configuration name
+    parseVenueReference(venueId) {
+        if (!venueId || typeof venueId !== 'string') {
+            throw new Error('Invalid venue reference: must be a non-empty string');
+        }
+
+        // Check if venue reference contains configuration (venue-id:config-name format)
+        const colonIndex = venueId.indexOf(':');
+        
+        if (colonIndex === -1) {
+            // No configuration specified, return just the venue ID
+            return {
+                venueId: venueId,
+                configName: null
+            };
+        }
+
+        // Split venue ID and configuration name
+        const baseVenueId = venueId.substring(0, colonIndex);
+        const configName = venueId.substring(colonIndex + 1);
+
+        if (!baseVenueId) {
+            throw new Error('Invalid venue reference: venue ID cannot be empty');
+        }
+
+        if (!configName) {
+            throw new Error('Invalid venue reference: configuration name cannot be empty when using colon separator');
+        }
+
+        return {
+            venueId: baseVenueId,
+            configName: configName
+        };
+    }
+
+    // Get venue capacity for a concert with error handling for invalid configurations
+    getVenueCapacityForConcert(venueId) {
+        try {
+            const { venueId: baseVenueId, configName } = this.parseVenueReference(venueId);
+            const venue = this.venues.find(venue => venue.id === baseVenueId);
+
+            if (!venue) {
+                throw new Error(`Venue not found: ${baseVenueId}`);
+            }
+
+            // If no configuration specified, return default capacity
+            if (!configName) {
+                return venue.capacity;
+            }
+
+            // Check if venue has configurations
+            if (!venue.configurations || typeof venue.configurations !== 'object') {
+                throw new Error(`Venue "${venue.name}" does not have any configurations, but configuration "${configName}" was requested`);
+            }
+
+            // Check if requested configuration exists
+            if (!venue.configurations.hasOwnProperty(configName)) {
+                const availableConfigs = Object.keys(venue.configurations).join(', ');
+                throw new Error(`Configuration "${configName}" not found for venue "${venue.name}". Available configurations: ${availableConfigs}`);
+            }
+
+            const config_capacity = venue.configurations[configName];
+            
+            // Return configuration capacity, fallback to venue default capacity if config capacity is null
+            return config_capacity !== null && config_capacity !== undefined ? config_capacity : venue.capacity;
+
+        } catch (error) {
+            // Re-throw with more context for debugging
+            throw new Error(`Error resolving venue capacity: ${error.message}`);
+        }
     }
 
     // Get concert by ID
@@ -482,7 +556,11 @@ class DataManager {
             country: venue.country,
             latitude: venue.latitude,
             longitude: venue.longitude,
-            concertCount: this.concerts.filter(concert => concert.venueId === venue.id).length
+            concertCount: this.concerts.filter(concert => {
+                // Parse venue reference to get base venue ID for counting
+                const { venueId: baseVenueId } = this.parseVenueReference(concert.venueId);
+                return baseVenueId === venue.id;
+            }).length
         }));
     }
 
@@ -727,7 +805,11 @@ class DataManager {
         const venues = this.getVenues().filter(venue => venue.country === countryName);
         const venueIds = venues.map(venue => venue.id);
         
-        return this.concerts.filter(concert => venueIds.includes(concert.venueId));
+        return this.concerts.filter(concert => {
+            // Parse venue reference to get base venue ID for filtering
+            const { venueId: baseVenueId } = this.parseVenueReference(concert.venueId);
+            return venueIds.includes(baseVenueId);
+        });
     }
 
     // Get country statistics (venues, concerts, artists)
@@ -803,27 +885,33 @@ class DataManager {
 
     // Get location statistics for the locations view
     getLocationStatistics() {
-        // Calculate unique venues
+        // Calculate unique venues (using base venue IDs)
         const uniqueVenueIds = new Set();
         this.concerts.forEach(concert => {
-            uniqueVenueIds.add(concert.venueId);
+            // Parse venue reference to get base venue ID for statistics
+            const { venueId: baseVenueId } = this.parseVenueReference(concert.venueId);
+            uniqueVenueIds.add(baseVenueId);
         });
         const totalVenues = uniqueVenueIds.size;
         
         // Calculate unique cities
         const uniqueCities = new Set();
         this.concerts.forEach(concert => {
-            const venue = this.getVenueById(concert.venueId);
+            // Parse venue reference to get base venue ID, then get venue details
+            const { venueId: baseVenueId } = this.parseVenueReference(concert.venueId);
+            const venue = this.getVenueById(baseVenueId);
             if (venue) {
                 uniqueCities.add(venue.city);
             }
         });
         const totalCities = uniqueCities.size;
         
-        // Calculate venue frequency (events per venue)
+        // Calculate venue frequency (events per venue using base venue IDs)
         const venueFrequency = {};
         this.concerts.forEach(concert => {
-            const venue = this.getVenueById(concert.venueId);
+            // Parse venue reference to get base venue ID, then get venue details
+            const { venueId: baseVenueId } = this.parseVenueReference(concert.venueId);
+            const venue = this.getVenueById(baseVenueId);
             if (venue) {
                 venueFrequency[venue.name] = (venueFrequency[venue.name] || 0) + 1;
             }
@@ -838,7 +926,9 @@ class DataManager {
         // Calculate city frequency (events per city)
         const cityFrequency = {};
         this.concerts.forEach(concert => {
-            const venue = this.getVenueById(concert.venueId);
+            // Parse venue reference to get base venue ID, then get venue details
+            const { venueId: baseVenueId } = this.parseVenueReference(concert.venueId);
+            const venue = this.getVenueById(baseVenueId);
             if (venue) {
                 cityFrequency[venue.city] = (cityFrequency[venue.city] || 0) + 1;
             }
@@ -864,9 +954,10 @@ class DataManager {
         
         this.concerts.forEach(concert => {
             const year = new Date(concert.date).getFullYear();
-            const venue = this.getVenueById(concert.venueId);
             
-            if (venue && venue.capacity) {
+            const capacity = this.getVenueCapacityForConcert(concert.venueId);
+            
+            if (capacity !== null && capacity !== undefined) {
                 if (!yearStats[year]) {
                     yearStats[year] = {
                         overall: [],
@@ -875,9 +966,9 @@ class DataManager {
                     };
                 }
                 
-                // Add venue capacity to overall and type-specific arrays
-                yearStats[year].overall.push(venue.capacity);
-                yearStats[year][concert.type].push(venue.capacity);
+                // Add configuration-specific capacity to overall and type-specific arrays
+                yearStats[year].overall.push(capacity);
+                yearStats[year][concert.type].push(capacity);
             }
         });
         
@@ -1026,9 +1117,10 @@ class DataManager {
         
         artistConcerts.forEach(concert => {
             const year = new Date(concert.date).getFullYear();
-            const venue = this.getVenueById(concert.venueId);
             
-            if (venue && venue.capacity !== null && venue.capacity !== undefined) {
+            const capacity = this.getVenueCapacityForConcert(concert.venueId);
+            
+            if (capacity !== null && capacity !== undefined) {
                 if (!yearStats[year]) {
                     yearStats[year] = {
                         allShows: [],
@@ -1037,16 +1129,16 @@ class DataManager {
                     };
                 }
                 
-                // All shows where this artist appeared
-                yearStats[year].allShows.push(venue.capacity);
+                // All shows where this artist appeared (using configuration-specific capacity)
+                yearStats[year].allShows.push(capacity);
                 
                 // Concerts only (not festivals)
                 if (concert.type === 'concert') {
-                    yearStats[year].concertsOnly.push(venue.capacity);
+                    yearStats[year].concertsOnly.push(capacity);
                     
                     // Headline shows (concerts where this artist is listed first)
                     if (concert.artistIds.length > 0 && concert.artistIds[0] === artistId) {
-                        yearStats[year].headlineShows.push(venue.capacity);
+                        yearStats[year].headlineShows.push(capacity);
                     }
                 }
             }

@@ -171,9 +171,11 @@ class ShowDisplayManager {
         
         // Get all concerts and filter by city venues
         const allConcerts = dataManager.getConcerts();
-        const cityConcerts = allConcerts.filter(concert =>
-            cityVenueIds.includes(concert.venueId)
-        );
+        const cityConcerts = allConcerts.filter(concert => {
+            // Parse venue reference to handle configuration format
+            const { venueId: baseVenueId } = dataManager.parseVenueReference(concert.venueId);
+            return cityVenueIds.includes(baseVenueId);
+        });
 
         // Sort concerts by date (chronologically - first event first)
         const sortedConcerts = cityConcerts.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -221,7 +223,9 @@ class ShowDisplayManager {
         const event = dataManager.getConcertById(eventId);
         if (!event) return '';
 
-        const venue = dataManager.getVenueById(event.venueId);
+        // Parse venue reference to get base venue ID
+        const { venueId: baseVenueId } = dataManager.parseVenueReference(event.venueId);
+        const venue = dataManager.getVenueById(baseVenueId);
         if (!venue) return '';
 
         const { compact = false } = options;
@@ -248,9 +252,13 @@ class ShowDisplayManager {
 
         // Format capacity if available (only in standard view)
         let capacityText = '';
-        if (!compact && venue.capacity !== null && venue.capacity !== undefined) {
-            const formattedCapacity = venue.capacity.toLocaleString('de-DE');
-            capacityText = ` <span style="color: var(--red);">•</span> ${formattedCapacity} attendants`;
+        if (!compact) {
+            // Get configuration-specific capacity for concert displays
+            const configCapacity = dataManager.getVenueCapacityForConcert(event.venueId);
+            if (configCapacity !== null && configCapacity !== undefined) {
+                const formattedCapacity = configCapacity.toLocaleString('de-DE');
+                capacityText = ` <span style="color: var(--red);">•</span> ${formattedCapacity} attendants`;
+            }
         }
 
         return `<a href="#year/${year}" class="date-link">${formattedDate}</a> <span style="color: var(--red);">•</span> <a href="#city/${sanitizedCity}" class="venue-link">${venue.name}, ${venue.city}</a>${priceText}${capacityText}`;

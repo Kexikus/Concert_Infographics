@@ -155,14 +155,16 @@ class StatisticsManager {
         const venues = dataManager.getVenues();
         const concerts = dataManager.getConcerts();
         
-        // Calculate venue utilization
+        // Calculate venue utilization (using base venue IDs for consistency)
         const venueUsage = {};
         concerts.forEach(concert => {
-            venueUsage[concert.venueId] = (venueUsage[concert.venueId] || 0) + 1;
+            // Parse venue reference to get base venue ID for statistics
+            const { venueId: baseVenueId } = dataManager.parseVenueReference(concert.venueId);
+            venueUsage[baseVenueId] = (venueUsage[baseVenueId] || 0) + 1;
         });
 
         // Find most used venue
-        const mostUsedVenueId = Object.keys(venueUsage).reduce((a, b) => 
+        const mostUsedVenueId = Object.keys(venueUsage).reduce((a, b) =>
             venueUsage[a] > venueUsage[b] ? a : b
         );
         const mostUsedVenue = dataManager.getVenueById(mostUsedVenueId);
@@ -539,9 +541,11 @@ class StatisticsManager {
         const cityVenueIds = cityVenues.map(venue => venue.id);
         
         // Get all concerts that happened at venues in this city
-        const cityConcerts = dataManager.getConcerts().filter(concert =>
-            cityVenueIds.includes(concert.venueId)
-        );
+        // Parse venue references to handle configuration format
+        const cityConcerts = dataManager.getConcerts().filter(concert => {
+            const { venueId: baseVenueId } = dataManager.parseVenueReference(concert.venueId);
+            return cityVenueIds.includes(baseVenueId);
+        });
         
         // Calculate statistics
         const totalEvents = cityConcerts.length;

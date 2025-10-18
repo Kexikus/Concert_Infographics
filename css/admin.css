@@ -1312,3 +1312,274 @@ form button[type="button"]:hover {
 .logo-row.error input:focus {
     box-shadow: 0 0 0 2px rgb(220 38 38 / 0.1);
 }
+
+/* ==================== VENUE CONFIGURATIONS INTERFACE STYLES ==================== */
+
+/* Configurations container */
+.configurations-container {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--surface-color);
+    padding: 1rem;
+}
+
+/* Configurations table container */
+.configurations-table-container {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+/* Configurations table */
+.configurations-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface-color);
+}
+
+.configurations-table thead {
+    background: var(--background-color);
+}
+
+.configurations-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.configurations-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.configurations-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.configurations-table tbody tr:hover {
+    background: var(--background-color);
+}
+
+/* Table inputs */
+.configurations-table input {
+    width: 100%;
+    padding: 0.375rem 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    background: var(--surface-color);
+    transition: var(--transition);
+}
+
+.configurations-table input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgb(37 99 235 / 0.1);
+}
+
+/* Add configuration button */
+.btn-add-configuration {
+    background: var(--success-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
+    margin-bottom: 1rem;
+}
+
+.btn-add-configuration:hover {
+    background: #047857;
+    transform: translateY(-1px);
+}
+
+/* Remove configuration button */
+.btn-remove-configuration {
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-remove-configuration:hover {
+    background: #b91c1c;
+}
+
+/* Configurations help text */
+.configurations-help {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.configurations-help small {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+/* Empty state for configurations table */
+.configurations-table tbody:empty::after {
+    content: 'No configurations added yet. Click "Add Configuration" to get started.';
+    display: block;
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 2rem;
+    font-size: 0.875rem;
+}
+
+/* Column widths */
+.configurations-table th:nth-child(1),
+.configurations-table td:nth-child(1) {
+    width: 50%;
+}
+
+.configurations-table th:nth-child(2),
+.configurations-table td:nth-child(2) {
+    width: 30%;
+}
+
+.configurations-table th:nth-child(3),
+.configurations-table td:nth-child(3) {
+    width: 20%;
+    text-align: center;
+}
+
+/* Responsive adjustments for configurations interface */
+@media (max-width: 768px) {
+    .configurations-table th,
+    .configurations-table td {
+        padding: 0.5rem;
+    }
+    
+    .configurations-table th:nth-child(1),
+    .configurations-table td:nth-child(1) {
+        width: 45%;
+    }
+    
+    .configurations-table th:nth-child(2),
+    .configurations-table td:nth-child(2) {
+        width: 35%;
+    }
+    
+    .configurations-table th:nth-child(3),
+    .configurations-table td:nth-child(3) {
+        width: 20%;
+    }
+    
+    .btn-add-configuration {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .configurations-container {
+        padding: 0.75rem;
+    }
+    
+    .configurations-table th,
+    .configurations-table td {
+        padding: 0.375rem;
+        font-size: 0.8rem;
+    }
+    
+    .configurations-table input {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.25rem 0.375rem;
+    }
+    
+    .btn-remove-configuration {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .configurations-help small {
+        font-size: 0.7rem;
+    }
+}
+
+/* Animation for configuration rows */
+@keyframes configurationRowSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.configuration-row {
+    animation: configurationRowSlideIn 0.3s ease-out;
+}
+
+/* Validation error styling for configuration rows */
+.configuration-row.error {
+    background: #fef2f2;
+}
+
+.configuration-row.error input {
+    border-color: var(--danger-color);
+}
+
+.configuration-row.error input:focus {
+    box-shadow: 0 0 0 2px rgb(220 38 38 / 0.1);
+}
+
+/* Venue configuration display in data items */
+.venue-configurations {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: var(--background-color);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.venue-configurations .config-title {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.venue-configurations .config-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.venue-configurations .config-item {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Concert venue dropdown with configurations */
+.venue-option-with-config {
+    padding-left: 1rem;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+.venue-option-with-config::before {
+    content: "↳ ";
+    margin-right: 0.25rem;
+}
