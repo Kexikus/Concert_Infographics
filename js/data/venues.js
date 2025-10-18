@@ -16,7 +16,10 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.0833,
         "longitude": 8.25,
-        "capacity": 2400
+        "capacity": 2400,
+        "configurations": {
+            "Kesselhaus": 300
+        }    
     },
     {
         "id": "amphitheater-hanau",
@@ -124,7 +127,10 @@ const venuesData = [
         "country": "Germany",
         "latitude": 50.0686,
         "longitude": 8.6454,
-        "capacity": 65000
+        "capacity": 65000,
+        "configurations": {
+            "Rockin1000": 15000
+        }
     },
     {
         "id": "domgarten-speyer",
@@ -358,7 +364,7 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.8728,
         "longitude": 8.6512,
-        "capacity": 400000
+        "capacity": 100000
     },
     {
         "id": "kurfuerstliches-schloss-mainz",
@@ -502,7 +508,10 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.0134,
         "longitude": 8.4044,
-        "capacity": null
+        "capacity": null,
+        "configurations": {
+            "HockRock": 3000
+        }
     },
     {
         "id": "schlosshof-fulda",

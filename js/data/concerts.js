@@ -1196,33 +1196,18 @@ const concertsData = [
         "notes": null
     },
     {
-        "id": "das-elfte-gebot-tour",
-        "date": "2022-01-13",
-        "endDate": null,
-        "artistIds": [
-            "feuerschwanz",
-            "warkings"
-        ],
-        "venueId": "batschkapp-frankfurt",
-        "type": "concert",
-        "name": "Das Elfte Gebot Tour",
-        "price": 36.5,
-        "logo": "DasElfteGebot2022.png",
-        "notes": null
-    },
-    {
         "id": "hock-rock",
+        "name": "Hock Rock",
         "date": "2021-09-17",
         "endDate": "2021-09-19",
+        "type": "festival",
         "artistIds": [
             "fiddlers-green",
             "saltatio-mortis",
             "versengold",
             "mr-hurley-und-die-pulveraffen"
         ],
-        "venueId": "schlossgarten-karlsruhe",
-        "type": "festival",
-        "name": "Hock Rock",
+        "venueId": "schlossgarten-karlsruhe:HockRock",
         "price": 156,
         "logo": "HockRock.png",
         "notes": null
@@ -1451,15 +1436,15 @@ const concertsData = [
     },
     {
         "id": "rockin-1000",
+        "name": "Rockin' 1000",
         "date": "2019-07-07",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "rockin-1000",
             "gypsys"
         ],
-        "venueId": "deutsche-bank-park-frankfurt",
-        "type": "concert",
-        "name": "Rockin' 1000",
+        "venueId": "deutsche-bank-park-frankfurt:Rockin1000",
         "price": 25,
         "logo": "Rockin_1000.png",
         "notes": null
@@ -1655,14 +1640,14 @@ const concertsData = [
     },
     {
         "id": "european-invasion",
+        "name": "European Invasion",
         "date": "2018-06-19",
         "endDate": null,
+        "type": "concert",
         "artistIds": [
             "galactic-empire"
         ],
-        "venueId": "alter-schlachthof-wiesbaden",
-        "type": "concert",
-        "name": "European Invasion",
+        "venueId": "alter-schlachthof-wiesbaden:Kesselhaus",
         "price": 22,
         "logo": "EuropeanInvasion2018.png",
         "notes": null
@@ -2200,18 +2185,18 @@ const concertsData = [
         "endDate": "2013-08-03",
         "type": "festival",
         "artistIds": [
-            "alice-cooper",
-            "deep-purple",
-            "asp",
-            "die-apokalyptischen-reiter",
-            "doro",
-            "feuerschwanz",
-            "rage",
             "motorhead",
+            "deep-purple",
             "nightwish",
-            "russkaja",
-            "sabaton",
+            "alice-cooper",
+            "doro",
+            "rage",
             "subway-to-sally",
+            "die-apokalyptischen-reiter",
+            "sabaton",
+            "asp",
+            "russkaja",
+            "feuerschwanz",
             "woa-firefighters"
         ],
         "venueId": "wacken-open-air",
