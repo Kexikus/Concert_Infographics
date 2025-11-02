@@ -1,6 +1,22 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "darkness-tour-2025",
+        "name": "Darkness Tour 2025",
+        "date": "2025-10-30",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "mono-inc",
+            "soulbound",
+            "alienare"
+        ],
+        "venueId": "alter-schlachthof-wiesbaden",
+        "price": 52.55,
+        "logo": "Darkness2025.png",
+        "notes": null
+    },
+    {
         "id": "the-greatest-of-all-tours-worldwide",
         "name": "The Greatest of All Tours Worldwide",
         "date": "2025-10-08",

@@ -43,6 +43,17 @@ const artistsData = [
         "logo": "Alice_Cooper.png"
     },
     {
+        "id": "alienare",
+        "name": "Alienare",
+        "country": "Germany",
+        "logo": [
+            {
+                "filename": "Alienare.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "amaranthe",
         "name": "Amaranthe",
         "country": "Sweden",
@@ -190,6 +201,12 @@ const artistsData = [
         "name": "Butcher Babies",
         "country": "USA",
         "logo": "Butcher_Babies.png"
+    },
+    {
+        "id": "cari-cari",
+        "name": "Cari Cari",
+        "country": "Austria",
+        "logo": "Cari_Cari.png"
     },
     {
         "id": "coldrain",
@@ -696,12 +713,6 @@ const artistsData = [
         "logo": "MajorVoice.png"
     },
     {
-        "id": "cari-cari",
-        "name": "Cari Cari",
-        "country": "Austria",
-        "logo": "Cari_Cari.png"
-    },
-    {
         "id": "manntra",
         "name": "Manntra",
         "country": "Croatia",
@@ -909,6 +920,17 @@ const artistsData = [
         "name": "Skillet",
         "country": "USA",
         "logo": "Skillet.png"
+    },
+    {
+        "id": "soulbound",
+        "name": "Soulbound",
+        "country": "Germany",
+        "logo": [
+            {
+                "filename": "Soulbound.png",
+                "from": null
+            }
+        ]
     },
     {
         "id": "steel-panther",
