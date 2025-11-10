@@ -1,6 +1,36 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "live-rakkatakka-2025",
+        "name": "Live Rakkatakka 2025",
+        "date": "2025-11-09",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "van-canto",
+            "metal-mind"
+        ],
+        "venueId": "colos-saal-aschaffenburg",
+        "price": 33.7,
+        "logo": "LiveRakkatakka2025.png",
+        "notes": null
+    },
+    {
+        "id": "weltenwanderer-tour-2025",
+        "name": "Weltenwanderer Tour 2025",
+        "date": "2025-11-08",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "saltatio-mortis",
+            "bad-loverz"
+        ],
+        "venueId": "jahrhunderthalle-frankfurt",
+        "price": 67.49,
+        "logo": "Weltenwanderer.png",
+        "notes": null
+    },
+    {
         "id": "darkness-tour-2025",
         "name": "Darkness Tour 2025",
         "date": "2025-10-30",

@@ -114,6 +114,17 @@ const artistsData = [
         "logo": "Baby_Metal.png"
     },
     {
+        "id": "bad-loverz",
+        "name": "Bad Loverz",
+        "country": "Germany",
+        "logo": [
+            {
+                "filename": "Bad_Loverz.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "bannkreis",
         "name": "Bannkreis",
         "country": "Germany",
@@ -723,6 +734,17 @@ const artistsData = [
         "name": "Megaherz",
         "country": "Germany",
         "logo": "Megaherz.png"
+    },
+    {
+        "id": "metal-mind",
+        "name": "Metal Mind",
+        "country": "Germany",
+        "logo": [
+            {
+                "filename": "Metal_Mind.png",
+                "from": null
+            }
+        ]
     },
     {
         "id": "mono-inc",
