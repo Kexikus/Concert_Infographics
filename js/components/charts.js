@@ -1525,9 +1525,7 @@ class ChartsManager {
         // Count actual shows for this artist
         artistConcerts.forEach(concert => {
             const year = new Date(concert.date).getFullYear();
-            // Count how many times this artist appears in this concert (should be 1, but being safe)
-            const artistAppearances = concert.artistIds.filter(id => id === artistId).length;
-            showsPerYear[year] = (showsPerYear[year] || 0) + artistAppearances;
+            showsPerYear[year] = (showsPerYear[year] || 0) + 1;
         });
 
         const years = allYears.sort();
@@ -1699,7 +1697,8 @@ class ChartsManager {
         // Count how many times each band was seen in that year
         const bandFrequency = {};
         yearConcerts.forEach(concert => {
-            concert.artistIds.forEach(artistId => {
+            const uniqueArtistIds = new Set(concert.artistIds);
+            uniqueArtistIds.forEach(artistId => {
                 const artist = dataManager.getArtistById(artistId);
                 if (artist) {
                     bandFrequency[artist.name] = (bandFrequency[artist.name] || 0) + 1;

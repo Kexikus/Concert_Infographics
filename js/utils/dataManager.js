@@ -344,7 +344,8 @@ class DataManager {
     getArtistFrequencyStats() {
         const stats = {};
         this.concerts.forEach(concert => {
-            concert.artistIds.forEach(artistId => {
+            const uniqueArtistIds = new Set(concert.artistIds);
+            uniqueArtistIds.forEach(artistId => {
                 const artist = this.getArtistById(artistId);
                 if (artist) {
                     stats[artist.name] = (stats[artist.name] || 0) + 1;
