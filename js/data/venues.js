@@ -19,7 +19,7 @@ const venuesData = [
         "capacity": 2400,
         "configurations": {
             "Kesselhaus": 300
-        }    
+        }
     },
     {
         "id": "amphitheater-hanau",
@@ -56,6 +56,15 @@ const venuesData = [
         "latitude": 50.1109,
         "longitude": 8.6821,
         "capacity": 1500
+    },
+    {
+        "id": "buderus-arena",
+        "name": "Buderus Arena",
+        "city": "Wetzlar",
+        "country": "Germany",
+        "latitude": 50.56514287741329,
+        "longitude": 8.50834288420034,
+        "capacity": 6000
     },
     {
         "id": "burg-abenberg",
@@ -557,6 +566,15 @@ const venuesData = [
         "latitude": 50.08292656780726,
         "longitude": 8.776994708281967,
         "capacity": 4000
+    },
+    {
+        "id": "stadthalle-limburg",
+        "name": "Stadthalle",
+        "city": "Limburg",
+        "country": "Germany",
+        "latitude": 50.38711594549639,
+        "longitude": 8.062280135700952,
+        "capacity": 1000
     },
     {
         "id": "tanzbrunnen-koeln",

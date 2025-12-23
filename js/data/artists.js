@@ -197,6 +197,17 @@ const artistsData = [
         "logo": "Brunhilde.png"
     },
     {
+        "id": "bury-tomorrow",
+        "name": "Bury Tomorrow",
+        "country": "UK",
+        "logo": [
+            {
+                "filename": "Bury_Tomorrow.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "bush",
         "name": "Bush",
         "country": "UK",
@@ -497,6 +508,17 @@ const artistsData = [
         "logo": "Grailknights.png"
     },
     {
+        "id": "gregorian",
+        "name": "Gregorian",
+        "country": "UK",
+        "logo": [
+            {
+                "filename": "Gregorian.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "gypsys",
         "name": "Gypsys",
         "country": "Germany",
@@ -507,6 +529,17 @@ const artistsData = [
         "name": "Habenichtse",
         "country": "Germany",
         "logo": "Habenichtse.png"
+    },
+    {
+        "id": "haggefugg",
+        "name": "Haggefugg",
+        "country": "Germany",
+        "logo": [
+            {
+                "filename": "Haggefugg.png",
+                "from": null
+            }
+        ]
     },
     {
         "id": "haematom",
@@ -1030,6 +1063,17 @@ const artistsData = [
         "logo": "The_Dark_Side_of_the_Moon.png"
     },
     {
+        "id": "the-legendary-orchestra",
+        "name": "The Legendary Orchestra",
+        "country": "Sweden",
+        "logo": [
+            {
+                "filename": "Legendary_Orchestra.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "the-oreillys-and-the-paddyhats",
         "name": "The O'Reillys and the Paddyhats",
         "country": "Germany",
@@ -1126,6 +1170,17 @@ const artistsData = [
         "name": "W:O:A Firefighters",
         "country": "Germany",
         "logo": null
+    },
+    {
+        "id": "wargasm",
+        "name": "Wargasm",
+        "country": "UK",
+        "logo": [
+            {
+                "filename": "Wargasm.png",
+                "from": null
+            }
+        ]
     },
     {
         "id": "warkings",

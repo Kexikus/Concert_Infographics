@@ -1,6 +1,68 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "eisheilige-nacht-2025",
+        "name": "Eisheilige Nacht 2025",
+        "date": "2025-12-20",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "subway-to-sally",
+            "schandmaul",
+            "kupfergold",
+            "haggefugg"
+        ],
+        "venueId": "buderus-arena",
+        "price": 61.85,
+        "logo": "EHN2025.png",
+        "notes": null
+    },
+    {
+        "id": "25-jahre-masters-of-chant",
+        "name": "25 Jahre Masters of Chant",
+        "date": "2025-11-28",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "gregorian"
+        ],
+        "venueId": "stadthalle-limburg",
+        "price": 85.75,
+        "logo": "Gregorian25.png",
+        "notes": null
+    },
+    {
+        "id": "tanzneid-world-tour",
+        "name": "Tanzneid World Tour",
+        "date": "2025-11-27",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "electric-callboy",
+            "bury-tomorrow",
+            "wargasm"
+        ],
+        "venueId": "festhalle-frankfurt",
+        "price": 77.6,
+        "logo": "TanzneidTour.png",
+        "notes": null
+    },
+    {
+        "id": "the-legendary-tour",
+        "name": "The Legendary Tour",
+        "date": "2025-11-25",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "sabaton",
+            "the-legendary-orchestra"
+        ],
+        "venueId": "festhalle-frankfurt",
+        "price": 87.4,
+        "logo": "LegendaryTour.png",
+        "notes": null
+    },
+    {
         "id": "live-rakkatakka-2025",
         "name": "Live Rakkatakka 2025",
         "date": "2025-11-09",
