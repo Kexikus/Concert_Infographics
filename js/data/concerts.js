@@ -1,6 +1,20 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "aller-guten-dinge-sind-30",
+        "name": "Aller guten Dinge sind 30",
+        "date": "2026-01-23",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "knorkator"
+        ],
+        "venueId": "batschkapp-frankfurt",
+        "price": 41.90,
+        "logo": "AllerGutenDingeSind30.png",
+        "notes": null
+    },
+    {
         "id": "eisheilige-nacht-2025",
         "name": "Eisheilige Nacht 2025",
         "date": "2025-12-20",
