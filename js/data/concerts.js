@@ -229,7 +229,7 @@ const concertsData = [
         "name": "Summer of the Wicked Tour 2025",
         "date": "2025-07-11",
         "endDate": null,
-        "type": "festival",
+        "type": "concert",
         "artistIds": [
             "powerwolf",
             "warkings",
