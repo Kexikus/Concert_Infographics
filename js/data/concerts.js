@@ -1,6 +1,21 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "wake-up-the-wicked-tour-2026",
+        "name": "Wake Up the Wicked Tour 2026",
+        "date": "2026-03-05",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "powerwolf",
+            "hammerfall"
+        ],
+        "venueId": "sap-arena",
+        "price": 79.99,
+        "logo": "WakeUpTheWicked.png",
+        "notes": null
+    },
+    {
         "id": "aller-guten-dinge-sind-30",
         "name": "Aller guten Dinge sind 30",
         "date": "2026-01-23",
@@ -10,7 +25,7 @@ const concertsData = [
             "knorkator"
         ],
         "venueId": "batschkapp-frankfurt",
-        "price": 41.90,
+        "price": 41.9,
         "logo": "AllerGutenDingeSind30.png",
         "notes": null
     },

@@ -548,6 +548,17 @@ const artistsData = [
         "logo": "Hämatom.png"
     },
     {
+        "id": "hammerfall",
+        "name": "HammerFall",
+        "country": "Sweden",
+        "logo": [
+            {
+                "filename": "HammerFall.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "harmony-glen",
         "name": "Harmony Glen",
         "country": "Germany",

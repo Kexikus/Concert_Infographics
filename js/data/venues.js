@@ -511,6 +511,15 @@ const venuesData = [
         "capacity": 13000
     },
     {
+        "id": "sap-arena",
+        "name": "SAP Arena",
+        "city": "Mannheim",
+        "country": "Germany",
+        "latitude": 49.46434032957538,
+        "longitude": 8.517593582791667,
+        "capacity": 11500
+    },
+    {
         "id": "schlossgarten-karlsruhe",
         "name": "Schlossgarten",
         "city": "Karlsruhe",
