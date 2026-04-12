@@ -1,6 +1,21 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "eingenordet-tour",
+        "name": "Eingenordet Tour",
+        "date": "2026-04-09",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "versengold",
+            "kupfergold"
+        ],
+        "venueId": "alter-schlachthof-wiesbaden",
+        "price": 57.45,
+        "logo": "Eingenordet2026.png",
+        "notes": null
+    },
+    {
         "id": "wake-up-the-wicked-tour-2026",
         "name": "Wake Up the Wicked Tour 2026",
         "date": "2026-03-05",
