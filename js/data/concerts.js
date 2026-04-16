@@ -1,6 +1,20 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "nackt-iii-luegen-und-legenden",
+        "name": "Nackt III - Lügen und Legenden",
+        "date": "2026-04-14",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "subway-to-sally"
+        ],
+        "venueId": "stadttheater",
+        "price": 61.85,
+        "logo": "NacktIII.png",
+        "notes": null
+    },
+    {
         "id": "eingenordet-tour",
         "name": "Eingenordet Tour",
         "date": "2026-04-09",

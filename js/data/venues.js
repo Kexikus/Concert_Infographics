@@ -586,6 +586,15 @@ const venuesData = [
         "capacity": 1000
     },
     {
+        "id": "stadttheater",
+        "name": "Stadttheater",
+        "city": "Aschaffenburg",
+        "country": "Germany",
+        "latitude": 49.97423648471719,
+        "longitude": 9.14409671656489,
+        "capacity": 430
+    },
+    {
         "id": "tanzbrunnen-koeln",
         "name": "Tanzbrunnen",
         "city": "Köln",
