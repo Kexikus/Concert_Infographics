@@ -1,6 +1,84 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "mps-rastede-2026",
+        "name": "MPS Rastede 2026",
+        "date": "2026-05-14",
+        "endDate": "2026-05-17",
+        "type": "festival",
+        "artistIds": [
+            "saltatio-mortis",
+            "feuerschwanz",
+            "versengold",
+            "knasterbart",
+            "subway-to-sally",
+            "dartagnan",
+            "mr-hurley-und-die-pulveraffen"
+        ],
+        "venueId": "schlosspark-rastede",
+        "price": 216,
+        "logo": "MPS2026Rastede.png",
+        "notes": null
+    },
+    {
+        "id": "tour-noir",
+        "name": "Tour Noir",
+        "date": "2026-05-09",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "lord-of-the-lost",
+            "dogma"
+        ],
+        "venueId": "lka-longhorn",
+        "price": 46.45,
+        "logo": "TourNoir.png",
+        "notes": null
+    },
+    {
+        "id": "nackt-iii-luegen-und-legenden-2",
+        "name": "Nackt III - Lügen und Legenden",
+        "date": "2026-05-02",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "subway-to-sally"
+        ],
+        "venueId": "kongresshalle-giessen",
+        "price": 53,
+        "logo": "NacktIII.png",
+        "notes": null
+    },
+    {
+        "id": "european-tour-2026",
+        "name": "European Tour 2026",
+        "date": "2026-05-01",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "skillet",
+            "storm-orchestra"
+        ],
+        "venueId": "stadthalle-offenbach",
+        "price": 64.4,
+        "logo": "EuropeanTour2026.png",
+        "notes": null
+    },
+    {
+        "id": "joe-bonamassa-2026-european-tour",
+        "name": "Joe Bonamassa 2026 European Tour",
+        "date": "2026-04-29",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "joe-bonamassa"
+        ],
+        "venueId": "sap-arena:Seated",
+        "price": 95.35,
+        "logo": "JoeBonamassaEurope2026.png",
+        "notes": null
+    },
+    {
         "id": "nackt-iii-luegen-und-legenden",
         "name": "Nackt III - Lügen und Legenden",
         "date": "2026-04-14",

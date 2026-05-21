@@ -376,6 +376,15 @@ const venuesData = [
         "capacity": 100000
     },
     {
+        "id": "kongresshalle-giessen",
+        "name": "Kongresshalle Gießen",
+        "city": "Gießen",
+        "country": "Germany",
+        "latitude": 50.58336465784102,
+        "longitude": 8.677511266731381,
+        "capacity": 731
+    },
+    {
         "id": "kurfuerstliches-schloss-mainz",
         "name": "Kurfürstliches Schloss",
         "city": "Mainz",
@@ -517,7 +526,10 @@ const venuesData = [
         "country": "Germany",
         "latitude": 49.46434032957538,
         "longitude": 8.517593582791667,
-        "capacity": 11500
+        "capacity": 15000,
+        "configurations": {
+            "Seated": 10000
+        }
     },
     {
         "id": "schlossgarten-karlsruhe",

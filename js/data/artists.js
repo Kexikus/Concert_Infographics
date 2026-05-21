@@ -297,6 +297,17 @@ const artistsData = [
         "logo": "Die_Ärzte.png"
     },
     {
+        "id": "dogma",
+        "name": "Dogma",
+        "country": "Uruguay",
+        "logo": [
+            {
+                "filename": "Dogma.png",
+                "from": null
+            }
+        ]
+    },
+    {
         "id": "donots",
         "name": "Donots",
         "country": "Germany",
@@ -653,6 +664,17 @@ const artistsData = [
         "name": "Joachim Witt",
         "country": "Germany",
         "logo": "Joachim_Witt.png"
+    },
+    {
+        "id": "joe-bonamassa",
+        "name": "Joe Bonamassa",
+        "country": "USA",
+        "logo": [
+            {
+                "filename": "Joe_Bonamassa.png",
+                "from": null
+            }
+        ]
     },
     {
         "id": "john-kanaka-the-jack-tars",
@@ -1015,6 +1037,17 @@ const artistsData = [
         "name": "Stimmgewalt",
         "country": "Germany",
         "logo": "Stimmgewalt.png"
+    },
+    {
+        "id": "storm-orchestra",
+        "name": "Storm Orchestra",
+        "country": "France",
+        "logo": [
+            {
+                "filename": "Storm_Orchestra.png",
+                "from": null
+            }
+        ]
     },
     {
         "id": "storm-seeker",
