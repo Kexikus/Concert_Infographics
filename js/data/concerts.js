@@ -1,6 +1,20 @@
 // Concert data - converted from original event list
 const concertsData = [
     {
+        "id": "burgentour-staub-schatten",
+        "name": "Burgentour Staub & Schatten",
+        "date": "2026-07-02",
+        "endDate": null,
+        "type": "concert",
+        "artistIds": [
+            "saltatio-mortis"
+        ],
+        "venueId": "residenzschloss",
+        "price": 76.9,
+        "logo": "BurgentourStaubUndSchatten.png",
+        "notes": null
+    },
+    {
         "id": "mps-rastede-2026",
         "name": "MPS Rastede 2026",
         "date": "2026-05-14",

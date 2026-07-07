@@ -493,6 +493,15 @@ const venuesData = [
         "capacity": 2100
     },
     {
+        "id": "residenzschloss",
+        "name": "Residenzschloss",
+        "city": "Rastatt",
+        "country": "Germany",
+        "latitude": 48.85909750478073,
+        "longitude": 8.204661284235856,
+        "capacity": 3000
+    },
+    {
         "id": "rheingoldhalle-mainz",
         "name": "Rheingoldhalle",
         "city": "Mainz",
