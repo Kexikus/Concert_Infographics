@@ -48,6 +48,7 @@
                                         <tr>
                                             <th>Filename</th>
                                             <th>From Date</th>
+                                            <th>Upload</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -60,7 +61,8 @@
                             <div class="logos-help">
                                 <small>
                                     • Exactly one logo must have no "from" date (the original logo)<br>
-                                    • "From" dates indicate when a logo change took effect
+                                    • "From" dates indicate when a logo change took effect<br>
+                                    • Use "Upload" to send an image file directly to the server
                                 </small>
                             </div>
                         </div>
@@ -225,7 +227,11 @@
                     
                     <div class="form-group">
                         <label for="concert-logo">Logo (optional):</label>
-                        <input type="text" id="concert-logo" name="logo" placeholder="logo-filename.png">
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input type="text" id="concert-logo" name="logo" placeholder="logo-filename.png" style="flex:1;">
+                            <input type="file" id="concert-logo-upload" accept="image/*" style="display:none;">
+                            <button type="button" id="concert-logo-upload-btn">Upload</button>
+                        </div>
                     </div>
                     
                     <div class="form-group">

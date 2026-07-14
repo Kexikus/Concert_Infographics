@@ -66,6 +66,26 @@ class AdminManager {
         // Venue configurations interface
         document.getElementById('add-configuration-btn').addEventListener('click', () => this.addConfigurationRow());
         
+        // Concert logo upload button
+        const concertLogoUploadBtn = document.getElementById('concert-logo-upload-btn');
+        const concertLogoFileInput = document.getElementById('concert-logo-upload');
+        if (concertLogoUploadBtn && concertLogoFileInput) {
+            concertLogoUploadBtn.addEventListener('click', () => concertLogoFileInput.click());
+            concertLogoFileInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                concertLogoUploadBtn.disabled = true;
+                concertLogoUploadBtn.textContent = 'Uploading...';
+                const filename = await this.uploadLogoImage(file, 'events');
+                concertLogoUploadBtn.disabled = false;
+                concertLogoUploadBtn.textContent = 'Upload';
+                if (filename) {
+                    document.getElementById('concert-logo').value = filename;
+                }
+                concertLogoFileInput.value = '';
+            });
+        }
+        
         // Modal close events
         document.querySelector('.close').addEventListener('click', () => this.closeModal());
         document.getElementById('confirm-no').addEventListener('click', () => this.closeConfirmModal());
@@ -1296,7 +1316,6 @@ class AdminManager {
 
             const jsContent = this.generateArtistsJS();
             await this.saveDataFile('artists.js', jsContent);
-            this.showSuccessMessage('Artists data saved successfully!');
         } catch (error) {
             this.showErrorMessage('Failed to save artists data: ' + error.message);
         }
@@ -1315,7 +1334,6 @@ class AdminManager {
 
             const jsContent = this.generateVenuesJS();
             await this.saveDataFile('venues.js', jsContent);
-            this.showSuccessMessage('Venues data saved successfully!');
         } catch (error) {
             this.showErrorMessage('Failed to save venues data: ' + error.message);
         }
@@ -1334,7 +1352,6 @@ class AdminManager {
 
             const jsContent = this.generateConcertsJS();
             await this.saveDataFile('concerts.js', jsContent);
-            this.showSuccessMessage('Concerts data saved successfully!');
         } catch (error) {
             this.showErrorMessage('Failed to save concerts data: ' + error.message);
         }
@@ -1386,21 +1403,68 @@ class AdminManager {
     }
 
     /**
-     * Save data file content (simulated - in real implementation would use server endpoint)
-     * @param {string} filename - Name of the file to save
+     * Save data file content.
+     * Tries to save directly to the server via the Flask backend (/api/save/<type>).
+     * Falls back to a browser download if the server is unreachable (e.g. when the
+     * admin page is served from a plain static file server without the backend).
+     * Shows a success message on completion (server save or download fallback).
+     * @param {string} filename - Name of the file to save (e.g. "artists.js")
      * @param {string} content - Content to save
      */
     async saveDataFile(filename, content) {
-        // In a real implementation, this would make an API call to save the file
-        // For now, we'll download the file so the user can manually replace it
-        const blob = new Blob([content], { type: 'text/javascript' });
-        this.downloadBlob(blob, filename);
-        
-        // Show instructions to user
-        this.showMessage(
-            `File "${filename}" has been downloaded. Please replace the existing file in the js/data/ folder to apply changes.`,
-            'info'
-        );
+        const type = filename.replace(/\.js$/, '');
+        try {
+            const response = await fetch(`/api/save/${type}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/javascript' },
+                body: content
+            });
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err.error || `Server responded ${response.status}`);
+            }
+            // Saved on server. Refresh in-memory copy so further edits stay in sync.
+            await this.reloadDataType(type);
+            this.showSuccessMessage(`${filename} saved to server successfully.`);
+            return;
+        } catch (error) {
+            // Server not available (e.g. static-only hosting): fall back to download.
+            const blob = new Blob([content], { type: 'text/javascript' });
+            this.downloadBlob(blob, filename);
+            this.showMessage(
+                `Server save failed (${error.message}). File "${filename}" was downloaded instead - replace the existing file in js/data/ manually.`,
+                'info'
+            );
+        }
+    }
+
+    /**
+     * Reload a single data type from the server (if available) so the in-memory
+     * copy matches what was just written. Silently skips on failure.
+     * @param {string} type - artists | venues | concerts
+     */
+    async reloadDataType(type) {
+        try {
+            const response = await fetch(`/api/data/${type}`);
+            if (!response.ok) return;
+            const text = await response.text();
+            // Evaluate the JS file in a function scope to extract the array.
+            // The files define a const named <type>Data and optionally export it.
+            const varName = `${type}Data`;
+            const fn = new Function(`${text}\nreturn typeof ${varName} !== 'undefined' ? ${varName} : null;`);
+            const data = fn();
+            if (Array.isArray(data)) {
+                if (type === 'artists') this.artists = data;
+                else if (type === 'venues') this.venues = data;
+                else if (type === 'concerts') this.concerts = data;
+                // Refresh the visible list for the section currently displayed.
+                if (type === 'artists') this.loadArtistsList();
+                else if (type === 'venues') this.loadVenuesList();
+                else if (type === 'concerts') this.loadConcertsList();
+            }
+        } catch (e) {
+            // Non-fatal: in-memory copy is already up to date with what we wrote.
+        }
     }
 
     /**
@@ -1522,6 +1586,47 @@ class AdminManager {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+
+    /**
+     * Upload an image file to the server (assets/logos/<category>/).
+     * Returns the saved filename on success, or null on failure.
+     * When the Flask backend is not running, falls back to letting the user
+     * place the file manually in the correct assets/logos/<category>/ folder.
+     * @param {File} file - The image file to upload
+     * @param {string} category - Logo category: 'artists' or 'events'
+     * @returns {Promise<string|null>} Saved filename, or null on failure
+     */
+    async uploadLogoImage(file, category) {
+        if (!file) return null;
+
+        const allowed = ['png', 'jpg', 'jpeg', 'svg', 'avif', 'gif', 'webp'];
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!allowed.includes(ext)) {
+            this.showErrorMessage(`File type ".${ext}" is not allowed. Allowed: ${allowed.join(', ')}`);
+            return null;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const response = await fetch(`/api/upload/image/${category}`, {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err.error || `Server responded ${response.status}`);
+            }
+            const result = await response.json();
+            return result.filename;
+        } catch (error) {
+            this.showErrorMessage(
+                `Image upload to server failed (${error.message}). ` +
+                `Save the file manually to assets/logos/${category}/ and enter the filename below.`
+            );
+            return null;
+        }
     }
 
     /**
@@ -2043,11 +2148,37 @@ class AdminManager {
                        value="${logoData && logoData.from ? logoData.from : ''}" />
             </td>
             <td>
+                <input type="file" class="logo-upload-input" accept="image/*" style="display:none;" />
+                <button type="button" class="btn-upload-logo">Upload</button>
+            </td>
+            <td>
                 <button type="button" class="btn-remove-logo" onclick="adminManager.removeLogoRow(${rowIndex})">Delete</button>
             </td>
         `;
         
         tableBody.appendChild(row);
+
+        // Wire the upload button: open the hidden file picker.
+        const uploadBtn = row.querySelector('.btn-upload-logo');
+        const fileInput = row.querySelector('.logo-upload-input');
+        uploadBtn.addEventListener('click', () => fileInput.click());
+
+        // On file selection, upload to the server and fill the filename field.
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+            const filename = await this.uploadLogoImage(file, 'artists');
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = 'Upload';
+            if (filename) {
+                row.querySelector('.logo-filename').value = filename;
+            }
+            // Reset so the same file can be selected again later.
+            fileInput.value = '';
+        });
+
         this.updateLogoRowIndices();
     }
 
